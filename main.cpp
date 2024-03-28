@@ -56,7 +56,7 @@ int main(int argv, char* arg[]) {
 
 	// xu ly nhan vat 
 	MainObject p_player;
-	p_player.LoadImg("map1/player_right.png", g_screen);  // mac dinh cho ban dau nhan vat quay ve ben phai 
+	p_player.LoadImg("map1/right.png", g_screen);  // mac dinh cho ban dau nhan vat quay ve ben phai 
 	p_player.set_clips();
 	//
 

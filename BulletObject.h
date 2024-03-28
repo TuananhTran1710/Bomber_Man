@@ -9,7 +9,7 @@ class BulletObject : public BaseObject
 {
 public:
 	BulletObject();
-	~BulletObject();
+	//~BulletObject();
 
 
 	void set_is_move(const bool& isMove) { is_move = isMove; }
@@ -20,7 +20,7 @@ public:
 	int get_bullet_time() { return bullet_time; }
 	void set_bullet_time(int time) { bullet_time = time; }
 private:
-	bool is_move;  // trang th�i xem dan co o trong m�n h�nh kh�ng
+	bool is_move;       
 	int bullet_time;
 
 };

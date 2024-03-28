@@ -49,19 +49,19 @@ void MainObject::Show(SDL_Renderer* des) {
 
 	//
 	if (status == WALK_LEFT) {
-		LoadImg("map1/player_left.png", des);  // ham LoadImg nay la ham trong MainObject.h chu kp trong Object.h
+		LoadImg("map1/left.png", des);  // ham LoadImg nay la ham trong MainObject.h chu kp trong Object.h
 	}
 	else if (status == WALK_RIGHT)
 	{
-		LoadImg("map1/player_right.png", des);
+		LoadImg("map1/right.png", des);
 	}
 	else if (status == WALK_UP)
 	{
-		LoadImg("map1/player_left.png", des);
+		LoadImg("map1/up.png", des);
 	}
 	else if (status == WALK_DOWN)
 	{
-		LoadImg("map1/player_right.png", des);
+		LoadImg("map1/down.png", des);
 	}
 
 	//
@@ -168,7 +168,7 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen) {
 				// 
 				if (status == WALK_LEFT) {
 
-					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45, 60 + floor((this->y_pos - 60) / 45) * 45 + 5); // rect.x , rect.y la vi tri set anh cua nhan vat 
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2); // rect.x , rect.y la vi tri set anh cua nhan vat 
 
 					p_bullet->LoadImg("map1/bom.png", screen);
 
@@ -177,20 +177,20 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen) {
 				else if (status == WALK_RIGHT)
 				{
 
-					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45, 60 + floor((this->y_pos - 60) / 45) * 45 + 5);
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->LoadImg("map1/bom.png", screen);
 
 				}
 				else if (status == WALK_UP)
 				{
 
-					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45, 60 + floor((this->y_pos - 60) / 45) * 45 + 5);
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->LoadImg("map1/bom.png", screen);
 
 				}
 				else if (status == WALK_DOWN)
 				{
-					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45, 60 + floor((this->y_pos - 60) / 45) * 45 + 5);
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->LoadImg("map1/bom.png", screen);
 
 				}
@@ -210,7 +210,6 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 {
 	for (int i = 0; i < bullet_list.size(); i++)
 	{
-		std::cout << bullet_list.size() << std::endl;
 		BulletObject* p_bullet = bullet_list.at(i);
 		if (p_bullet != NULL)
 		{
@@ -226,7 +225,7 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 void MainObject::RemoveBullet() {
 	for (int i = 0; i < bullet_list.size(); i++) {
 		BulletObject* p_bullet = bullet_list.at(i);
-		if (SDL_GetTicks() - p_bullet->get_bullet_time() >= 2700)
+		if (SDL_GetTicks() - p_bullet->get_bullet_time() >= 3000)
 		{
 			bullet_list.erase(bullet_list.begin() + i);
 			if (p_bullet != NULL)

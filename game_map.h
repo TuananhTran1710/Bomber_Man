@@ -19,7 +19,7 @@ public:
 
 	void LoadTiles(SDL_Renderer* screen);
 	void DrawMap(SDL_Renderer* screen);
-	void LoadMap(std::string path);    // kh�ng d�ng v� loi ( d� d�ng 1 doan code thay the trong h�m main)  
+	void LoadMap(std::string path);  
 
 	Map getMap() const { return game_map; }
 	void SetMap(Map& map_data) { game_map = map_data; }

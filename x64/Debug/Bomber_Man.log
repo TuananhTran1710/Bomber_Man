@@ -1,56 +1,4 @@
-﻿  BaseObject.cpp
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'BaseObject.cpp')
-  
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'BaseObject.cpp')
-  
-  BaseObject.h
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'BaseObject.h')
-  
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'BaseObject.h')
-  
-  BulletObject.cpp
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'BulletObject.cpp')
-  
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'BulletObject.cpp')
-  
-  CommonFunc.cpp
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'CommonFunc.cpp')
-  
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'CommonFunc.cpp')
-  
-  CommonFunc.h
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  game_map.cpp
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'game_map.cpp')
-  
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'game_map.cpp')
-  
-  ImpTimer.cpp
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'ImpTimer.cpp')
-  
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'ImpTimer.cpp')
-  
-  main.cpp
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'main.cpp')
-  
-  MainObject.cpp
+﻿  MainObject.cpp
 H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(50,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
   (compiling source file 'MainObject.cpp')
   
@@ -59,28 +7,25 @@ H:\Visual C++\Bomber_Man\Bomber_Man\CommonFunc.h(55,2): warning C4091: 'typedef 
   
 H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(79,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(80,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(171,109): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(171,28): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(180,109): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(180,28): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(187,109): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(187,28): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(193,109): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(193,28): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(270,33): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(271,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(272,24): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(273,43): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(279,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(286,17): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(291,25): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(292,43): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(293,32): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(294,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(298,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(307,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(319,53): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
-x64\Debug\BaseObject.obj : warning LNK4042: object specified more than once; extras ignored
-x64\Debug\CommonFunc.obj : warning LNK4042: object specified more than once; extras ignored
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(171,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(171,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(180,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(180,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(187,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(187,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(193,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(193,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(269,33): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(270,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(271,24): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(272,43): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(278,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(285,17): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(290,25): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(291,43): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(292,32): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(293,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(297,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(306,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+H:\Visual C++\Bomber_Man\Bomber_Man\MainObject.cpp(318,53): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Bomber_Man.vcxproj -> H:\Visual C++\Bomber_Man\x64\Debug\Bomber_Man.exe
