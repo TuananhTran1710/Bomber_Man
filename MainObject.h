@@ -11,7 +11,8 @@
 class MainObject : public BaseObject
 {
 public:
-	MainObject();
+	MainObject();    
+
 	~MainObject();
 
 	enum WalkType
@@ -23,14 +24,17 @@ public:
 	};
 
 	bool LoadImg(std::string path, SDL_Renderer* screen);   // load ca anh to len va lay width_frame, height_frame
-	void Show(SDL_Renderer* des);             // load 1 frame len man hinh                       
-	void HandleInputAction(SDL_Event events, SDL_Renderer* screen, Map & map_data); // xu ly su kien
+
+	void Show1(SDL_Renderer* des);             // load 1 frame len man hinh       
+	void Show2(SDL_Renderer* des);
+
+	void HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map & map_data); // xu ly su kien cho nhan vat 1 
+	void HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data);  // xu ly su kien cho nhan vat 2 
+
 	void set_clips();
 
 	void DoPlayer(Map& map_data);
 	void CheckToMap(Map& map_data);
-
-	void UpdateImagePlayer(SDL_Renderer* des);
 
 	void set_bullet_list(std::vector <BulletObject*> Bullet_list) {
 		bullet_list = Bullet_list;
@@ -39,6 +43,12 @@ public:
 	void HandleBullet(SDL_Renderer* des);
 
 	void RemoveBullet(Map & map_data);
+
+	void set_pos2(float x, float y );
+
+	bool Check_Bumb(Map& map_data);
+
+
 private:
 
 	std::vector <BulletObject* > bullet_list; // vector chua c�c vi�n dann 

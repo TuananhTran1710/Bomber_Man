@@ -14,8 +14,6 @@ public:
 
 class GameMap {
 public:
-	//GameMap(){;};
-	//~GameMap() { ; };
 
 	void LoadTiles(SDL_Renderer* screen);
 	void DrawMap(SDL_Renderer* screen);
@@ -23,6 +21,7 @@ public:
 
 	Map getMap() const { return game_map; }
 	void SetMap(Map& map_data) { game_map = map_data; }
+
 private:
 	Map game_map;
 	TileMat tile_mat[MAX_TILE];

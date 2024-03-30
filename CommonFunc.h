@@ -43,10 +43,7 @@ const int COLOR_B = 253;
 
 
 typedef struct Map {
-	int start_x, start_y;
-	int max_x, max_y;
 	int tile[MAX_MAP_Y][MAX_MAP_X];
-	char* file_name;
 };
 
 

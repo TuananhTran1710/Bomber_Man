@@ -41,6 +41,7 @@ void close() {
 	IMG_Quit();
 	SDL_Quit();
 }
+
 int main(int argv, char* arg[]) {
 
 	ImpTimer fps_timer;
@@ -58,17 +59,23 @@ int main(int argv, char* arg[]) {
 
 
 	// xu ly nhan vat 
-	MainObject p_player;
-	p_player.LoadImg("map1/right.png", g_screen);  // mac dinh cho ban dau nhan vat quay ve ben phai 
-	p_player.set_clips();
+	MainObject p_player1, p_player2;
+
+	p_player2.set_pos2(185 + 45 * 14, 60);
+
+	p_player1.LoadImg("map1/right.png", g_screen);  // mac dinh cho ban dau nhan vat quay ve ben phai 
+	p_player2.LoadImg("map1/left2.png", g_screen);
+
+	p_player1.set_clips();
+	p_player2.set_clips();
 	//
 
 
 	bool quit = 0;
-	Map map_data = map.getMap();
 
 	while (!quit)
 	{
+		Map map_data = map.getMap();
 
 		fps_timer.start();
 
@@ -76,25 +83,33 @@ int main(int argv, char* arg[]) {
 			if (g_event.type == SDL_QUIT) {
 				quit = 1;
 			}
-			p_player.HandleInputAction(g_event, g_screen, map_data);
-			map.SetMap(map_data);
+			p_player1.HandleInputAction1(g_event, g_screen, map_data);
+			p_player2.HandleInputAction2(g_event, g_screen, map_data);
+
 		}
 
 		SDL_SetRenderDrawColor(g_screen, COLOR_R, COLOR_G, COLOR_B, 255);
 		SDL_RenderClear(g_screen);
 		g_background.Render(g_screen, NULL);
 
-		// xu ly map 
-		map_data = map.getMap();
 		map.DrawMap(g_screen);
 
 
-		p_player.DoPlayer(map_data);    // xử lý di chuyển và va chạm
-		p_player.HandleBullet(g_screen);  // xử lý đạn 
-		p_player.RemoveBullet(map_data);
-		map.SetMap(map_data);
+		p_player1.DoPlayer(map_data);    // xử lý di chuyển và va chạm
+		p_player2.DoPlayer(map_data);    // xử lý di chuyển và va chạm
 
-		p_player.Show(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
+
+		p_player1.HandleBullet(g_screen);  // xử lý đạn 
+		p_player2.HandleBullet(g_screen);  // xử lý đạn 
+
+		p_player1.RemoveBullet(map_data);
+		p_player2.RemoveBullet(map_data);
+
+		map.SetMap(map_data);      // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
+
+		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
+		p_player2.Show2(g_screen);
+
 		SDL_RenderPresent(g_screen);
 
 
