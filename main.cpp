@@ -3,7 +3,6 @@
 #include "CommonFunc.h"
 #include "MainObject.h"
 #include "ImpTimer.h"
-
 BaseObject g_background;
 bool Init() {
 	bool success = 1;
@@ -45,7 +44,6 @@ void close() {
 int main(int argv, char* arg[]) {
 
 	ImpTimer fps_timer;
-
 	if (!Init()) return -1;
 	if (!LoadBackground()) return -1;
 	g_background.Render(g_screen);
@@ -102,8 +100,8 @@ int main(int argv, char* arg[]) {
 		p_player1.HandleBullet(g_screen);  // xử lý đạn 
 		p_player2.HandleBullet(g_screen);  // xử lý đạn 
 
-		p_player1.RemoveBullet(map_data);
-		p_player2.RemoveBullet(map_data);
+		p_player1.RemoveBullet(map_data,g_screen);
+		p_player2.RemoveBullet(map_data,g_screen);
 
 		map.SetMap(map_data);      // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 

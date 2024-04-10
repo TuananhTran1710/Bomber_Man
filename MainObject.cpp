@@ -1,5 +1,6 @@
 ﻿#include "MainObject.h"
-
+#include "ImpTimer.h"
+std::vector< ImpTimer> Delay_time;
 MainObject::MainObject() {
 	frame = 0;
 	x_pos = 185;
@@ -13,7 +14,7 @@ MainObject::MainObject() {
 	input_type.right = 0;
 	input_type.down = 0;
 	input_type.up = 0;
-	soluongdattoida = 1;
+	soluongdattoida = 10;
 }
 MainObject :: ~MainObject() {
 
@@ -24,7 +25,7 @@ void MainObject::set_pos2(float x, float y)
 	x_pos = x;
 	y_pos = y;
 }
-
+				
 
 bool MainObject::LoadImg(std::string path, SDL_Renderer* screen) {
 	bool ret = BaseObject::LoadImg(path, screen);
@@ -423,8 +424,7 @@ int dx[5] = { 0,1,-1,0,0 };
 int dy[5] = { 0,0,0,-1,1 };
 
 
-
-void MainObject::RemoveBullet(Map& map_data) {
+void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 	for (int i = 0; i < bullet_list.size(); i++) {
 		BulletObject* p_bullet = bullet_list.at(i);
 		if (SDL_GetTicks() - p_bullet->get_bullet_time() >= 3000)
@@ -439,7 +439,7 @@ void MainObject::RemoveBullet(Map& map_data) {
 			{
 				for (int k = 0; k < 5; k++) 
 				{
-					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0)
+					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14)
 					{
 						if (!(map_data.tile[map_y + dy[k]][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 3))
 						{
@@ -453,7 +453,7 @@ void MainObject::RemoveBullet(Map& map_data) {
 			{
 				for (int k = 0; k < 5; k++)
 				{
-					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0)
+					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14)
 					{
 						if (!(map_data.tile[map_y + dy[k]][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 3))
 						{
@@ -462,8 +462,13 @@ void MainObject::RemoveBullet(Map& map_data) {
 					}
 				}
 			}
-
-
+			
+			nobom.push_back(p_bullet->get_nobom());
+			(*nobom.rbegin()).LoadImg("map1/bom_doc.png", des);
+			(*nobom.rbegin()).SetRect(p_bullet->GetRect().x, p_bullet->GetRect().y - 45 - 2);
+			ImpTimer ret; Delay_time.push_back(ret);
+			(*Delay_time.rbegin()).start();
+			
 			if (p_bullet != NULL)
 			{
 					delete p_bullet;
@@ -471,7 +476,15 @@ void MainObject::RemoveBullet(Map& map_data) {
 			}
 
 		}
-
+	}
+	for(int i=0;i<nobom.size();i++)
+	if (Delay_time[i].get_ticks() <= 500) {
+		nobom[i].Render(des);
+	}
+	else {
+		nobom[i].Free();
+		nobom.erase(nobom.begin() + i);
+		Delay_time.erase(Delay_time.begin() + i);
 	}
 }
 

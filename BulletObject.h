@@ -4,6 +4,7 @@
 
 #include "BaseObject.h"
 #include "CommonFunc.h"
+#include "NoBom.h"
 
 class BulletObject : public BaseObject
 {
@@ -18,7 +19,11 @@ public:
 	int get_bullet_time() { return bullet_time; }
 	void set_bullet_time(int time) { bullet_time = time; }
 
+	NoBom get_nobom() { return doc; }
+	void set_nobom(NoBom no) { doc = no; }
+
 private:
+	NoBom doc;
 	bool is_move;
 	int bullet_time;
 

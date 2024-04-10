@@ -5,7 +5,7 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
 #include "BulletObject.h"
-
+#include "NoBom.h"
 #define PLAYER_SPEED 7.5
 
 class MainObject : public BaseObject
@@ -39,14 +39,15 @@ public:
 	void set_bullet_list(std::vector <BulletObject*> Bullet_list) {
 		bullet_list = Bullet_list;
 	}
+
 	std::vector <BulletObject*>  get_bullet_list() const { return bullet_list; }
+
 	void HandleBullet(SDL_Renderer* des);
 
-	void RemoveBullet(Map & map_data);
+	void RemoveBullet(Map & map_data, SDL_Renderer *des);
 
-	void set_pos2(float x, float y );
+	void set_pos2(float x, float y);
 
-	bool Check_Bumb(Map& map_data);
 
 
 private:
@@ -62,6 +63,8 @@ private:
 	int frame;   // luu chi so frame 
 	int status;  // xem la WALK_Right hay left , up , down 
 	int soluongdattoida;
+	//ImpTimer Delay_game;
+	std::vector<NoBom> nobom;
 };
 
 
