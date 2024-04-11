@@ -47,8 +47,11 @@ public:
 	void RemoveBullet(Map & map_data, SDL_Renderer *des);
 
 	void set_pos2(float x, float y);
+	
+	int get_width_frame() { return width_frame; }
+	int get_height_frame() { return height_frame; }
 
-
+	std::vector <std::pair <NoBom, NoBom>> get_no_bom_list() const { return nobom; }
 
 private:
 
@@ -63,8 +66,8 @@ private:
 	int frame;   // luu chi so frame 
 	int status;  // xem la WALK_Right hay left , up , down 
 	int soluongdattoida;
-	//ImpTimer Delay_game;
-	std::vector<NoBom> nobom;
+
+	std::vector< std :: pair <NoBom,NoBom> > nobom;
 };
 
 

@@ -108,6 +108,48 @@ int main(int argv, char* arg[]) {
 		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
 		p_player2.Show2(g_screen);
 
+		
+		// xu ly va cham giua nguoi va bom
+		
+		std::vector <std::pair<NoBom, NoBom>> nobom_list = p_player1.get_no_bom_list();
+		for (int r = 0; r < nobom_list.size(); r++)
+		{
+			std :: pair<NoBom,NoBom> no_bom = nobom_list.at(r);
+			NoBom doc = nobom_list.at(r).first;
+			NoBom ngang = nobom_list.at(r).second; 
+			
+			SDL_Rect tRect;
+			tRect.x = p_player1.GetRect().x;
+			tRect.y = p_player1.GetRect().y;
+			tRect.w = p_player1.get_width_frame();
+			tRect.h = p_player1.get_height_frame();
+				
+			SDL_Rect bRect_doc = doc.GetRect();
+			SDL_Rect bRect_ngang = ngang.GetRect();
+
+			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
+			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
+
+			if (bCol_doc || bCol_ngang)
+			{
+				if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+				{
+					nobom_list.erase(nobom_list.begin() + r);
+					close();
+					SDL_Quit();
+					return 0;
+				}
+				std::cout << 1;
+				break;
+			}
+			
+		}
+
+		
+
+		
+
+
 		SDL_RenderPresent(g_screen);
 
 

@@ -1,7 +1,7 @@
 
 #ifndef COMMON_FUNCTION_H_
 #define COMMON_FUNCTION_H_
-
+#include <Windows.h>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -13,7 +13,7 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
-
+#include <utility>
 static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
@@ -51,5 +51,9 @@ typedef struct Input {
 	int left, right, up, down;
 };
 
+namespace SDLCommonFunc
+{
+	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
+}
 
 #endif

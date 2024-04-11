@@ -9,11 +9,6 @@ class NoBom : public BaseObject
 {
 public:
 	NoBom();
-	//~BulletObject();
-
-
-	//void set_is_move(const bool& isMove) { is_move = isMove; }
-	//bool get_is_move() const { return is_move; }
 
 	int get_no_time() { return no_time; }
 	void set_no_time(int time) { no_time = time; }

@@ -1,6 +1,7 @@
 ﻿#include "MainObject.h"
 #include "ImpTimer.h"
 std::vector< ImpTimer> Delay_time;
+
 MainObject::MainObject() {
 	frame = 0;
 	x_pos = 185;
@@ -14,7 +15,7 @@ MainObject::MainObject() {
 	input_type.right = 0;
 	input_type.down = 0;
 	input_type.up = 0;
-	soluongdattoida = 10;
+	soluongdattoida = 1;
 }
 MainObject :: ~MainObject() {
 
@@ -462,10 +463,17 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 					}
 				}
 			}
-			
-			nobom.push_back(p_bullet->get_nobom());
-			(*nobom.rbegin()).LoadImg("map1/bom_doc.png", des);
-			(*nobom.rbegin()).SetRect(p_bullet->GetRect().x, p_bullet->GetRect().y - 45 - 2);
+
+			// xu ly no bom
+						
+			nobom.push_back({ p_bullet->get_nobom_doc(),p_bullet->get_nobom_ngang() });
+
+			(*nobom.rbegin()).first.LoadImg("map1/nobom_doc.png", des);
+			(*nobom.rbegin()).second.LoadImg("map1/nobom_ngang.png", des);
+
+			(*nobom.rbegin()).first.SetRect(p_bullet->GetRect().x, p_bullet->GetRect().y - 45 - 2);
+			(*nobom.rbegin()).second.SetRect(p_bullet->GetRect().x - 45 - 2 , p_bullet->GetRect().y);
+
 			ImpTimer ret; Delay_time.push_back(ret);
 			(*Delay_time.rbegin()).start();
 			
@@ -477,14 +485,24 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 
 		}
 	}
-	for(int i=0;i<nobom.size();i++)
-	if (Delay_time[i].get_ticks() <= 500) {
-		nobom[i].Render(des);
-	}
-	else {
-		nobom[i].Free();
-		nobom.erase(nobom.begin() + i);
-		Delay_time.erase(Delay_time.begin() + i);
+
+
+	for (int i = 0; i < nobom.size(); i++)
+	{
+		if (Delay_time[i].get_ticks() <= 500)
+		{
+			nobom[i].first.Render(des);
+			nobom[i].second.Render(des);
+		}
+		else
+		{
+
+			nobom[i].first.Free();
+			nobom[i].second.Free();
+
+			nobom.erase(nobom.begin() + i);
+			Delay_time.erase(Delay_time.begin() + i);
+		}
 	}
 }
 
