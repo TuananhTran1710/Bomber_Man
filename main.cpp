@@ -70,13 +70,12 @@ int main(int argv, char* arg[]) {
 
 
 	bool quit = 0;
-
+	
 	while (!quit)
 	{
 		Map map_data = map.getMap();
 
 		fps_timer.start();
-
 		while (SDL_PollEvent(&g_event) != 0) {
 			if (g_event.type == SDL_QUIT) {
 				quit = 1;
@@ -114,7 +113,8 @@ int main(int argv, char* arg[]) {
 		std::vector <std::pair<NoBom, NoBom>> nobom_list = p_player1.get_no_bom_list();
 		for (int r = 0; r < nobom_list.size(); r++)
 		{
-			std :: pair<NoBom,NoBom> no_bom = nobom_list.at(r);
+			std::pair<NoBom, NoBom> no_bom = nobom_list.at(r);
+			 
 			NoBom doc = nobom_list.at(r).first;
 			NoBom ngang = nobom_list.at(r).second; 
 			
@@ -129,12 +129,12 @@ int main(int argv, char* arg[]) {
 
 			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
 			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
-
+			SDL_RenderPresent(g_screen);
 			if (bCol_doc || bCol_ngang)
 			{
 				if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 				{
-					nobom_list.erase(nobom_list.begin() + r);
+					//nobom_list.erase(nobom_list.begin() + r);
 					close();
 					SDL_Quit();
 					return 0;
@@ -146,7 +146,7 @@ int main(int argv, char* arg[]) {
 		}
 
 		
-
+  
 		
 
 

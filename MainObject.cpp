@@ -489,14 +489,14 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 
 	for (int i = 0; i < nobom.size(); i++)
 	{
-		if (Delay_time[i].get_ticks() <= 500)
+		if (Delay_time[i].get_ticks() <= 10000)
 		{
 			nobom[i].first.Render(des);
 			nobom[i].second.Render(des);
 		}
 		else
 		{
-
+			
 			nobom[i].first.Free();
 			nobom[i].second.Free();
 

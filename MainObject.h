@@ -14,7 +14,6 @@ public:
 	MainObject();    
 
 	~MainObject();
-
 	enum WalkType
 	{
 		WALK_RIGHT,
