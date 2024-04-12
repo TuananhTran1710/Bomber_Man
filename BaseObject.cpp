@@ -9,7 +9,7 @@ BaseObject::BaseObject() {
 }
 
 BaseObject :: ~BaseObject() {
-	Free();
+	//Free();
 }
 
 bool BaseObject::LoadImg(std::string path, SDL_Renderer* screen) {

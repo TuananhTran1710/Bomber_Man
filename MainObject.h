@@ -51,7 +51,7 @@ public:
 	int get_height_frame() { return height_frame; }
 
 	std::vector <std::pair <NoBom, NoBom>> get_no_bom_list() const { return nobom; }
-
+	
 private:
 
 	std::vector <BulletObject* > bullet_list; // vector chua c�c vi�n dann 
@@ -65,7 +65,6 @@ private:
 	int frame;   // luu chi so frame 
 	int status;  // xem la WALK_Right hay left , up , down 
 	int soluongdattoida;
-
 	std::vector< std :: pair <NoBom,NoBom> > nobom;
 };
 
