@@ -4,6 +4,7 @@
 #include "MainObject.h"
 #include "ImpTimer.h"
 #include "TextObject.h"
+#include "PlayerPower.h"
 BaseObject g_background;
 TTF_Font *font_time = NULL;
 bool Init() {
@@ -78,10 +79,13 @@ int main(int argv, char* arg[]) {
 	p_player1.set_clips();
 	p_player2.set_clips();
 	//
+	PlayerPower player_power1;   // xử lý hình ảnh sinh mạng 
+	player_power1.Init(g_screen);
 
+	PlayerPower player_power2;  
+	player_power2.Init(g_screen);
 
 	bool quit = 0;
-	int num_die = 0; // lưu số mạng của nhân vật
 
 	//Time Text ;
 	TextObject time_game;
@@ -126,49 +130,127 @@ int main(int argv, char* arg[]) {
 
 		map.SetMap(map_data);      // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 
+		player_power1.Show(g_screen,60);    //show vi tri load hinh anh trai tym
+		player_power2.Show(g_screen,120);   
+
 		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
 		p_player2.Show2(g_screen);
 
 		
 		// xu ly va cham giua nguoi va bom
 		
-		std::vector <std::pair<NoBom, NoBom>> nobom_list1 = p_player1.get_no_bom_list();
-		std::vector <std::pair<NoBom, NoBom>> nobom_list2 = p_player2.get_no_bom_list();
+		std::vector <std::pair<NoBom, NoBom>> nobom_list_1 = p_player1.get_no_bom_list();
+		std::vector <std::pair<NoBom, NoBom>> nobom_list_2 = p_player2.get_no_bom_list();
+		std::vector <std::pair<NoBom, NoBom>> nobom_list1, nobom_list2;
+
+		for (int i = 0; i < nobom_list_1.size(); i++)
+		{
+			nobom_list1.push_back(nobom_list_1[i]);
+			nobom_list2.push_back(nobom_list_1[i]);
+		}
+		for (int i = 0; i < nobom_list_2.size(); i++)
+		{
+			nobom_list1.push_back(nobom_list_2[i]);
+			nobom_list2.push_back(nobom_list_2[i]);
+		}
+
+		// xử lý va cham bom-nguoi cho nhân vật 1 
 		for (int r = 0; r < nobom_list1.size(); r++)
 		{
-			std::pair<NoBom, NoBom> no_bom = nobom_list1.at(r);
-			 
-			NoBom doc1 = nobom_list1.at(r).first;
-			NoBom ngang1 = nobom_list1.at(r).second; 
 			
-			SDL_Rect tRect;
-			tRect.x = p_player1.GetRect().x;
-			tRect.y = p_player1.GetRect().y;
-			tRect.w = p_player1.get_width_frame();
-			tRect.h = p_player1.get_height_frame();
-				
-			SDL_Rect bRect_doc1 = doc1.GetRect();
-			SDL_Rect bRect_ngang1 = ngang1.GetRect();
+				std::pair<NoBom, NoBom> no_bom = nobom_list1.at(r);
 
-			bool bCol_doc1 = SDLCommonFunc::CheckCollision(bRect_doc1, tRect);
-			bool bCol_ngang1 = SDLCommonFunc::CheckCollision(bRect_ngang1, tRect);
-			SDL_RenderPresent(g_screen);
-			if (bCol_doc1 || bCol_ngang1)
-			{
-				num_die++;
-				if (num_die <= 3)
+				NoBom doc = nobom_list1.at(r).first;
+				NoBom ngang = nobom_list1.at(r).second;
+
+				SDL_Rect tRect;
+
+				tRect.x = p_player1.GetRect().x;
+				tRect.y = p_player1.GetRect().y;
+				tRect.w = p_player1.get_width_frame();
+				tRect.h = p_player1.get_height_frame();
+
+
+
+				SDL_Rect bRect_doc = doc.GetRect();
+				SDL_Rect bRect_ngang = ngang.GetRect();
+
+				bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
+				bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
+
+				SDL_RenderPresent(g_screen);
+
+				if (bCol_doc || bCol_ngang)
 				{
-					p_player1.set_pos2(185, 60);
-					p_player1.Render(g_screen);
-					SDL_RenderPresent(g_screen);
-					nobom_list1.erase(nobom_list1.begin() + r);
-					continue;
+					p_player1.set_num_die();
+					if (p_player1.get_num_die() <= 2)
+					{
+						p_player1.set_pos2(185, 60);
+
+						nobom_list1.erase(nobom_list1.begin() + r);
+
+						player_power1.Decrease();
+						player_power1.Render(g_screen);
+						//continue;
+					}
+					else
+					{
+						if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+						{
+							nobom_list1.erase(nobom_list1.begin() + r);
+							close();
+							SDL_Quit();
+							return 0;
+						}
+					}
+				}
+			
+		}
+
+		// xử lý va cham bom-nguoi cho nhân vật 2
+		for (int r = 0; r < nobom_list2.size(); r++)
+		{
+
+			std::pair<NoBom, NoBom> no_bom = nobom_list2.at(r);
+
+			NoBom doc = nobom_list2.at(r).first;
+			NoBom ngang = nobom_list2.at(r).second;
+
+			SDL_Rect tRect;
+
+			tRect.x = p_player2.GetRect().x;
+			tRect.y = p_player2.GetRect().y;
+			tRect.w = p_player2.get_width_frame();
+			tRect.h = p_player2.get_height_frame();
+
+
+
+			SDL_Rect bRect_doc = doc.GetRect();
+			SDL_Rect bRect_ngang = ngang.GetRect();
+
+			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
+			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
+
+			SDL_RenderPresent(g_screen);
+
+			if (bCol_doc || bCol_ngang)
+			{
+				p_player2.set_num_die();
+				if (p_player2.get_num_die() <= 2)  
+				{
+					p_player2.set_pos2(185 + 14 * 45, 60);
+
+					nobom_list2.erase(nobom_list2.begin() + r);
+
+					player_power2.Decrease();
+					player_power2.Render(g_screen);
+					//continue;
 				}
 				else
-				{																									
+				{
 					if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 					{
-						nobom_list1.erase(nobom_list1.begin() + r);
+						nobom_list2.erase(nobom_list2.begin() + r);
 						close();
 						SDL_Quit();
 						return 0;
@@ -176,8 +258,6 @@ int main(int argv, char* arg[]) {
 				}
 			}
 
-
-			
 		}
 
 		//Show game time;
@@ -203,9 +283,7 @@ int main(int argv, char* arg[]) {
 		}
 
 		time_game.Free();  // giải phóng cho đỡ tốn bộ nhớ
-
-
-		//
+		
 		SDL_RenderPresent(g_screen);
 
 

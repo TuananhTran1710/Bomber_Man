@@ -16,6 +16,7 @@ MainObject::MainObject() {
 	input_type.down = 0;
 	input_type.up = 0;
 	soluongdattoida = 1;
+	num_die = 0;
 }
 MainObject :: ~MainObject() {
 

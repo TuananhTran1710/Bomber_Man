@@ -11,7 +11,7 @@
 class MainObject : public BaseObject
 {
 public:
-	MainObject();    
+	MainObject();
 
 	~MainObject();
 	enum WalkType
@@ -27,7 +27,7 @@ public:
 	void Show1(SDL_Renderer* des);             // load 1 frame len man hinh       
 	void Show2(SDL_Renderer* des);
 
-	void HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map & map_data); // xu ly su kien cho nhan vat 1 
+	void HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map& map_data); // xu ly su kien cho nhan vat 1 
 	void HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data);  // xu ly su kien cho nhan vat 2 
 
 	void set_clips();
@@ -43,17 +43,20 @@ public:
 
 	void HandleBullet(SDL_Renderer* des);
 
-	void RemoveBullet(Map & map_data, SDL_Renderer *des);
+	void RemoveBullet(Map& map_data, SDL_Renderer* des);
 
 	void set_pos2(float x, float y);
-	
+
 	int get_width_frame() { return width_frame; }
 	int get_height_frame() { return height_frame; }
 
 	std::vector <std::pair <NoBom, NoBom>> get_no_bom_list() const { return nobom; }
-	
-private:
+	int get_num_die() { return num_die; }
+	void set_num_die() { num_die++; }
+	//PlayerPower get_player_power (){ return power ; }
 
+private:
+	int num_die;
 	std::vector <BulletObject* > bullet_list; // vector chua c�c vi�n dann 
 	float x_val, y_val, x_pos, y_pos;
 
@@ -66,6 +69,7 @@ private:
 	int status;  // xem la WALK_Right hay left , up , down 
 	int soluongdattoida;
 	std::vector< std :: pair <NoBom,NoBom> > nobom;
+	//PlayerPower  power;
 };
 
 
