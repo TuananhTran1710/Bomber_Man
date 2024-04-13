@@ -18,6 +18,7 @@ MainObject::MainObject() {
 	max_bom = 1;
 	bat_tu = false;
 	num_life = 2;
+	mark = 0; 
 }
 MainObject :: ~MainObject() {
 
@@ -438,6 +439,7 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 			map_x = (p_bullet->GetRect().x - 185) / 45;
 			map_y = (p_bullet->GetRect().y -  15) / 45 ;
 			/// 
+			int cnt = 0; // biến tính số ô bị phá hủy để suy ra điểm số nhân vật nhận được
 			if (map_data.tile[map_y][map_x] == 8)  
 			{
 				for (int k = 0; k < 5; k++) 
@@ -446,13 +448,17 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 					{
 						if (!(map_data.tile[map_y + dy[k]][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 3))
 						{
+							if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
+							{
+								cnt++;
+							}
 							map_data.tile[map_y + dy[k]][map_x + dx[k]] = 0;
 						}
 					}
 				}
 			}
 
-			if (map_data.tile[map_y][map_x] == 0)    // là khi đặt bom xong vẫn không di chuyển, người và bom cùng 1 ô 
+			else if(map_data.tile[map_y][map_x] == 0)    // là khi đặt bom xong vẫn không di chuyển, người và bom cùng 1 ô 
 			{
 				for (int k = 0; k < 5; k++)
 				{
@@ -460,11 +466,16 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 					{
 						if (!(map_data.tile[map_y + dy[k]][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 3))
 						{
+							if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
+							{
+								cnt++;
+							}
 							map_data.tile[map_y + dy[k]][map_x + dx[k]] = 0;
 						}
 					}
 				}
 			}
+			mark += cnt * 10;   // mỗi ô phá hủy được cộng thêm 10 điểm
 
 			// xu ly no bom
 						

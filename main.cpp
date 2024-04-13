@@ -91,9 +91,9 @@ int main(int argv, char* arg[]) {
 	num_bom2.SetColor(TextObject::BLACK_TEXT);
 
 	//
-	TextObject mark_game;
-	mark_game.SetColor(TextObject::WHITE_TEXT);
-	UINT mark_value = 0;
+	TextObject mark_game1, mark_game2;
+	mark_game1.SetColor(TextObject::WHITE_TEXT);
+	mark_game2.SetColor(TextObject::WHITE_TEXT);
 
 	ImpTimer time_bat_tu1;  //xu ly thoi gian bất tử cho nhan vat 
 	ImpTimer time_bat_tu2;   
@@ -214,7 +214,13 @@ int main(int argv, char* arg[]) {
 			p_player1.set_bat_tu(false); 
 		}	
 
-		// xử lý text chỉ số sinh mang cho vật 1
+		//xử lý chỉ số điểm cho nhân vật 1 
+		std::string  val_str_mark1 = std::to_string(p_player1.get_mark());
+		mark_game1.SetText(val_str_mark1);
+		mark_game1.LoadFromRenderText(font_time, g_screen);
+		mark_game1.RenderText(g_screen, 40, 122);
+
+		// xử lý text chỉ số sinh mang cho nhân vật 1
 		std::string str_life1 = std:: to_string(p_player1.get_num_life());
 		life1.SetText(str_life1);
 		life1.LoadFromRenderText(font_time, g_screen);
@@ -289,6 +295,12 @@ int main(int argv, char* arg[]) {
 			p_player2.set_bat_tu(false);
 		}
 
+		//xử lý chỉ số điểm cho nhân vật 2 
+		std::string  val_str_mark2 = std::to_string(p_player2.get_mark());
+		mark_game2.SetText(val_str_mark2);
+		mark_game2.LoadFromRenderText(font_time, g_screen);
+		mark_game2.RenderText(g_screen, 40, 242);
+
 		// xử lý text sinh mạng cho nhân vật 2 
 		std::string str_life2 = std::to_string(p_player2.get_num_life());
 		life2.SetText(str_life2);
@@ -328,6 +340,8 @@ int main(int argv, char* arg[]) {
 		life2.Free();
 		num_bom1.Free();
 		num_bom2.Free();
+		mark_game1.Free();
+		mark_game2.Free();
 		SDL_RenderPresent(g_screen);
 
 
