@@ -4,7 +4,6 @@
 #include "MainObject.h"
 #include "ImpTimer.h"
 #include "TextObject.h"
-#include "PlayerPower.h"
 BaseObject g_background;
 TTF_Font *font_time = NULL;
 bool Init() {
@@ -28,7 +27,7 @@ bool Init() {
 		{
 			success = false;
 		}
-		font_time = TTF_OpenFont("font/dlxfont_.ttf", 15);
+		font_time = TTF_OpenFont("font/dlxfont_.ttf", 12);
 		if (font_time == NULL)
 		{
 			success = false;
@@ -61,7 +60,6 @@ int main(int argv, char* arg[]) {
 	g_background.Render(g_screen);
 
 	// xu ly map 
-
 	GameMap map;
 	map.LoadMap("map1/map01.txt");
 	map.LoadTiles(g_screen);
@@ -78,23 +76,27 @@ int main(int argv, char* arg[]) {
 
 	p_player1.set_clips();
 	p_player2.set_clips();
-	//
-	PlayerPower player_power1;   // xử lý hình ảnh sinh mạng 
-	player_power1.Init(g_screen);
-
-	PlayerPower player_power2;  
-	player_power2.Init(g_screen);
 
 	bool quit = 0;
 
 	//Time Text ;
 	TextObject time_game;
 	time_game.SetColor(TextObject::WHITE_TEXT);
-	
+
+	// xử lý text sinh mạng và số bom hiện có
+	TextObject life1, life2,num_bom1, num_bom2;
+	life1.SetColor(TextObject::BLACK_TEXT);
+	life2.SetColor(TextObject::BLACK_TEXT);
+	num_bom1.SetColor(TextObject::BLACK_TEXT);
+	num_bom2.SetColor(TextObject::BLACK_TEXT);
+
 	//
 	TextObject mark_game;
 	mark_game.SetColor(TextObject::WHITE_TEXT);
 	UINT mark_value = 0;
+
+	ImpTimer time_bat_tu1;  //xu ly thoi gian bất tử cho nhan vat 
+	ImpTimer time_bat_tu2;   
 
 	while (!quit)
 	{
@@ -117,10 +119,8 @@ int main(int argv, char* arg[]) {
 
 		map.DrawMap(g_screen);
 
-
 		p_player1.DoPlayer(map_data);    // xử lý di chuyển và va chạm
 		p_player2.DoPlayer(map_data);    // xử lý di chuyển và va chạm
-
 
 		p_player1.HandleBullet(g_screen);  // xử lý đạn 
 		p_player2.HandleBullet(g_screen);  // xử lý đạn 
@@ -130,15 +130,10 @@ int main(int argv, char* arg[]) {
 
 		map.SetMap(map_data);      // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 
-		player_power1.Show(g_screen,60);    //show vi tri load hinh anh trai tym
-		player_power2.Show(g_screen,120);   
-
 		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
 		p_player2.Show2(g_screen);
-
-		
+	
 		// xu ly va cham giua nguoi va bom
-		
 		std::vector <std::pair<NoBom, NoBom>> nobom_list_1 = p_player1.get_no_bom_list();
 		std::vector <std::pair<NoBom, NoBom>> nobom_list_2 = p_player2.get_no_bom_list();
 		std::vector <std::pair<NoBom, NoBom>> nobom_list1, nobom_list2;
@@ -157,7 +152,7 @@ int main(int argv, char* arg[]) {
 		// xử lý va cham bom-nguoi cho nhân vật 1 
 		for (int r = 0; r < nobom_list1.size(); r++)
 		{
-			
+				
 				std::pair<NoBom, NoBom> no_bom = nobom_list1.at(r);
 
 				NoBom doc = nobom_list1.at(r).first;
@@ -179,33 +174,58 @@ int main(int argv, char* arg[]) {
 				bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
 
 				SDL_RenderPresent(g_screen);
-
-				if (bCol_doc || bCol_ngang)
+				if (p_player1.get_bat_tu() == false)
 				{
-					p_player1.set_num_die();
-					if (p_player1.get_num_die() <= 2)
+					if (bCol_doc || bCol_ngang)
 					{
-						p_player1.set_pos2(185, 60);
-
-						nobom_list1.erase(nobom_list1.begin() + r);
-
-						player_power1.Decrease();
-						player_power1.Render(g_screen);
-						//continue;
-					}
-					else
-					{
-						if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+						p_player1.Decrease_num_life();
+						if ( p_player1.get_num_life() >= 1)
 						{
+							p_player1.set_pos2(185, 60);
+
+							time_bat_tu1.start();   //
+
+							p_player1.set_bat_tu(true);
+							
 							nobom_list1.erase(nobom_list1.begin() + r);
-							close();
-							SDL_Quit();
-							return 0;
+
+							//continue;
+						}
+						else
+						{
+							if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+								nobom_list1.erase(nobom_list1.begin() + r);
+								close();
+								SDL_Quit();
+								return 0;
+							}
 						}
 					}
 				}
-			
+
+				if (time_bat_tu1.get_ticks() >= 3000)
+				{
+					p_player1.set_bat_tu(false);
+				}	
 		}
+		if (time_bat_tu1.get_ticks() >= 3000) 
+		{ 
+			p_player1.set_bat_tu(false); 
+		}	
+
+		// xử lý text chỉ số sinh mang cho vật 1
+		std::string str_life1 = std:: to_string(p_player1.get_num_life());
+		life1.SetText(str_life1);
+		life1.LoadFromRenderText(font_time, g_screen);
+		life1.RenderText(g_screen, 135, 39);
+
+		// xu ly text chi so bom cho nhan vat 1 
+		std::string str_num_bom1 = std::to_string(p_player1.get_max_bom());
+		num_bom1.SetText(str_num_bom1);
+		num_bom1.LoadFromRenderText(font_time, g_screen);
+		num_bom1.RenderText(g_screen, 135, 60);
+
 
 		// xử lý va cham bom-nguoi cho nhân vật 2
 		for (int r = 0; r < nobom_list2.size(); r++)
@@ -233,38 +253,59 @@ int main(int argv, char* arg[]) {
 
 			SDL_RenderPresent(g_screen);
 
-			if (bCol_doc || bCol_ngang)
+			if (p_player2.get_bat_tu() == false)
 			{
-				p_player2.set_num_die();
-				if (p_player2.get_num_die() <= 2)  
+				if (bCol_doc || bCol_ngang)
 				{
-					p_player2.set_pos2(185 + 14 * 45, 60);
-
-					nobom_list2.erase(nobom_list2.begin() + r);
-
-					player_power2.Decrease();
-					player_power2.Render(g_screen);
-					//continue;
-				}
-				else
-				{
-					if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+					p_player2.Decrease_num_life();
+					if (p_player2.get_num_life() >= 1)
 					{
+						p_player2.set_pos2(185 + 14 * 45, 60);
+						p_player2.set_bat_tu(true);
+						time_bat_tu2.start();
 						nobom_list2.erase(nobom_list2.begin() + r);
-						close();
-						SDL_Quit();
-						return 0;
+
+						//continue;
+					}
+					else
+					{
+						if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+						{
+							nobom_list2.erase(nobom_list2.begin() + r);
+							close();
+							SDL_Quit();
+							return 0;
+						}
 					}
 				}
 			}
-
+			if (time_bat_tu2.get_ticks() >= 3000)
+			{
+				p_player2.set_bat_tu(false);
+			}
+		}
+		if (time_bat_tu2.get_ticks() >= 3000)
+		{
+			p_player2.set_bat_tu(false);
 		}
 
-		//Show game time;
+		// xử lý text sinh mạng cho nhân vật 2 
+		std::string str_life2 = std::to_string(p_player2.get_num_life());
+		life2.SetText(str_life2);
+		life2.LoadFromRenderText(font_time, g_screen);
+		life2.RenderText(g_screen, 135, 163);
+
+		//xử lý text so bom cho nhân vật 2
+		std::string str_num_bom2 = std::to_string(p_player2.get_max_bom());
+		num_bom2.SetText(str_num_bom2);
+		num_bom2.LoadFromRenderText(font_time, g_screen);
+		num_bom2.RenderText(g_screen, 135, 187);
+
+		//Show game time (xử lý text)
 		time_game.SetColor(TextObject::WHITE_TEXT);
 		std::string str_time = "Time: ";
 		Uint32 time_val = SDL_GetTicks() / 1000;
-		Uint32 val_time = 180 - time_val;
+		Uint32 val_time = 300 - time_val;
 		if (val_time <= 0)        // tuc la het gio nhưng nhan vật vẫn còn mạng
 		{
 			if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
@@ -279,11 +320,14 @@ int main(int argv, char* arg[]) {
 			str_time += str_val;
 			time_game.SetText(str_time);
 			time_game.LoadFromRenderText(font_time, g_screen);
-			time_game.RenderText(g_screen, SCREEN_WIDTH - 200, 15);
+			time_game.RenderText(g_screen, 35, 550);       // set vi tri hien thi text
 		}
 
 		time_game.Free();  // giải phóng cho đỡ tốn bộ nhớ
-		
+		life1.Free();
+		life2.Free();
+		num_bom1.Free();
+		num_bom2.Free();
 		SDL_RenderPresent(g_screen);
 
 

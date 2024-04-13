@@ -15,8 +15,9 @@ MainObject::MainObject() {
 	input_type.right = 0;
 	input_type.down = 0;
 	input_type.up = 0;
-	soluongdattoida = 1;
-	num_die = 0;
+	max_bom = 1;
+	bat_tu = false;
+	num_life = 2;
 }
 MainObject :: ~MainObject() {
 
@@ -209,7 +210,7 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 		if (events.key.keysym.sym == SDLK_SPACE)
 		{
 
-			if (bullet_list.size() < soluongdattoida)
+			if (bullet_list.size() < max_bom)
 			{
 				BulletObject* p_bullet = new BulletObject();
 
@@ -344,7 +345,7 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 		if (events.key.keysym.sym == SDLK_KP_ENTER)
 		{
 
-			if (bullet_list.size() < soluongdattoida)
+			if (bullet_list.size() < max_bom)
 			{
 				BulletObject* p_bullet = new BulletObject();
 
@@ -490,7 +491,7 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 
 	for (int i = 0; i < nobom.size(); i++)
 	{
-		if (Delay_time[i].get_ticks() <= 500)
+		if (Delay_time[i].get_ticks() <= 400)
 		{
 			nobom[i].first.Render(des);
 			nobom[i].second.Render(des);
