@@ -90,14 +90,15 @@ int main(int argv, char* arg[]) {
 	num_bom1.SetColor(TextObject::BLACK_TEXT);
 	num_bom2.SetColor(TextObject::BLACK_TEXT);
 
-	//
-	TextObject mark_game1, mark_game2;
-	mark_game1.SetColor(TextObject::WHITE_TEXT);
-	mark_game2.SetColor(TextObject::WHITE_TEXT);
+	// xử lý text kill 
+	TextObject kill_1, kill_2;
+	kill_1.SetColor(TextObject::BLACK_TEXT);
+	kill_2.SetColor(TextObject::BLACK_TEXT);
+
 
 	ImpTimer time_bat_tu1;  //xu ly thoi gian bất tử cho nhan vat 
 	ImpTimer time_bat_tu2;   
-
+	srand((int)time(0));
 	while (!quit)
 	{
 		
@@ -150,7 +151,7 @@ int main(int argv, char* arg[]) {
 		}
 
 		// xử lý va cham bom-nguoi cho nhân vật 1 
-		for (int r = 0; r < nobom_list1.size(); r++)
+		for (int r = 0; r < nobom_list1.size(); r++)         // if r < nombom_list_1.size() thì là bom của nhân vật 1 
 		{
 				
 				std::pair<NoBom, NoBom> no_bom = nobom_list1.at(r);
@@ -178,29 +179,31 @@ int main(int argv, char* arg[]) {
 				{
 					if (bCol_doc || bCol_ngang)
 					{
-						p_player1.Decrease_num_life();
-						if ( p_player1.get_num_life() >= 1)
+						if (r >= nobom_list_1.size())
 						{
-							p_player1.set_pos2(185, 60);
-
-							time_bat_tu1.start();   //
-
-							p_player1.set_bat_tu(true);
-							
-							nobom_list1.erase(nobom_list1.begin() + r);
-
-							//continue;
-						}
-						else
-						{
-							if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							p_player2.Increase_num_kill();    // tức là bom của 2 đã giết 1 
+							if (p_player2.get_num_kill() == 3)
 							{
-								nobom_list1.erase(nobom_list1.begin() + r);
-								close();
-								SDL_Quit();
-								return 0;
+								if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+								{
+									nobom_list1.erase(nobom_list1.begin() + r);
+									close();
+									SDL_Quit();
+									return 0;
+								}
 							}
 						}
+						p_player1.Decrease_num_life();
+						
+						p_player1.set_pos2(185, 60);
+
+						time_bat_tu1.start();   //
+
+						p_player1.set_bat_tu(true);
+							
+						nobom_list1.erase(nobom_list1.begin() + r);
+
+							//continue;	
 					}
 				}
 
@@ -214,11 +217,13 @@ int main(int argv, char* arg[]) {
 			p_player1.set_bat_tu(false); 
 		}	
 
-		//xử lý chỉ số điểm cho nhân vật 1 
-		std::string  val_str_mark1 = std::to_string(p_player1.get_mark());
-		mark_game1.SetText(val_str_mark1);
-		mark_game1.LoadFromRenderText(font_time, g_screen);
-		mark_game1.RenderText(g_screen, 40, 122);
+		// xử lý chỉ số kill cho nhân vật 2 
+		std::string str_kill_2 = std::to_string(p_player2.get_num_kill());
+		str_kill_2 += "/3";
+		kill_2.SetText(str_kill_2);
+		kill_2.LoadFromRenderText(font_time, g_screen);
+		kill_2.RenderText(g_screen, 60, 243);
+
 
 		// xử lý text chỉ số sinh mang cho nhân vật 1
 		std::string str_life1 = std:: to_string(p_player1.get_num_life());
@@ -263,26 +268,29 @@ int main(int argv, char* arg[]) {
 			{
 				if (bCol_doc || bCol_ngang)
 				{
-					p_player2.Decrease_num_life();
-					if (p_player2.get_num_life() >= 1)
+					if (r < nobom_list_1.size())
 					{
-						p_player2.set_pos2(185 + 14 * 45, 60);
-						p_player2.set_bat_tu(true);
-						time_bat_tu2.start();
-						nobom_list2.erase(nobom_list2.begin() + r);
-
-						//continue;
-					}
-					else
-					{
-						if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+						p_player1.Increase_num_kill();   // tuc la bom cua 1 giet 2 
+						if (p_player2.get_num_kill() == 3)
 						{
-							nobom_list2.erase(nobom_list2.begin() + r);
-							close();
-							SDL_Quit();
-							return 0;
+							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+								nobom_list1.erase(nobom_list1.begin() + r);
+								close();
+								SDL_Quit();
+								return 0;
+							}
 						}
 					}
+					p_player2.Decrease_num_life();
+					
+					p_player2.set_pos2(185 + 14 * 45, 60);
+					p_player2.set_bat_tu(true);
+					time_bat_tu2.start();
+					nobom_list2.erase(nobom_list2.begin() + r);
+
+						//continue;
+					
 				}
 			}
 			if (time_bat_tu2.get_ticks() >= 3000)
@@ -295,11 +303,12 @@ int main(int argv, char* arg[]) {
 			p_player2.set_bat_tu(false);
 		}
 
-		//xử lý chỉ số điểm cho nhân vật 2 
-		std::string  val_str_mark2 = std::to_string(p_player2.get_mark());
-		mark_game2.SetText(val_str_mark2);
-		mark_game2.LoadFromRenderText(font_time, g_screen);
-		mark_game2.RenderText(g_screen, 40, 242);
+		// xử lý chỉ số kill cho nhân vật 2
+		std::string str_kill_1 = std::to_string(p_player1.get_num_kill());
+		str_kill_1 += "/3";
+		kill_1.SetText(str_kill_1);
+		kill_1.LoadFromRenderText(font_time, g_screen);
+		kill_1.RenderText(g_screen, 58, 122);
 
 		// xử lý text sinh mạng cho nhân vật 2 
 		std::string str_life2 = std::to_string(p_player2.get_num_life());
@@ -318,13 +327,33 @@ int main(int argv, char* arg[]) {
 		std::string str_time = "Time: ";
 		Uint32 time_val = SDL_GetTicks() / 1000;
 		Uint32 val_time = 300 - time_val;
-		if (val_time <= 0)        // tuc la het gio nhưng nhan vật vẫn còn mạng
+		if (val_time <= 0)       
 		{
-			if (MessageBox(NULL, L"Game Over", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+			if (p_player1.get_num_kill() > p_player2.get_num_kill())
 			{
-				quit = true;
-				break;
+				if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+				{
+					quit = true;
+					break;
+				}
 			}
+			else if (p_player1.get_num_kill() < p_player2.get_num_kill())
+			{
+				if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+				{
+					quit = true;
+					break;
+				}
+			}
+			else
+			{
+				if (MessageBox(NULL, L"Equal", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+				{
+					quit = true;
+					break;
+				}
+			}
+			
 		}
 		else
 		{
@@ -340,8 +369,8 @@ int main(int argv, char* arg[]) {
 		life2.Free();
 		num_bom1.Free();
 		num_bom2.Free();
-		mark_game1.Free();
-		mark_game2.Free();
+		kill_1.Free();
+		kill_2.Free();
 		SDL_RenderPresent(g_screen);
 
 

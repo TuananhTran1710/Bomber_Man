@@ -14,6 +14,10 @@
 #include <chrono>
 #include <thread>
 #include <utility>
+#include <time.h>
+#include <stdlib.h>
+#include <cstdlib>
+
 static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;

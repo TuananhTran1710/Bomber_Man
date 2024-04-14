@@ -18,7 +18,7 @@ MainObject::MainObject() {
 	max_bom = 1;
 	bat_tu = false;
 	num_life = 2;
-	mark = 0; 
+	num_kill = 0;
 }
 MainObject :: ~MainObject() {
 
@@ -423,10 +423,15 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 	}
 }
 
+int dx[4] = { 1,-1,0,0 };
+int dy[4] = { 0,0,-1,1 };
 
-int dx[5] = { 0,1,-1,0,0 };
-int dy[5] = { 0,0,0,-1,1 };
 
+
+int Rand(int l, int r)
+{
+	return l + rand() % (r - l + 1);
+}
 
 void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 	for (int i = 0; i < bullet_list.size(); i++) {
@@ -439,43 +444,41 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 			map_x = (p_bullet->GetRect().x - 185) / 45;
 			map_y = (p_bullet->GetRect().y -  15) / 45 ;
 			/// 
-			int cnt = 0; // biến tính số ô bị phá hủy để suy ra điểm số nhân vật nhận được
 			if (map_data.tile[map_y][map_x] == 8)  
 			{
-				for (int k = 0; k < 5; k++) 
+				for (int k = 0; k < 4; k++) 
 				{
-					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14)
+					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14 && map_x + dx[k] <= 14)
 					{
 						if (!(map_data.tile[map_y + dy[k]][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 3))
 						{
 							if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
 							{
-								cnt++;
+								map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(9, 14);
 							}
-							map_data.tile[map_y + dy[k]][map_x + dx[k]] = 0;
 						}
 					}
 				}
+				map_data.tile[map_y][map_x] = 0;
 			}
 
 			else if(map_data.tile[map_y][map_x] == 0)    // là khi đặt bom xong vẫn không di chuyển, người và bom cùng 1 ô 
 			{
-				for (int k = 0; k < 5; k++)
+				for (int k = 0; k < 4; k++)
 				{
-					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14)
+					if (map_x + dx[k] >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14 && map_x + dx[k] <= 14)
 					{
 						if (!(map_data.tile[map_y + dy[k]][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 3))
 						{
 							if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
 							{
-								cnt++;
+								map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(9,14);
 							}
-							map_data.tile[map_y + dy[k]][map_x + dx[k]] = 0;
 						}
 					}
 				}
 			}
-			mark += cnt * 10;   // mỗi ô phá hủy được cộng thêm 10 điểm
+		
 
 			// xu ly no bom
 						
@@ -547,6 +550,7 @@ void MainObject::DoPlayer(Map& map_data) {
 
 void MainObject::CheckToMap(Map& map_data) {
 	int map_x1, map_x2, map_y1, map_y2;
+	int val_1, val_2;
 	map_x1 = (x_pos + x_val - 185) / TILE_SIZE;
 	map_x2 = (x_pos + x_val + width_frame - 185 - 1) / TILE_SIZE;
 	map_y1 = (y_pos - 15) / TILE_SIZE;
@@ -555,12 +559,29 @@ void MainObject::CheckToMap(Map& map_data) {
 	{
 		if (x_val > 0) {
 			// 15 la toa do y de set_rect cho cac o vuong dòng 0 
-			if (map_data.tile[map_y1][map_x2] != BLANK_TILE || map_data.tile[map_y2][map_x2] != BLANK_TILE) {
+			val_1 = map_data.tile[map_y1][map_x2];
+			val_2 = map_data.tile[map_y2][map_x2];
+			if (9 <= val_1 && 9 <= val_2)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
+													// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
+			{
+				map_data.tile[map_y1][map_x2] = 0;
+				map_data.tile[map_y2][map_x2] = 0;
+			}
+
+			if ( map_data.tile[map_y1][map_x2] != BLANK_TILE || map_data.tile[map_y2][map_x2] != BLANK_TILE) {
 				x_pos = 185 + TILE_SIZE * (map_x2)-width_frame - 1;
 				x_val = 0;
 			}
 		}
 		else if (x_val < 0) {
+
+			val_1 = map_data.tile[map_y1][map_x1];
+			val_2 = map_data.tile[map_y2][map_x1];
+			if (9 <= val_1 && 9 <= val_2)           		
+			{
+				map_data.tile[map_y1][map_x1] = 0;
+				map_data.tile[map_y2][map_x1] = 0;
+			}
 
 			if (map_data.tile[map_y1][map_x1] != BLANK_TILE || map_data.tile[map_y2][map_x1] != BLANK_TILE) {
 				x_pos = 185 + (map_x1 + 1) * TILE_SIZE;
@@ -573,7 +594,17 @@ void MainObject::CheckToMap(Map& map_data) {
 	map_y1 = (y_pos + y_val - 15) / TILE_SIZE;
 	map_y2 = (y_pos + y_val + height_frame - 15 - 1) / TILE_SIZE;
 	if (map_x1 >= 0 && map_x2 < MAX_MAP_X && map_y1 >= 0 && map_y2 < MAX_MAP_Y) {
-		if (y_val > 0) {
+		if (y_val > 0) 
+		{
+			val_1 = map_data.tile[map_y2][map_x1];
+			val_2 = map_data.tile[map_y2][map_x2];
+			if (9 <= val_1 && 9 <= val_2)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
+				// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
+			{
+				map_data.tile[map_y2][map_x1] = 0;
+				map_data.tile[map_y2][map_x2] = 0;
+			}
+
 			if (map_data.tile[map_y2][map_x1] != BLANK_TILE || map_data.tile[map_y2][map_x2] != BLANK_TILE) {
 				y_pos = 15 + map_y2 * TILE_SIZE - height_frame - 1;
 				y_val = 0;
@@ -582,6 +613,14 @@ void MainObject::CheckToMap(Map& map_data) {
 
 		else if (y_val < 0)
 		{
+			val_1 = map_data.tile[map_y1][map_x1];
+			val_2 = map_data.tile[map_y1][map_x2];
+			if (9 <= val_1 && 9 <= val_2)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
+				// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
+			{
+				map_data.tile[map_y1][map_x1] = 0;
+				map_data.tile[map_y1][map_x2] = 0;
+			}
 			if (map_data.tile[map_y1][map_x1] != BLANK_TILE || map_data.tile[map_y1][map_x2] != BLANK_TILE)
 			{
 				y_pos = (map_y1 + 1) * TILE_SIZE + 15;

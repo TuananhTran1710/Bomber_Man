@@ -65,9 +65,9 @@ public:
 	void Increase_max_bom() { max_bom++; }
 	void Decrease_max_bom() { max_bom--; }
 
-	int get_mark() { return mark; }
-	void set_mark(int x) { mark = x; }
-
+	int get_num_kill() { return num_kill; }
+	void set_num_kill(int x) { num_kill = x; }
+	void Increase_num_kill() { num_kill++; }
 private:
 
 	std::vector <BulletObject* > bullet_list; // vector chua c�c vi�n dann 
@@ -81,9 +81,8 @@ private:
 	int status;  // xem la WALK_Right hay left , up , down 
 	int max_bom;
 	int num_life;
-	int mark; 
 	std::vector< std :: pair <NoBom,NoBom> > nobom;
-	//PlayerPower  power;
+	int num_kill;
 };
 
 
