@@ -19,6 +19,14 @@ MainObject::MainObject() {
 	bat_tu = false;
 	num_life = 2;
 	num_kill = 0;
+	have_lachan = 0;
+
+	num_sung_dan=0;
+	num_sung_lua=0;
+	num_ten_lua=0;
+	num_min=0;
+	num_sung_dien=0;
+
 }
 MainObject :: ~MainObject() {
 
@@ -454,7 +462,7 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 						{
 							if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
 							{
-								map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(9, 14);
+								map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(13, 13);
 							}
 						}
 					}
@@ -472,7 +480,7 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 						{
 							if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
 							{
-								map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(9,14);
+								map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(13,13);
 							}
 						}
 					}
@@ -523,8 +531,49 @@ void MainObject::RemoveBullet(Map& map_data, SDL_Renderer* des ) {
 }
 
 
+// xu ly hinh anh la chan
+void MainObject::init_lachan(SDL_Renderer* des, double x , double y)
+{
+	lachan.LoadImg("map1/lachan.png", des);
+	lachan.SetRect(x, y);
+}
+
+void MainObject::show_la_chan(SDL_Renderer* des)
+{
+	for (int i = 1; i <= this->get_have_lachan();i++)
+	{
+		lachan.Render(des);
+	}
+}
+// check va set tinh nang cho item la chan
+void MainObject::check_item_lachan(int val_1, int val_2)
+{
+	if (val_1 == 13 && val_2 == 13)
+	{
+		this->set_bat_tu(true);
+		have_lachan = 1;
+	}
+}
 
 
+// check va set tinh nang cho item bom 
+void MainObject :: check_item_bom(int val_1, int val_2)
+{
+	if (val_1 == 15 && val_2 == 15)
+	{
+		max_bom++;
+		num_sung_dan = 0;
+		num_sung_lua = 0;
+		num_ten_lua = 0;
+		num_min = 0;
+		num_sung_dien = 0;
+	}
+}
+
+void MainObject::check_item_sung_dan(int val_1, int val_2)
+{
+
+}
 
 // xử lý va chạm và di chuyển 
 
@@ -561,6 +610,9 @@ void MainObject::CheckToMap(Map& map_data) {
 			// 15 la toa do y de set_rect cho cac o vuong dòng 0 
 			val_1 = map_data.tile[map_y1][map_x2];
 			val_2 = map_data.tile[map_y2][map_x2];
+			check_item_lachan(val_1, val_2);
+			check_item_bom(val_1, val_2);
+
 			if (9 <= val_1 && 9 <= val_2)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
 													// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
 			{
@@ -577,6 +629,8 @@ void MainObject::CheckToMap(Map& map_data) {
 
 			val_1 = map_data.tile[map_y1][map_x1];
 			val_2 = map_data.tile[map_y2][map_x1];
+			check_item_lachan(val_1, val_2);
+			check_item_bom(val_1, val_2);
 			if (9 <= val_1 && 9 <= val_2)           		
 			{
 				map_data.tile[map_y1][map_x1] = 0;
@@ -598,6 +652,8 @@ void MainObject::CheckToMap(Map& map_data) {
 		{
 			val_1 = map_data.tile[map_y2][map_x1];
 			val_2 = map_data.tile[map_y2][map_x2];
+			check_item_lachan(val_1, val_2);
+			check_item_bom(val_1, val_2);
 			if (9 <= val_1 && 9 <= val_2)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
 				// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
 			{
@@ -615,6 +671,8 @@ void MainObject::CheckToMap(Map& map_data) {
 		{
 			val_1 = map_data.tile[map_y1][map_x1];
 			val_2 = map_data.tile[map_y1][map_x2];
+			check_item_lachan(val_1, val_2);
+			check_item_bom(val_1, val_2);
 			if (9 <= val_1 && 9 <= val_2)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
 				// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
 			{

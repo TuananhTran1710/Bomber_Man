@@ -4,6 +4,8 @@
 #include "MainObject.h"
 #include "ImpTimer.h"
 #include "TextObject.h"
+
+
 BaseObject g_background;
 TTF_Font *font_time = NULL;
 bool Init() {
@@ -77,6 +79,10 @@ int main(int argv, char* arg[]) {
 	p_player1.set_clips();
 	p_player2.set_clips();
 
+	// xu ly hinh anh la chan
+	p_player1.init_lachan(g_screen, 105 ,80);
+	p_player2.init_lachan(g_screen, 107, 210);
+
 	bool quit = 0;
 
 	//Time Text ;
@@ -98,6 +104,7 @@ int main(int argv, char* arg[]) {
 
 	ImpTimer time_bat_tu1;  //xu ly thoi gian bất tử cho nhan vat 
 	ImpTimer time_bat_tu2;   
+	ImpTimer lachan1,lachan2;
 	srand((int)time(0));
 	while (!quit)
 	{
@@ -123,11 +130,18 @@ int main(int argv, char* arg[]) {
 		p_player1.DoPlayer(map_data);    // xử lý di chuyển và va chạm
 		p_player2.DoPlayer(map_data);    // xử lý di chuyển và va chạm
 
+		// xu ly hinh anh la chan
+		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
+		if (p_player2.get_have_lachan()) p_player2.show_la_chan(g_screen);
+
+
+		//
 		p_player1.HandleBullet(g_screen);  // xử lý đạn 
 		p_player2.HandleBullet(g_screen);  // xử lý đạn 
 
 		p_player1.RemoveBullet(map_data,g_screen);
 		p_player2.RemoveBullet(map_data,g_screen);
+
 
 		map.SetMap(map_data);      // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 
@@ -202,17 +216,27 @@ int main(int argv, char* arg[]) {
 						p_player1.set_bat_tu(true);
 							
 						nobom_list1.erase(nobom_list1.begin() + r);
-
 							//continue;	
 					}
 				}
+				else if (p_player1.get_bat_tu() && p_player1.get_have_lachan() && (bCol_doc || bCol_ngang))
+				{
+					p_player1.set_have_lachan(false);
+					lachan1.start();
+					nobom_list1.erase(nobom_list1.begin() + r);        // sao nó vẫn nhảy vào trường hợp trên sau khi đã xóa ???
 
-				if (time_bat_tu1.get_ticks() >= 3000)
+				}
+				if (lachan1.get_ticks() >= 3000)
+				{
+					p_player1.set_bat_tu(false);
+				}
+
+				if (time_bat_tu1.get_ticks() >= 3000 && p_player1.get_have_lachan() == false)
 				{
 					p_player1.set_bat_tu(false);
 				}	
 		}
-		if (time_bat_tu1.get_ticks() >= 3000) 
+		if (time_bat_tu1.get_ticks() >= 3000 && p_player1.get_have_lachan() ) 
 		{ 
 			p_player1.set_bat_tu(false); 
 		}	
@@ -293,12 +317,24 @@ int main(int argv, char* arg[]) {
 					
 				}
 			}
-			if (time_bat_tu2.get_ticks() >= 3000)
+			else if (p_player2.get_bat_tu() && p_player2.get_have_lachan() && (bCol_doc || bCol_ngang))
+			{
+				p_player2.set_have_lachan(false);
+				lachan2.start();
+				nobom_list2.erase(nobom_list2.begin() + r);       
+
+			}
+			if (lachan2.get_ticks() >= 3000)
 			{
 				p_player2.set_bat_tu(false);
 			}
+
+			if (time_bat_tu2.get_ticks() >= 3000 && p_player2.get_have_lachan() == false)
+			{
+				p_player1.set_bat_tu(false);
+			}
 		}
-		if (time_bat_tu2.get_ticks() >= 3000)
+		if (time_bat_tu2.get_ticks() >= 3000 && p_player2.get_have_lachan() == false)
 		{
 			p_player2.set_bat_tu(false);
 		}

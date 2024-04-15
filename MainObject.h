@@ -68,6 +68,33 @@ public:
 	int get_num_kill() { return num_kill; }
 	void set_num_kill(int x) { num_kill = x; }
 	void Increase_num_kill() { num_kill++; }
+
+	void check_item_lachan( int val_1 ,int val_2);
+	void check_item_bom(int val_1, int val_2);
+	void check_item_sung_dan(int val_1, int val_2);
+
+	int get_have_lachan() { return have_lachan; }
+	void set_have_lachan(int x) { have_lachan = x; }
+
+	// xử lý hình ảnh thông tin lá chắn
+	void init_lachan(SDL_Renderer* screen , double x, double y);
+	void show_la_chan(SDL_Renderer* screen);
+
+	int get_num_sung_dien() { return num_sung_dien; }
+	void set_num_sung_dien(int x) { num_sung_dien = x; }
+
+	int get_num_sung_dan() { return num_sung_dan; }
+	void set_num_sung_dan(int x) { num_sung_dan = x; }
+
+	int get_num_sung_lua() { return num_sung_lua; }
+	void set_num_sung_lua(int x) { num_sung_lua = x; }
+
+	int get_num_min() { return num_min; }
+	void set_num_min(int x) { num_min = x; }
+
+	int get_num_ten_lua() { return num_ten_lua; }
+	void set_num_ten_lua(int x) { num_ten_lua = x; }
+	
 private:
 
 	std::vector <BulletObject* > bullet_list; // vector chua c�c vi�n dann 
@@ -83,6 +110,15 @@ private:
 	int num_life;
 	std::vector< std :: pair <NoBom,NoBom> > nobom;
 	int num_kill;
+	int have_lachan;
+
+	int num_sung_dan;
+	int num_sung_lua;
+	int num_ten_lua;
+	int num_min;
+	int num_sung_dien;
+
+	BaseObject lachan, sung_dan, sung_lua, ten_lua, min_, sung_dien;
 };
 
 
