@@ -82,6 +82,10 @@ int main(int argv, char* arg[]) {
 	// xu ly hinh anh la chan
 	p_player1.init_lachan(g_screen, 105 ,80);
 	p_player2.init_lachan(g_screen, 107, 210);
+	// xu ly hinh anh min
+	p_player1.init_min(g_screen, 105, 103);
+	p_player2.init_min(g_screen, 105, 222);
+
 
 	bool quit = 0;
 
@@ -105,6 +109,7 @@ int main(int argv, char* arg[]) {
 	ImpTimer time_bat_tu1;  //xu ly thoi gian bất tử cho nhan vat 
 	ImpTimer time_bat_tu2;   
 	ImpTimer lachan1,lachan2;
+
 	srand((int)time(0));
 	while (!quit)
 	{
@@ -133,9 +138,16 @@ int main(int argv, char* arg[]) {
 		// xu ly hinh anh la chan
 		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
 		if (p_player2.get_have_lachan()) p_player2.show_la_chan(g_screen);
-
-
+		// set bất tử sau khi ăn lá chắn
+		if (p_player1.get_have_lachan()) p_player1.set_bat_tu(true);
+		if (p_player2.get_have_lachan()) p_player2.set_bat_tu(true);
 		//
+
+		// xu ly hinh anh mìn 
+		if (p_player1.get_num_min()) p_player1.show_min(g_screen);
+		if (p_player2.get_num_min()) p_player2.show_min(g_screen);
+
+
 		p_player1.HandleBullet(g_screen);  // xử lý đạn 
 		p_player2.HandleBullet(g_screen);  // xử lý đạn 
 
@@ -167,76 +179,63 @@ int main(int argv, char* arg[]) {
 		// xử lý va cham bom-nguoi cho nhân vật 1 
 		for (int r = 0; r < nobom_list1.size(); r++)         // if r < nombom_list_1.size() thì là bom của nhân vật 1 
 		{
-				
-				std::pair<NoBom, NoBom> no_bom = nobom_list1.at(r);
 
-				NoBom doc = nobom_list1.at(r).first;
-				NoBom ngang = nobom_list1.at(r).second;
+			std::pair<NoBom, NoBom> no_bom = nobom_list1.at(r);
 
-				SDL_Rect tRect;
+			NoBom doc = nobom_list1.at(r).first;
+			NoBom ngang = nobom_list1.at(r).second;
 
-				tRect.x = p_player1.GetRect().x;
-				tRect.y = p_player1.GetRect().y;
-				tRect.w = p_player1.get_width_frame();
-				tRect.h = p_player1.get_height_frame();
+			SDL_Rect tRect;
+
+			tRect.x = p_player1.GetRect().x;
+			tRect.y = p_player1.GetRect().y;
+			tRect.w = p_player1.get_width_frame();
+			tRect.h = p_player1.get_height_frame();
 
 
 
-				SDL_Rect bRect_doc = doc.GetRect();
-				SDL_Rect bRect_ngang = ngang.GetRect();
+			SDL_Rect bRect_doc = doc.GetRect();
+			SDL_Rect bRect_ngang = ngang.GetRect();
 
-				bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
-				bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
-
-				SDL_RenderPresent(g_screen);
-				if (p_player1.get_bat_tu() == false)
+			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
+			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
+			SDL_RenderPresent(g_screen);
+			if (p_player1.get_bat_tu() == false)
+			{
+				if (bCol_doc || bCol_ngang)
 				{
-					if (bCol_doc || bCol_ngang)
+					if (r >= nobom_list_1.size())
 					{
-						if (r >= nobom_list_1.size())
+						p_player2.Increase_num_kill();    // tức là bom của 2 đã giết 1 
+						if (p_player2.get_num_kill() == 3)
 						{
-							p_player2.Increase_num_kill();    // tức là bom của 2 đã giết 1 
-							if (p_player2.get_num_kill() == 3)
+							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
-								if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-								{
-									nobom_list1.erase(nobom_list1.begin() + r);
-									close();
-									SDL_Quit();
-									return 0;
-								}
+								nobom_list1.erase(nobom_list1.begin() + r);
+								close();
+								SDL_Quit();
+								return 0;
 							}
 						}
-						p_player1.Decrease_num_life();
-						
-						p_player1.set_pos2(185, 60);
-
-						time_bat_tu1.start();   //
-
-						p_player1.set_bat_tu(true);
-							
-						nobom_list1.erase(nobom_list1.begin() + r);
-							//continue;	
 					}
-				}
-				else if (p_player1.get_bat_tu() && p_player1.get_have_lachan() && (bCol_doc || bCol_ngang))
-				{
-					p_player1.set_have_lachan(false);
-					lachan1.start();
-					nobom_list1.erase(nobom_list1.begin() + r);        // sao nó vẫn nhảy vào trường hợp trên sau khi đã xóa ???
+					p_player1.Decrease_num_life();
 
-				}
-				if (lachan1.get_ticks() >= 3000)
-				{
-					p_player1.set_bat_tu(false);
-				}
+					p_player1.set_pos2(185, 60);
 
-				if (time_bat_tu1.get_ticks() >= 3000 && p_player1.get_have_lachan() == false)
-				{
-					p_player1.set_bat_tu(false);
-				}	
+					time_bat_tu1.start();   //
+
+					p_player1.set_bat_tu(true);
+					//continue;	
+				}
+			}
+			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan()){
+				p_player1.set_have_lachan(0); 
+				p_player1.set_bat_tu(true);
+				time_bat_tu1.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
+			}
 		}
-		if (time_bat_tu1.get_ticks() >= 3000 && p_player1.get_have_lachan() ) 
+		
+		if (time_bat_tu1.get_ticks() >= 2000) 
 		{ 
 			p_player1.set_bat_tu(false); 
 		}	
@@ -267,7 +266,6 @@ int main(int argv, char* arg[]) {
 		{
 
 			std::pair<NoBom, NoBom> no_bom = nobom_list2.at(r);
-
 			NoBom doc = nobom_list2.at(r).first;
 			NoBom ngang = nobom_list2.at(r).second;
 
@@ -317,24 +315,13 @@ int main(int argv, char* arg[]) {
 					
 				}
 			}
-			else if (p_player2.get_bat_tu() && p_player2.get_have_lachan() && (bCol_doc || bCol_ngang))
-			{
-				p_player2.set_have_lachan(false);
-				lachan2.start();
-				nobom_list2.erase(nobom_list2.begin() + r);       
-
-			}
-			if (lachan2.get_ticks() >= 3000)
-			{
-				p_player2.set_bat_tu(false);
-			}
-
-			if (time_bat_tu2.get_ticks() >= 3000 && p_player2.get_have_lachan() == false)
-			{
-				p_player1.set_bat_tu(false);
+			if ((bCol_doc || bCol_ngang) && p_player2.get_have_lachan()) {
+				p_player2.set_have_lachan(0);
+				p_player2.set_bat_tu(true);
+				time_bat_tu2.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
 			}
 		}
-		if (time_bat_tu2.get_ticks() >= 3000 && p_player2.get_have_lachan() == false)
+		if (time_bat_tu2.get_ticks() >= 2000)
 		{
 			p_player2.set_bat_tu(false);
 		}

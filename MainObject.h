@@ -71,7 +71,7 @@ public:
 
 	void check_item_lachan( int val_1 ,int val_2);
 	void check_item_bom(int val_1, int val_2);
-	void check_item_sung_dan(int val_1, int val_2);
+	void check_item_min(int val_1, int val_2);
 
 	int get_have_lachan() { return have_lachan; }
 	void set_have_lachan(int x) { have_lachan = x; }
@@ -79,6 +79,9 @@ public:
 	// xử lý hình ảnh thông tin lá chắn
 	void init_lachan(SDL_Renderer* screen , double x, double y);
 	void show_la_chan(SDL_Renderer* screen);
+
+	void init_min(SDL_Renderer* screen, double x, double y);
+	void show_min(SDL_Renderer* screen);
 
 	int get_num_sung_dien() { return num_sung_dien; }
 	void set_num_sung_dien(int x) { num_sung_dien = x; }
@@ -94,6 +97,8 @@ public:
 
 	int get_num_ten_lua() { return num_ten_lua; }
 	void set_num_ten_lua(int x) { num_ten_lua = x; }
+
+	
 	
 private:
 
