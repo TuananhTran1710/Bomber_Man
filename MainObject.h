@@ -32,18 +32,15 @@ public:
 
 	void set_clips();
 
-	void DoPlayer(Map& map_data);
-	void CheckToMap(Map& map_data);
+	void DoPlayer(Map& map_data, SDL_Renderer*des);
+	void CheckToMap(Map& map_data, SDL_Renderer *des);
 
-	void set_bullet_list(std::vector <BulletObject*> Bullet_list) {
-		bullet_list = Bullet_list;
-	}
-
-	std::vector <BulletObject*>  get_bullet_list() const { return bullet_list; }
 
 	void HandleBullet(SDL_Renderer* des);
 
-	void RemoveBullet(Map& map_data, SDL_Renderer* des);
+	void RemoveBullet_Bom(Map& map_data, SDL_Renderer* des);
+	void RemoveBullet_Min(Map& map_data, SDL_Renderer* des);
+
 
 	void set_pos2(float x, float y);
 
@@ -51,6 +48,8 @@ public:
 	int get_height_frame() { return height_frame; }
 
 	std::vector <std::pair <NoBom, NoBom>> get_no_bom_list() const { return nobom; }
+	std::vector <std::pair <NoBom, NoBom>> get_no_min_list() const { return nomin; }
+
 
 	void set_bat_tu(bool con) { bat_tu = con; }
 	bool get_bat_tu() { return bat_tu; }
@@ -98,11 +97,17 @@ public:
 	int get_num_ten_lua() { return num_ten_lua; }
 	void set_num_ten_lua(int x) { num_ten_lua = x; }
 
-	
+	void check_col_min(int val_1, int val_2, Map& map_data, SDL_Renderer* des);
+
+	void set_bullet_list(std::vector <BulletObject*> Bullet_list) {	bullet_list_bom = Bullet_list; }
+	std::vector <BulletObject*>  get_bullet_list_bom() const { return bullet_list_bom; }
+
+	std::vector <BulletObject*>  get_bullet_list_min() const { return bullet_list_min; }
 	
 private:
 
-	std::vector <BulletObject* > bullet_list; // vector chua c�c vi�n dann 
+	std::vector <BulletObject* > bullet_list_min;
+	std::vector <BulletObject* > bullet_list_bom; //vector chua c�c vi�n dann 
 	float x_val, y_val, x_pos, y_pos;
 
 	int width_frame, height_frame;  // luu w, h cua moi frame 
@@ -113,7 +118,10 @@ private:
 	int status;  // xem la WALK_Right hay left , up , down 
 	int max_bom;
 	int num_life;
+
 	std::vector< std :: pair <NoBom,NoBom> > nobom;
+	std::vector< std::pair <NoBom, NoBom>> nomin;
+
 	int num_kill;
 	int have_lachan;
 
@@ -123,6 +131,7 @@ private:
 	int num_min;
 	int num_sung_dien;
 
+	int type_bullet;
 	BaseObject lachan, sung_dan, sung_lua, ten_lua, min_, sung_dien;
 };
 

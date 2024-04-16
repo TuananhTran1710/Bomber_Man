@@ -132,8 +132,8 @@ int main(int argv, char* arg[]) {
 
 		map.DrawMap(g_screen);
 
-		p_player1.DoPlayer(map_data);    // xử lý di chuyển và va chạm
-		p_player2.DoPlayer(map_data);    // xử lý di chuyển và va chạm
+		p_player1.DoPlayer(map_data,g_screen);    // xử lý di chuyển và va chạm
+		p_player2.DoPlayer(map_data,g_screen);    // xử lý di chuyển và va chạm
 
 		// xu ly hinh anh la chan
 		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
@@ -143,7 +143,7 @@ int main(int argv, char* arg[]) {
 		if (p_player2.get_have_lachan()) p_player2.set_bat_tu(true);
 		//
 
-		// xu ly hinh anh mìn 
+		// xu ly hinh anh mìn ở bàng tổng hợp
 		if (p_player1.get_num_min()) p_player1.show_min(g_screen);
 		if (p_player2.get_num_min()) p_player2.show_min(g_screen);
 
@@ -151,8 +151,8 @@ int main(int argv, char* arg[]) {
 		p_player1.HandleBullet(g_screen);  // xử lý đạn 
 		p_player2.HandleBullet(g_screen);  // xử lý đạn 
 
-		p_player1.RemoveBullet(map_data,g_screen);
-		p_player2.RemoveBullet(map_data,g_screen);
+		p_player1.RemoveBullet_Bom(map_data,g_screen);
+		p_player2.RemoveBullet_Bom(map_data,g_screen);
 
 
 		map.SetMap(map_data);      // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
