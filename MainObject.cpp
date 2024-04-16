@@ -461,6 +461,52 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 		}
 	}
 
+	if (type_bullet == 11)
+	{
+		if (events.type == SDL_KEYDOWN)
+		{
+			if (events.key.keysym.sym == SDLK_KP_ENTER)
+			{
+				if (bullet_list_min.size() < num_min)
+				{
+					BulletObject* p_bullet = new BulletObject();
+
+					p_bullet->set_bullet_type(type_bullet);
+					p_bullet->LoadImgBullet(screen);
+
+					if (status == WALK_LEFT) {
+
+						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
+
+					}
+
+					else if (status == WALK_RIGHT)
+					{
+						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
+
+					}
+					else if (status == WALK_UP)
+					{
+
+						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
+
+
+					}
+					else if (status == WALK_DOWN)
+					{
+						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
+					}
+
+					p_bullet->set_is_move(true); // chuyển sang true tức là cho phép đạn bắn ra 
+					// nhu vậy phần trên đã khởi tạo xong viên đạn 
+
+					bullet_list_min.push_back(p_bullet); // nạp đạn sẵn vào băng, chỉ ấn là đạn sẽ xuất hiện
+
+				}
+			}
+		}
+	}
+
 	for (int i = 0; i < bullet_list_bom.size(); i++) 
 	{
 		BulletObject* p_bullet = bullet_list_bom.at(i);
@@ -474,7 +520,18 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 			map_data.tile[map_y][map_x] = 8;			// đến khi nào người ra hẳn ngoài thì mới set cho ô có bom thành ô không đi được 
 		}
 	}
-
+	for (int i = 0; i < bullet_list_min.size(); i++) {
+		BulletObject* p_bullet = bullet_list_min.at(i);
+		int map_x; int map_y;
+		map_x = (p_bullet->GetRect().x - 185) / 45;
+		map_y = (p_bullet->GetRect().y - 15) / 45;
+		/// 
+		int x = (floor((this->x_pos - 185) / 45));
+		int y = (floor((this->y_pos - 15) / 45));
+		if (!(x == map_x && y == map_y)) {             // để cho sau khi đặt min ( min và người trùng 1 ô) thì người vẫn có thể di chuyển trong ô đó mà không bị nổ
+			map_data.tile[map_y][map_x] = 20;			// đến khi nào người ra hẳn ngoài thì mới set cho ô có mìn và khi đi vào thì bị nổ 
+		}
+	}
 }
 
 

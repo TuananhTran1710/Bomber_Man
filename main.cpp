@@ -108,9 +108,9 @@ int main(int argv, char* arg[]) {
 
 	ImpTimer time_bat_tu1;  //xu ly thoi gian bất tử cho nhan vat 
 	ImpTimer time_bat_tu2;   
-	ImpTimer lachan1,lachan2;
 
 	srand((int)time(0));
+
 	while (!quit)
 	{
 		
@@ -165,6 +165,7 @@ int main(int argv, char* arg[]) {
 		std::vector <std::pair<NoBom, NoBom>> nobom_list_2 = p_player2.get_no_bom_list();
 		std::vector <std::pair<NoBom, NoBom>> nobom_list1, nobom_list2;
 
+
 		for (int i = 0; i < nobom_list_1.size(); i++)
 		{
 			nobom_list1.push_back(nobom_list_1[i]);
@@ -176,14 +177,44 @@ int main(int argv, char* arg[]) {
 			nobom_list2.push_back(nobom_list_2[i]);
 		}
 
-		// xử lý va cham bom-nguoi cho nhân vật 1 
-		for (int r = 0; r < nobom_list1.size(); r++)         // if r < nombom_list_1.size() thì là bom của nhân vật 1 
+		// xu ly va cham giữa người - mìn
+		std::vector <std::pair<NoBom, NoBom>> nomin_list_1 = p_player1.get_no_min_list();
+		std::vector <std::pair<NoBom, NoBom>> nomin_list_2 = p_player2.get_no_min_list();
+		std::vector <std::pair<NoBom, NoBom>> nomin_list1, nomin_list2;
+		std::vector < std::pair<NoBom, NoBom>> no1, no2;
+
+		for (int i = 0; i < nomin_list_1.size(); i++)
 		{
+			nomin_list1.push_back(nomin_list_1[i]);
+			nomin_list2.push_back(nomin_list_1[i]);
+		}
+		for (int i = 0; i < nomin_list_2.size(); i++)
+		{
+			nomin_list1.push_back(nomin_list_2[i]);
+			nomin_list2.push_back(nomin_list_2[i]);
+		}
+		
+		// lấy ra list nổ chung gồm cả nổ bom và mìn để xử lý cho tiện
+		for (int i = 0; i < nomin_list1.size() + nobom_list1.size(); i++)
+		{
+			if (i < nobom_list1.size()) no1.push_back(nobom_list1[i]);
+			else no1.push_back(nomin_list1[i - nobom_list1.size()]);
+		}
 
-			std::pair<NoBom, NoBom> no_bom = nobom_list1.at(r);
+		for (int i = 0; i < nomin_list2.size() + nobom_list2.size(); i++)
+		{
+			if (i < nobom_list2.size()) no2.push_back( nobom_list2[i] );
+			else no2.push_back(nomin_list2[ i - nobom_list2.size() ]);
+		}
 
-			NoBom doc = nobom_list1.at(r).first;
-			NoBom ngang = nobom_list1.at(r).second;
+		// xử lý va chạm giữa nhân vật 1 và nổ bom && nổ mìn 
+
+		for (int r = 0; r < no1.size(); r++)       		{
+
+			std::pair<NoBom, NoBom> no_bom = no1.at(r);
+
+			NoBom doc = no1.at(r).first;
+			NoBom ngang = no1.at(r).second;
 
 			SDL_Rect tRect;
 
@@ -204,14 +235,14 @@ int main(int argv, char* arg[]) {
 			{
 				if (bCol_doc || bCol_ngang)
 				{
-					if (r >= nobom_list_1.size())
+					if ( (r >= nobom_list_1.size() && r < nobom_list1.size() ) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size()) )    // tức là bom (mìn) của 2 đã giết 1 
 					{
-						p_player2.Increase_num_kill();    // tức là bom của 2 đã giết 1 
+						p_player2.Increase_num_kill();    
 						if (p_player2.get_num_kill() == 3)
 						{
 							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
-								nobom_list1.erase(nobom_list1.begin() + r);
+								no1.erase(no1.begin() + r);
 								close();
 								SDL_Quit();
 								return 0;
@@ -228,18 +259,19 @@ int main(int argv, char* arg[]) {
 					//continue;	
 				}
 			}
-			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan()){
-				p_player1.set_have_lachan(0); 
+			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan()) {
+				p_player1.set_have_lachan(0);
 				p_player1.set_bat_tu(true);
 				time_bat_tu1.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
 			}
+
+
 		}
-		
 		if (time_bat_tu1.get_ticks() >= 2000) 
 		{ 
 			p_player1.set_bat_tu(false); 
 		}	
-
+		
 		// xử lý chỉ số kill cho nhân vật 2 
 		std::string str_kill_2 = std::to_string(p_player2.get_num_kill());
 		str_kill_2 += "/3";
@@ -261,13 +293,14 @@ int main(int argv, char* arg[]) {
 		num_bom1.RenderText(g_screen, 135, 60);
 
 
-		// xử lý va cham bom-nguoi cho nhân vật 2
-		for (int r = 0; r < nobom_list2.size(); r++)
+		// xử lý va chạm giữa nhân vật 2 và nổ bom & mìn
+		for (int r = 0; r < no2.size(); r++)     
 		{
 
-			std::pair<NoBom, NoBom> no_bom = nobom_list2.at(r);
-			NoBom doc = nobom_list2.at(r).first;
-			NoBom ngang = nobom_list2.at(r).second;
+			std::pair<NoBom, NoBom> no_bom = no2.at(r);
+
+			NoBom doc = no2.at(r).first;
+			NoBom ngang = no2.at(r).second;
 
 			SDL_Rect tRect;
 
@@ -283,21 +316,19 @@ int main(int argv, char* arg[]) {
 
 			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
 			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
-
 			SDL_RenderPresent(g_screen);
-
 			if (p_player2.get_bat_tu() == false)
 			{
 				if (bCol_doc || bCol_ngang)
 				{
-					if (r < nobom_list_1.size())
+					if ( ! ( (r >= nobom_list_1.size() && r < nobom_list1.size()) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size() ) ) )    // tức là bom (mìn) của 1 đã giết 2
 					{
-						p_player1.Increase_num_kill();   // tuc la bom cua 1 giet 2 
-						if (p_player2.get_num_kill() == 3)
+						p_player1.Increase_num_kill();					
+						if (p_player1.get_num_kill() == 3)
 						{
-							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
-								nobom_list1.erase(nobom_list1.begin() + r);
+								no2.erase(no2.begin() + r);
 								close();
 								SDL_Quit();
 								return 0;
@@ -305,14 +336,13 @@ int main(int argv, char* arg[]) {
 						}
 					}
 					p_player2.Decrease_num_life();
-					
-					p_player2.set_pos2(185 + 14 * 45, 60);
-					p_player2.set_bat_tu(true);
-					time_bat_tu2.start();
-					nobom_list2.erase(nobom_list2.begin() + r);
 
-						//continue;
-					
+					p_player2.set_pos2(185 + 45 * 14, 60);
+
+					time_bat_tu2.start();   //
+
+					p_player2.set_bat_tu(true);
+					//continue;	
 				}
 			}
 			if ((bCol_doc || bCol_ngang) && p_player2.get_have_lachan()) {
@@ -320,6 +350,8 @@ int main(int argv, char* arg[]) {
 				p_player2.set_bat_tu(true);
 				time_bat_tu2.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
 			}
+
+
 		}
 		if (time_bat_tu2.get_ticks() >= 2000)
 		{
