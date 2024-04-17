@@ -41,14 +41,43 @@ public:
 		BOM = 15,
 	};
 
+	enum BulletDir
+	{
+		DIR_RIGHT = 30,
+		DIR_LEFT = 31,
+		DIR_UP = 32,
+		DIR_DOWN = 33,
+	};
+
 	void LoadImgBullet(SDL_Renderer* des);
 
+
+	void set_x_val(const int& x) { x_val = x; }
+	int get_x_val() { return x_val; }
+
+	void set_y_val(const int& x) { y_val = x; }
+	int get_y_val() { return y_val; }
+
+	void HandleMove(const int& x_border, const int& y_border);
+
+	void set_bullet_dir(const int& x) { bullet_dir = x; }
+	int get_bullet_dir() { return bullet_dir; }
+
+	int get_lim_dis() { return lim_dis; }
+	void set_lim_dis(int x) { lim_dis = x; }
+
+	bool get_checked_col() { return checked_col; }
+	void set_checked_col(bool x) { checked_col = x; }
 private:
 	NoBom doc;
 	NoBom ngang;
 	bool is_move;
 	int bullet_time;
 	int bullet_type;
+	int bullet_dir;
+	int x_val, y_val;
+	bool checked_col;
+	int lim_dis;
 };
 
 

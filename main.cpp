@@ -86,6 +86,9 @@ int main(int argv, char* arg[]) {
 	p_player1.init_min(g_screen, 105, 103);
 	p_player2.init_min(g_screen, 105, 222);
 
+	// xử lý hình ảnh súng đạn
+	p_player1.init_sung_dan(g_screen, 105, 103);
+	p_player2.init_sung_dan(g_screen, 105, 222);
 
 	bool quit = 0;
 
@@ -135,7 +138,7 @@ int main(int argv, char* arg[]) {
 		p_player1.DoPlayer(map_data,g_screen);    // xử lý di chuyển và va chạm
 		p_player2.DoPlayer(map_data,g_screen);    // xử lý di chuyển và va chạm
 
-		// xu ly hinh anh la chan
+		// xu ly hinh anh la chan ở bảng tồng hợp 
 		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
 		if (p_player2.get_have_lachan()) p_player2.show_la_chan(g_screen);
 		// set bất tử sau khi ăn lá chắn
@@ -147,10 +150,17 @@ int main(int argv, char* arg[]) {
 		if (p_player1.get_num_min()) p_player1.show_min(g_screen);
 		if (p_player2.get_num_min()) p_player2.show_min(g_screen);
 
+		// xử lý hình ảnh súng đạn ở bảng tổng hợp
+		if (p_player1.get_num_sung_dan()) p_player1.show_sung_dan(g_screen);
+		if (p_player2.get_num_sung_dan()) p_player2.show_sung_dan(g_screen);
 
-		p_player1.HandleBullet(g_screen);  // xử lý đạn 
-		p_player2.HandleBullet(g_screen);  // xử lý đạn 
+		p_player1.HandleBullet_Dan(g_screen); // xu ly dan
+		p_player2.HandleBullet_Dan(g_screen);
 
+
+		p_player1.HandleBullet(g_screen);  // xử lý bom & min 
+		p_player2.HandleBullet(g_screen);  // xử lý bom & min
+		 
 		p_player1.RemoveBullet_Bom(map_data,g_screen);
 		p_player2.RemoveBullet_Bom(map_data,g_screen);
 
@@ -209,7 +219,7 @@ int main(int argv, char* arg[]) {
 
 		// xử lý va chạm giữa nhân vật 1 và nổ bom && nổ mìn 
 
-		for (int r = 0; r < no1.size(); r++)       		{
+		for (int r = 0; r < no1.size(); r++){
 
 			std::pair<NoBom, NoBom> no_bom = no1.at(r);
 
@@ -230,7 +240,8 @@ int main(int argv, char* arg[]) {
 
 			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
 			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
-			SDL_RenderPresent(g_screen);
+			//SDL_RenderPresent(g_screen);
+
 			if (p_player1.get_bat_tu() == false)
 			{
 				if (bCol_doc || bCol_ngang)
@@ -271,7 +282,12 @@ int main(int argv, char* arg[]) {
 		{ 
 			p_player1.set_bat_tu(false); 
 		}	
-		
+	
+
+		// xử lý va chạm giữa đạn của 2 với nhân vật 1 
+		p_player1.check_col_sungdan(map_data);
+		map.SetMap(map_data);
+
 		// xử lý chỉ số kill cho nhân vật 2 
 		std::string str_kill_2 = std::to_string(p_player2.get_num_kill());
 		str_kill_2 += "/3";
@@ -316,7 +332,7 @@ int main(int argv, char* arg[]) {
 
 			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
 			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
-			SDL_RenderPresent(g_screen);
+			//SDL_RenderPresent(g_screen);
 			if (p_player2.get_bat_tu() == false)
 			{
 				if (bCol_doc || bCol_ngang)

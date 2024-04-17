@@ -82,6 +82,10 @@ public:
 	void init_min(SDL_Renderer* screen, double x, double y);
 	void show_min(SDL_Renderer* screen);
 
+	void init_sung_dan(SDL_Renderer* screen, double x, double y);
+	void show_sung_dan(SDL_Renderer* screen);
+
+
 	int get_num_sung_dien() { return num_sung_dien; }
 	void set_num_sung_dien(int x) { num_sung_dien = x; }
 
@@ -104,8 +108,15 @@ public:
 
 	std::vector <BulletObject*>  get_bullet_list_min() const { return bullet_list_min; }
 	
-private:
 
+	void check_item_sungdan(int val_1, int val_2);
+
+	void HandleBullet_Dan(SDL_Renderer* des);
+
+
+	void check_col_sungdan(Map& map_data);
+private:
+	std::vector <BulletObject* > bullet_list;
 	std::vector <BulletObject* > bullet_list_min;
 	std::vector <BulletObject* > bullet_list_bom; //vector chua c�c vi�n dann 
 	float x_val, y_val, x_pos, y_pos;

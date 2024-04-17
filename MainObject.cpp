@@ -16,14 +16,14 @@ MainObject::MainObject() {
 	input_type.right = 0;
 	input_type.down = 0;
 	input_type.up = 0;
-	max_bom = 2;
+	max_bom = 0;
 	bat_tu = false;
 	num_life = 2;
 	num_kill = 0;
 	have_lachan = 0;
-	type_bullet = 15;
+	type_bullet = 10;
 
-	num_sung_dan=0;
+	num_sung_dan=1;
 	num_sung_lua=0;
 	num_ten_lua=0;
 	num_min=0;
@@ -227,33 +227,7 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 
 					p_bullet->set_bullet_type(type_bullet);
 					p_bullet->LoadImgBullet(screen);
-					if (status == WALK_LEFT) {
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2); // rect.x , rect.y la vi tri set anh cua nhan vat 
-
-					}
-
-					else if (status == WALK_RIGHT)
-					{
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-
-					}
-					else if (status == WALK_UP)
-					{
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-
-					}
-					else if (status == WALK_DOWN)
-					{
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-
-					}
-
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->set_is_move(true); // chuyển sang true tức là cho phép đạn bắn ra 
 					// nhu vậy phần trên đã khởi tạo xong viên đạn 
 
@@ -277,30 +251,7 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 
 					p_bullet->set_bullet_type(type_bullet);
 					p_bullet->LoadImgBullet(screen);
-
-					if (status == WALK_LEFT) {
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-					}
-
-					else if (status == WALK_RIGHT)
-					{
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-					}
-					else if (status == WALK_UP)
-					{
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-
-					}
-					else if (status == WALK_DOWN)
-					{
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-					}
-
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->set_is_move(true); // chuyển sang true tức là cho phép đạn bắn ra 
 					// nhu vậy phần trên đã khởi tạo xong viên đạn 
 
@@ -310,7 +261,56 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 			}
 		}
 	}
-		
+	else if (type_bullet == 10)
+	{
+		if (events.type = SDL_KEYDOWN)
+		{
+			if (events.key.keysym.sym == SDLK_SPACE)
+			{
+				if (bullet_list.size() < num_sung_dan)
+				{
+					BulletObject* p_bullet = new BulletObject();
+
+					p_bullet->set_bullet_type(type_bullet);
+					p_bullet->LoadImgBullet(screen);
+
+					if (status == WALK_LEFT)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+						p_bullet->SetRect(this->rect.x, this->rect.y + height_frame * 0.5);
+						//set tam ban cho vien dan ( tầm bắn của súng này là 3 ô )
+						p_bullet->set_lim_dis(this->rect.x - 45 * 3);
+					}
+					else if (status == WALK_RIGHT)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+						p_bullet->SetRect(this->rect.x + width_frame - 10, this->rect.y + height_frame * 0.5);
+						//set tam ban cho vien dan
+						p_bullet->set_lim_dis(this->rect.x + width_frame + 45 * 3);
+					}
+					else if (status == WALK_UP)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_UP);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y);
+
+						p_bullet->set_lim_dis(this->rect.y - 45 * 3);
+					}
+					else if (status == WALK_DOWN)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_DOWN);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y + height_frame);
+
+						p_bullet->set_lim_dis(this->rect.y + height_frame + 45 * 3);
+					}
+					
+					p_bullet->set_x_val(17);   // set tốc độ cho viên đạn
+					p_bullet->set_y_val(17);
+					p_bullet->set_is_move(true);
+					bullet_list.push_back(p_bullet);
+				}
+			}
+		}
+	}
 
 	for (int i = 0; i < bullet_list_bom.size(); i++) {
 		BulletObject* p_bullet = bullet_list_bom.at(i);
@@ -340,7 +340,6 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 }
 
 
-// chưa xử lý thằng 2 
 void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data) {
 	if (events.type == SDL_KEYDOWN) {
 		switch (events.key.keysym.sym)
@@ -425,31 +424,7 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 					p_bullet->set_bullet_type(type_bullet);
 					p_bullet->LoadImgBullet(screen);
 					// 
-					if (status == WALK_LEFT) {
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2); // rect.x , rect.y la vi tri set anh cua nhan vat 
-
-
-					}
-
-					else if (status == WALK_RIGHT)
-					{
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-
-					}
-					else if (status == WALK_UP)
-					{
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-					}
-					else if (status == WALK_DOWN)
-					{
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-					}
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->set_is_move(true); // chuyển sang true tức là cho phép đạn bắn ra 
 					// nhu vậy phần trên đã khởi tạo xong viên đạn 
 
@@ -474,29 +449,7 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 					p_bullet->set_bullet_type(type_bullet);
 					p_bullet->LoadImgBullet(screen);
 
-					if (status == WALK_LEFT) {
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-					}
-
-					else if (status == WALK_RIGHT)
-					{
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-					}
-					else if (status == WALK_UP)
-					{
-
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-
-
-					}
-					else if (status == WALK_DOWN)
-					{
-						p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
-					}
-
+					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->set_is_move(true); // chuyển sang true tức là cho phép đạn bắn ra 
 					// nhu vậy phần trên đã khởi tạo xong viên đạn 
 
@@ -506,7 +459,48 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 			}
 		}
 	}
+	else if (type_bullet == 10)
+	{
+		if (events.type = SDL_KEYDOWN)
+		{
+			if (events.key.keysym.sym == SDLK_KP_ENTER)
+			{
+				if (bullet_list.size() < num_sung_dan)
+				{
+					BulletObject* p_bullet = new BulletObject();
 
+					p_bullet->set_bullet_type(type_bullet);
+					p_bullet->LoadImgBullet(screen);
+
+					if (status == WALK_LEFT)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+						p_bullet->SetRect(this->rect.x, this->rect.y + height_frame * 0.5);
+					}
+					else if (status == WALK_RIGHT)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+						p_bullet->SetRect(this->rect.x + width_frame - 10, this->rect.y + height_frame * 0.5);
+					}
+					else if (status == WALK_UP)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_UP);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y);
+					}
+					else if (status == WALK_DOWN)
+					{
+						p_bullet->set_bullet_dir(BulletObject::DIR_DOWN);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y + height_frame);
+					}
+
+					p_bullet->set_x_val(20);   // set tốc độ cho viên đạn
+					p_bullet->set_y_val(20);
+					p_bullet->set_is_move(true);
+					bullet_list.push_back(p_bullet);
+				}
+			}
+		}
+	}
 	for (int i = 0; i < bullet_list_bom.size(); i++) 
 	{
 		BulletObject* p_bullet = bullet_list_bom.at(i);
@@ -535,7 +529,36 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 }
 
 
-// xử lý hình ảnh đạn 
+// xử lý hình ảnh đạn
+void MainObject::HandleBullet_Dan(SDL_Renderer* des)
+{
+	for (int i = 0; i < bullet_list.size(); i++)
+	{
+		BulletObject* p_bullet = bullet_list.at(i);
+		if (p_bullet != NULL)
+		{
+			if (p_bullet->get_is_move() == true)
+			{
+				p_bullet->HandleMove(855, 640);
+				p_bullet->Render(des);
+			}  
+			else        // tức là khi is_move = false thì viên đạn được xóa đi
+			{
+				bullet_list.erase(bullet_list.begin() + i);
+				if (p_bullet != NULL)
+				{
+					delete p_bullet;
+					p_bullet = NULL;
+				}
+
+			}
+		}
+	}
+}
+
+
+
+// xử lý hình ảnh bom & mìn 
 void MainObject::HandleBullet(SDL_Renderer* des)
 {	// Render ảnh quả bom nếu có trong list 
 	for (int i = 0; i < bullet_list_bom.size(); i++)
@@ -549,7 +572,6 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 			}
 		}
 	}
-
 
 	// Render ảnh mìn nếu có trong list 
 
@@ -596,7 +618,7 @@ void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des) {
 							{
 								if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
 								{
-									map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(9, 15);
+									map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(10, 10);
 								}
 							}
 						}
@@ -662,12 +684,13 @@ void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des) {
 				Delay_time_min.erase(Delay_time_min.begin() + i);
 			}
 		}
+		
 }
 
 
 void MainObject :: RemoveBullet_Min(Map& map_data, SDL_Renderer* des)
 {
-	for (int i = 0; i < bullet_list_min.size(); i++)
+	for (int i = 0; i < bullet_list_min.size(); i++)      // khoong set time, tức là khi có nhiều mìn thì 1 quả nổ thì tất cả sẽ nổ --> làm tăng xác suất trúng mục tiêu vì nó thể giết mục tiêu từ xa)
 	{
 		BulletObject* p_bullet = bullet_list_min.at(i);
 		bullet_list_min.erase(bullet_list_min.begin() + i);
@@ -765,6 +788,8 @@ void MainObject :: check_item_bom(int val_1, int val_2)
 }
 
 
+
+// xử lý hình ảnh mìn lên bảng tổng hợp
 void MainObject::init_min(SDL_Renderer* screen, double x , double y)
 {
 	min_.LoadImg("map1/min_icon.png", screen);
@@ -783,7 +808,7 @@ void MainObject::check_item_min(int val_1, int val_2)
 {
 	if ((val_1 == 11 && val_2 == 11) || (val_1 == 11 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 11 && val_2 == 0) || (val_1 == 0 && val_2 == 11))
 	{
-		num_min = 1; 
+		num_min = 2; 
 		type_bullet = 11;
 		max_bom = 0;
 		num_sung_dan = 0;
@@ -793,6 +818,7 @@ void MainObject::check_item_min(int val_1, int val_2)
 	}
 }
 
+// xử lý va chạm với mìn
 void MainObject::check_col_min(int val_1, int val_2, Map& map_data, SDL_Renderer* des)
 {
 	if ( (val_1 == 20 && val_2 == 20) || (val_1 == 20 && val_2 == 0) || (val_1 == 0 && val_2 == 20) || (val_1 == 20 && val_2 >= 9) || (val_1 >= 9 && val_2 == 20) )
@@ -800,6 +826,91 @@ void MainObject::check_col_min(int val_1, int val_2, Map& map_data, SDL_Renderer
 		RemoveBullet_Min(map_data, des);  // phải truyền vào đây g_screen
 	}
 }
+
+
+// xử lý hình ảnh súng đạn lên bảng tổng hợp
+void MainObject::check_item_sungdan(int val_1, int val_2)
+{
+	if ((val_1 == 10 && val_2 == 10) || (val_1 == 10 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 10 && val_2 == 0) || (val_1 == 0 && val_2 == 10))
+	{
+		num_sung_dan = 1;
+		type_bullet = 10;
+		max_bom = 0;
+		num_min = 0;
+		num_sung_lua = 0;
+		num_ten_lua = 0;
+		num_sung_dien = 0;
+	}
+}
+
+void MainObject :: init_sung_dan(SDL_Renderer* screen, double x, double y)
+{
+	sung_dan.LoadImg("map1/sung_dan.png", screen);
+	sung_dan.SetRect(x, y);
+}
+void MainObject::show_sung_dan(SDL_Renderer* screen)
+{
+	for (int i = 1; i <= num_sung_dan; i++)
+	{
+		sung_dan.Render(screen);
+	}
+}
+
+
+//  check va chạm giữa viên đạn và tường + ô có vật phẩm
+
+void MainObject::check_col_sungdan(Map& map_data)
+{
+	for (int i = 0; i < bullet_list.size(); i++)
+	{
+		BulletObject* p_bullet = bullet_list.at(i);
+		if (p_bullet != NULL)
+		{
+			SDL_Rect rect_bullet = p_bullet->GetRect();
+			int map_x, map_y; 
+			if (p_bullet->get_bullet_dir() == BulletObject::DIR_RIGHT)
+			{	
+				
+				map_x = (rect_bullet.x - 185) / 45 ;
+				map_y = (rect_bullet.y - 60) / 45 + 1;
+			}
+			SDL_Rect tile_map;
+			tile_map.x = 185 + (map_x) * 45;
+			tile_map.y = 60 + (map_y - 1) * 45;
+			tile_map.w = 45;
+			tile_map.h = 45;
+			if (map_data.tile[map_y][map_x] <= 7 && map_data.tile[map_y][map_x] >= 1)
+			{
+				bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);
+				if (Col && (map_data.tile[map_y][map_x] == 2 || map_data.tile[map_y][map_x] == 3 || map_data.tile[map_y][map_x] == 7))
+				{
+					bullet_list.erase(bullet_list.begin() + i);
+					if (p_bullet != NULL)
+					{
+						delete p_bullet;
+						p_bullet = NULL;
+						//std::cout << 1 << " " << map_data.tile[map_y][map_x] << " ";
+					}
+					//std::cout << 1 << " " << map_data.tile[map_y][map_x] << " ";
+				}
+				else if (Col && !(map_data.tile[map_y][map_x] == 2 || map_data.tile[map_y][map_x] == 3 || map_data.tile[map_y][map_x] == 7))
+				{
+					map_data.tile[map_y][map_x] = Rand(9, 15);
+					bullet_list.erase(bullet_list.begin() + i);
+					if (p_bullet != NULL)
+					{
+						delete p_bullet;
+						p_bullet = NULL;
+					}
+					std::cout << 1 << " " << map_data.tile[map_y][map_x] << " ";
+				}
+			}
+		}
+	}
+}
+
+
+
 
 
 // xử lý va chạm và di chuyển 
@@ -839,7 +950,8 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_lachan(val_1, val_2);
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
-			
+			check_item_sungdan(val_1,val_2);
+
 			// check xem nhân vật có đi vào mìn không 
 			check_col_min(val_1, val_2, map_data, des);
 
@@ -870,6 +982,7 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_lachan(val_1, val_2);
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
+			check_item_sungdan(val_1, val_2);
 
 			check_col_min(val_1, val_2, map_data, des);
 			if (9 <= val_1 && 9 <= val_2 && val_1 <= 15 && val_2 <= 15)           		
@@ -904,6 +1017,7 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_lachan(val_1, val_2);
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
+			check_item_sungdan(val_1, val_2);
 
 			check_col_min(val_1, val_2, map_data, des);
 			if (9 <= val_1 && 9 <= val_2 && val_1 <= 15 && val_2 <= 15)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
@@ -934,6 +1048,7 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_lachan(val_1, val_2);
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
+			check_item_sungdan(val_1, val_2);
 
 			check_col_min(val_1, val_2, map_data, des);
 			if (9 <= val_1 && 9 <= val_2 && val_1 <= 15 && val_2 <= 15 )            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
