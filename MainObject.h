@@ -108,6 +108,7 @@ public:
 
 	std::vector <BulletObject*>  get_bullet_list_min() const { return bullet_list_min; }
 	
+	std::vector<BulletObject*> get_bullet_list() { return bullet_list; }
 
 	void check_item_sungdan(int val_1, int val_2);
 
@@ -115,6 +116,8 @@ public:
 
 
 	void check_col_sungdan(Map& map_data);
+
+	void RemoveBullet_Col(const int& idx);
 private:
 	std::vector <BulletObject* > bullet_list;
 	std::vector <BulletObject* > bullet_list_min;

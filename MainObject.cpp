@@ -2,7 +2,7 @@
 #include "ImpTimer.h"
 std::vector< ImpTimer> Delay_time_bom;
 std::vector< ImpTimer> Delay_time_min;
-
+ImpTimer Delay_bullet;
 MainObject::MainObject() {
 	frame = 0;
 	x_pos = 185;
@@ -28,7 +28,8 @@ MainObject::MainObject() {
 	num_ten_lua=0;
 	num_min=0;
 	num_sung_dien=0;
-
+	// đặt ben ngoai de cho cos thể bắn ra được viên đầu
+	Delay_bullet.start();
 }
 MainObject :: ~MainObject() {
 
@@ -267,7 +268,7 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 		{
 			if (events.key.keysym.sym == SDLK_SPACE)
 			{
-				if (bullet_list.size() < num_sung_dan)
+				if (bullet_list.size() < num_sung_dan && Delay_bullet.get_ticks() > 300)
 				{
 					BulletObject* p_bullet = new BulletObject();
 
@@ -286,7 +287,7 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
 						p_bullet->SetRect(this->rect.x + width_frame - 10, this->rect.y + height_frame * 0.5);
 						//set tam ban cho vien dan
-						p_bullet->set_lim_dis(this->rect.x + width_frame + 45 * 3);
+						p_bullet->set_lim_dis(this->rect.x + width_frame + 45*3);
 					}
 					else if (status == WALK_UP)
 					{
@@ -305,7 +306,9 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 					
 					p_bullet->set_x_val(17);   // set tốc độ cho viên đạn
 					p_bullet->set_y_val(17);
-					p_bullet->set_is_move(true);
+					p_bullet->set_is_move(true); 
+
+					Delay_bullet.start();
 					bullet_list.push_back(p_bullet);
 				}
 			}
@@ -465,7 +468,7 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 		{
 			if (events.key.keysym.sym == SDLK_KP_ENTER)
 			{
-				if (bullet_list.size() < num_sung_dan)
+				if (bullet_list.size() < num_sung_dan && Delay_bullet.get_ticks() > 300)
 				{
 					BulletObject* p_bullet = new BulletObject();
 
@@ -476,26 +479,36 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 					{
 						p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
 						p_bullet->SetRect(this->rect.x, this->rect.y + height_frame * 0.5);
+						//set tam ban cho vien dan ( tầm bắn của súng này là 3 ô )
+						p_bullet->set_lim_dis(this->rect.x - 45 * 3);
 					}
 					else if (status == WALK_RIGHT)
 					{
 						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
 						p_bullet->SetRect(this->rect.x + width_frame - 10, this->rect.y + height_frame * 0.5);
+						//set tam ban cho vien dan
+						p_bullet->set_lim_dis(this->rect.x + width_frame + 45 * 3);
 					}
 					else if (status == WALK_UP)
 					{
 						p_bullet->set_bullet_dir(BulletObject::DIR_UP);
 						p_bullet->SetRect(this->rect.x + 10, this->rect.y);
+
+						p_bullet->set_lim_dis(this->rect.y - 45 * 3);
 					}
 					else if (status == WALK_DOWN)
 					{
 						p_bullet->set_bullet_dir(BulletObject::DIR_DOWN);
 						p_bullet->SetRect(this->rect.x + 10, this->rect.y + height_frame);
+
+						p_bullet->set_lim_dis(this->rect.y + height_frame + 45 * 3);
 					}
 
-					p_bullet->set_x_val(20);   // set tốc độ cho viên đạn
-					p_bullet->set_y_val(20);
+					p_bullet->set_x_val(17);   // set tốc độ cho viên đạn
+					p_bullet->set_y_val(17);
 					p_bullet->set_is_move(true);
+
+					Delay_bullet.start();
 					bullet_list.push_back(p_bullet);
 				}
 			}
@@ -618,7 +631,7 @@ void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des) {
 							{
 								if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
 								{
-									map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(10, 10);
+									map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(9, 15);
 								}
 							}
 						}
@@ -859,6 +872,22 @@ void MainObject::show_sung_dan(SDL_Renderer* screen)
 
 //  check va chạm giữa viên đạn và tường + ô có vật phẩm
 
+void MainObject::RemoveBullet_Col(const int& idx)
+{
+	int size = bullet_list.size();
+	if (size > 0 && idx < size)
+	{
+		BulletObject* p_bullet = bullet_list.at(idx);
+		bullet_list.erase(bullet_list.begin() + idx);
+		if (p_bullet)
+		{
+			delete p_bullet;
+			p_bullet = NULL;
+		}
+	}
+}
+
+
 void MainObject::check_col_sungdan(Map& map_data)
 {
 	for (int i = 0; i < bullet_list.size(); i++)
@@ -868,12 +897,8 @@ void MainObject::check_col_sungdan(Map& map_data)
 		{
 			SDL_Rect rect_bullet = p_bullet->GetRect();
 			int map_x, map_y; 
-			if (p_bullet->get_bullet_dir() == BulletObject::DIR_RIGHT)
-			{	
-				
-				map_x = (rect_bullet.x - 185) / 45 ;
-				map_y = (rect_bullet.y - 60) / 45 + 1;
-			}
+			map_x = (rect_bullet.x - 185) / 45;
+			map_y = (rect_bullet.y - 60) / 45 + 1;
 			SDL_Rect tile_map;
 			tile_map.x = 185 + (map_x) * 45;
 			tile_map.y = 60 + (map_y - 1) * 45;
@@ -884,25 +909,14 @@ void MainObject::check_col_sungdan(Map& map_data)
 				bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);
 				if (Col && (map_data.tile[map_y][map_x] == 2 || map_data.tile[map_y][map_x] == 3 || map_data.tile[map_y][map_x] == 7))
 				{
-					bullet_list.erase(bullet_list.begin() + i);
-					if (p_bullet != NULL)
-					{
-						delete p_bullet;
-						p_bullet = NULL;
-						//std::cout << 1 << " " << map_data.tile[map_y][map_x] << " ";
-					}
-					//std::cout << 1 << " " << map_data.tile[map_y][map_x] << " ";
+					
+					p_bullet->set_is_move(false);
 				}
 				else if (Col && !(map_data.tile[map_y][map_x] == 2 || map_data.tile[map_y][map_x] == 3 || map_data.tile[map_y][map_x] == 7))
 				{
 					map_data.tile[map_y][map_x] = Rand(9, 15);
-					bullet_list.erase(bullet_list.begin() + i);
-					if (p_bullet != NULL)
-					{
-						delete p_bullet;
-						p_bullet = NULL;
-					}
-					std::cout << 1 << " " << map_data.tile[map_y][map_x] << " ";
+					
+					p_bullet->set_is_move(false);
 				}
 			}
 		}

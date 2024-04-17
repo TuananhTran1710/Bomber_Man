@@ -66,8 +66,6 @@ public:
 	int get_lim_dis() { return lim_dis; }
 	void set_lim_dis(int x) { lim_dis = x; }
 
-	bool get_checked_col() { return checked_col; }
-	void set_checked_col(bool x) { checked_col = x; }
 private:
 	NoBom doc;
 	NoBom ngang;
@@ -76,7 +74,6 @@ private:
 	int bullet_type;
 	int bullet_dir;
 	int x_val, y_val;
-	bool checked_col;
 	int lim_dis;
 };
 

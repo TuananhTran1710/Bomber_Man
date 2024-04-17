@@ -1,10 +1,8 @@
 ﻿#include "BulletObject.h"
-
 BulletObject::BulletObject() {
 	bullet_time = 0;
 	is_move = false;
-	bullet_type = SUNG_DAN;
-	checked_col = false;
+	bullet_type = BOM;
 	x_val = 0;
 	y_val = 0;
 }
