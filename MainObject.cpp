@@ -2,7 +2,10 @@
 #include "ImpTimer.h"
 std::vector< ImpTimer> Delay_time_bom;
 std::vector< ImpTimer> Delay_time_min;
+std::vector< ImpTimer> Delay_time_tenlua;
+
 ImpTimer Delay_bullet;
+
 MainObject::MainObject() {
 	frame = 0;
 	x_pos = 185;
@@ -21,11 +24,11 @@ MainObject::MainObject() {
 	num_life = 2;
 	num_kill = 0;
 	have_lachan = 0;
-	type_bullet = 10;
+	type_bullet = 12;
 
-	num_sung_dan=1;
+	num_sung_dan=0;
 	num_sung_lua=0;
-	num_ten_lua=0;
+	num_ten_lua=1;
 	num_min=0;
 	num_sung_dien=0;
 	// đặt ben ngoai de cho cos thể bắn ra được viên đầu
@@ -225,14 +228,14 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 				if (bullet_list_bom.size() < max_bom)
 				{
 					BulletObject* p_bullet = new BulletObject();
-
 					p_bullet->set_bullet_type(type_bullet);
+
 					p_bullet->LoadImgBullet(screen);
 					p_bullet->SetRect(185 + floor((this->x_pos - 185) / 45) * 45 + 2, 60 + floor((this->y_pos - 60) / 45) * 45 + 2);
 					p_bullet->set_is_move(true); // chuyển sang true tức là cho phép đạn bắn ra 
 					// nhu vậy phần trên đã khởi tạo xong viên đạn 
 
-					bullet_list_bom.push_back(p_bullet); // nạp đạn sẵn vào băng, chỉ ấn là đạn sẽ xuất hiện
+					bullet_list_bom.push_back(p_bullet);
 					p_bullet->set_bullet_time(SDL_GetTicks());
 
 				}
@@ -314,7 +317,94 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 			}
 		}
 	}
+	else if (type_bullet == 9)
+	{
+		if (events.type == SDL_KEYDOWN)
+		{
+			if (events.key.keysym.sym == SDLK_SPACE)
+			{
+				if (bullet_list_lua.size() < num_sung_lua)
+				{
+					BulletObject* p_bullet = new BulletObject();
+					p_bullet->set_bullet_type(type_bullet);
 
+					if (status == WALK_RIGHT)
+					{
+						p_bullet->LoadImg("map1/lua_right.png", screen);
+						p_bullet->SetRect(this->rect.x + width_frame , this->rect.y + 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+					}
+					else if (status == WALK_LEFT)
+					{
+						p_bullet->LoadImg("map1/lua_left.png", screen);
+						p_bullet->SetRect(this->rect.x - p_bullet->GetRect().w , this->rect.y + 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+					}
+					else if (status == WALK_UP)
+					{
+						p_bullet->LoadImg("map1/lua_up.png", screen);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y - p_bullet->GetRect().h);
+						p_bullet->set_bullet_dir(BulletObject::DIR_UP);
+					}
+					else if (status == WALK_DOWN)
+					{
+						p_bullet->LoadImg("map1/lua_down.png", screen);
+						p_bullet->SetRect(this->rect.x + 5, this->rect.y + height_frame);
+						p_bullet->set_bullet_dir(BulletObject::DIR_DOWN);
+					}
+					p_bullet->set_is_move(true);
+					bullet_list_lua.push_back(p_bullet);
+					p_bullet->set_bullet_time(SDL_GetTicks());
+
+				}
+			}
+		}
+	}
+	else if (type_bullet == 12)
+	{
+		if (events.type == SDL_KEYDOWN)
+		{
+			if (events.key.keysym.sym == SDLK_SPACE)
+			{
+				if (bullet_list_tenlua.size() < num_ten_lua)
+				{
+					BulletObject* p_bullet = new BulletObject();
+					p_bullet->set_bullet_type(type_bullet);
+					
+					if (status == WALK_RIGHT)
+					{
+						p_bullet->LoadImg("map1/ten_lua_right.png", screen);
+						p_bullet->SetRect(this->rect.x + width_frame -10, this->rect.y + 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+					}
+					else if (status == WALK_LEFT)
+					{
+						p_bullet->LoadImg("map1/ten_lua_left.png", screen);
+						p_bullet->SetRect(this->rect.x - p_bullet->GetRect().w, this->rect.y + 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+					}
+					else if (status == WALK_UP)
+					{
+						p_bullet->LoadImg("map1/ten_lua_up.png", screen);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y - p_bullet->GetRect().h);
+						p_bullet->set_bullet_dir(BulletObject::DIR_UP);
+					}
+					else if (status == WALK_DOWN)
+					{
+						p_bullet->LoadImg("map1/ten_lua_down.png", screen);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y + height_frame - 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_DOWN);
+					}
+
+					p_bullet->set_x_val(17);   // set tốc độ cho viên đạn
+					p_bullet->set_y_val(17);
+					p_bullet->set_is_move(true);
+					bullet_list_tenlua.push_back(p_bullet);
+				}
+			}
+		}
+	}
+	
 	for (int i = 0; i < bullet_list_bom.size(); i++) {
 		BulletObject* p_bullet = bullet_list_bom.at(i);
 		int map_x; int map_y;
@@ -514,6 +604,93 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 			}
 		}
 	}
+	else if (type_bullet == 9)
+	{
+		if (events.type == SDL_KEYDOWN)
+		{
+			if (events.key.keysym.sym == SDLK_KP_ENTER)
+			{
+				if (bullet_list_lua.size() < num_sung_lua)
+				{
+					BulletObject* p_bullet = new BulletObject();
+					p_bullet->set_bullet_type(type_bullet);
+
+					if (status == WALK_RIGHT)
+					{
+						p_bullet->LoadImg("map1/lua_right.png", screen);
+						p_bullet->SetRect(this->rect.x + width_frame, this->rect.y + 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+					}
+					else if (status == WALK_LEFT)
+					{
+						p_bullet->LoadImg("map1/lua_left.png", screen);
+						p_bullet->SetRect(this->rect.x - p_bullet->GetRect().w, this->rect.y + 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+					}
+					else if (status == WALK_UP)
+					{
+						p_bullet->LoadImg("map1/lua_up.png", screen);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y - p_bullet->GetRect().h);
+						p_bullet->set_bullet_dir(BulletObject::DIR_UP);
+					}
+					else if (status == WALK_DOWN)
+					{
+						p_bullet->LoadImg("map1/lua_down.png", screen);
+						p_bullet->SetRect(this->rect.x + 5, this->rect.y + height_frame);
+						p_bullet->set_bullet_dir(BulletObject::DIR_DOWN);
+					}
+					p_bullet->set_is_move(true);
+					bullet_list_lua.push_back(p_bullet);
+					p_bullet->set_bullet_time(SDL_GetTicks());
+
+				}
+			}
+		}
+	}
+	else if (type_bullet == 12)
+	{
+		if (events.type == SDL_KEYDOWN)
+		{
+			if (events.key.keysym.sym == SDLK_KP_ENTER)
+			{
+				if (bullet_list_tenlua.size() < num_ten_lua)
+				{
+					BulletObject* p_bullet = new BulletObject();
+					p_bullet->set_bullet_type(type_bullet);
+
+					if (status == WALK_RIGHT)
+					{
+						p_bullet->LoadImg("map1/ten_lua_right.png", screen);
+						p_bullet->SetRect(this->rect.x + width_frame - 10, this->rect.y + 15);
+						p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+					}
+					else if (status == WALK_LEFT)
+					{
+						p_bullet->LoadImg("map1/ten_lua_left.png", screen);
+						p_bullet->SetRect(this->rect.x - p_bullet->GetRect().w, this->rect.y + 15);
+						p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+					}
+					else if (status == WALK_UP)
+					{
+						p_bullet->LoadImg("map1/ten_lua_up.png", screen);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y - p_bullet->GetRect().h);
+						p_bullet->set_bullet_dir(BulletObject::DIR_UP);
+					}
+					else if (status == WALK_DOWN)
+					{
+						p_bullet->LoadImg("map1/ten_lua_down.png", screen);
+						p_bullet->SetRect(this->rect.x + 10, this->rect.y + height_frame - 10);
+						p_bullet->set_bullet_dir(BulletObject::DIR_DOWN);
+					}
+
+					p_bullet->set_x_val(17);   // set tốc độ cho viên đạn
+					p_bullet->set_y_val(17);
+					p_bullet->set_is_move(true);
+					bullet_list_tenlua.push_back(p_bullet);
+				}
+			}
+		}
+		}
 	for (int i = 0; i < bullet_list_bom.size(); i++) 
 	{
 		BulletObject* p_bullet = bullet_list_bom.at(i);
@@ -552,7 +729,7 @@ void MainObject::HandleBullet_Dan(SDL_Renderer* des)
 		{
 			if (p_bullet->get_is_move() == true)
 			{
-				p_bullet->HandleMove(855, 640);
+				p_bullet->HandleMove_Dan(855, 640);
 				p_bullet->Render(des);
 			}  
 			else        // tức là khi is_move = false thì viên đạn được xóa đi
@@ -570,6 +747,58 @@ void MainObject::HandleBullet_Dan(SDL_Renderer* des)
 }
 
 
+// xử lý hình ảnh tên lửa 
+void MainObject::HandleBullet_TenLua(SDL_Renderer* des, Map&map_data)
+{
+	for (int i = 0; i < bullet_list_tenlua.size(); i++)
+	{
+		BulletObject* p_bullet = bullet_list_tenlua.at(i);
+		if (p_bullet != NULL)
+		{
+			if (p_bullet->get_is_move() == true)
+			{
+				p_bullet->HandleMove_TenLua(855, 660);
+				p_bullet->Render(des);
+			}
+			else        // tức là khi is_move = false thì viên đạn được xóa đi
+			{
+				bullet_list_tenlua.erase(bullet_list_tenlua.begin() + i);
+				if (p_bullet != NULL)
+				{
+					delete p_bullet;
+					p_bullet = NULL;
+				}
+
+			}
+		}
+	}
+}
+
+// xử lý hình ảnh lửa
+void MainObject::HandleBullet_Lua(SDL_Renderer* des)
+{
+	for (int i = 0; i < bullet_list_lua.size(); i++)
+	{
+		BulletObject* p_bullet = bullet_list_lua.at(i);
+		if (p_bullet != NULL)
+		{
+			if (p_bullet->get_is_move() == true)
+			{
+				p_bullet->Render(des);
+			}
+			else        // tức là khi is_move = false thì viên đạn được xóa đi
+			{
+				bullet_list_lua.erase(bullet_list_lua.begin() + i);
+				if (p_bullet != NULL)
+				{
+					delete p_bullet;
+					p_bullet = NULL;
+				}
+
+			}
+		}
+	}
+}
 
 // xử lý hình ảnh bom & mìn 
 void MainObject::HandleBullet(SDL_Renderer* des)
@@ -583,7 +812,18 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 			{
 				p_bullet->Render(des);
 			}
+			else        // tức là khi is_move = false thì viên đạn được xóa đi
+			{
+				bullet_list_bom.erase(bullet_list_bom.begin() + i);
+				if (p_bullet != NULL)
+				{
+					delete p_bullet;
+					p_bullet = NULL;
+				}
+
+			}
 		}
+		
 	}
 
 	// Render ảnh mìn nếu có trong list 
@@ -597,7 +837,18 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 			{
 				p_bullet->Render(des);
 			}
+			else        // tức là khi is_move = false thì viên đạn được xóa đi
+			{
+				bullet_list_min.erase(bullet_list_min.begin() + i);
+				if (p_bullet != NULL)
+				{
+					delete p_bullet;
+					p_bullet = NULL;
+				}
+
+			}
 		}
+		
 	}
 
 }
@@ -697,9 +948,28 @@ void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des) {
 				Delay_time_min.erase(Delay_time_min.begin() + i);
 			}
 		}
+
+		// xử lý hiệu ứng nổ tên lửa
+
+		for (int i = 0; i < no_tenlua.size(); i++)
+		{
+			if (Delay_time_tenlua[i].get_ticks() <= 350)
+			{
+				no_tenlua[i].first.Render(des);
+				no_tenlua[i].second.Render(des);
+			}
+			else
+			{
+
+				no_tenlua[i].first.Free();
+				no_tenlua[i].second.Free();
+
+				no_tenlua.erase(no_tenlua.begin() + i);
+				Delay_time_tenlua.erase(Delay_time_tenlua.begin() + i);
+			}
+		}
 		
 }
-
 
 void MainObject :: RemoveBullet_Min(Map& map_data, SDL_Renderer* des)
 {
@@ -755,6 +1025,291 @@ void MainObject :: RemoveBullet_Min(Map& map_data, SDL_Renderer* des)
 	}
 }
 
+void MainObject::RemoveBullet_Lua(Map& map_data, SDL_Renderer* des)
+{
+	for (int i = 0; i < bullet_list_lua.size(); i++)
+	{
+		BulletObject* p_bullet = bullet_list_lua.at(i);
+		if (p_bullet != NULL)
+		{
+			if (SDL_GetTicks() - p_bullet->get_bullet_time() >= 250)
+			{
+				if (p_bullet->get_bullet_dir() == BulletObject::DIR_RIGHT)
+				{
+					p_bullet->set_is_move(false);
+					SDL_Rect rect_bullet = p_bullet->GetRect();
+					int map_x, map_y;
+					map_x = (rect_bullet.x - 185) / 45 + 1;
+					map_y = (rect_bullet.y - 60) / 45 + 1;
+					SDL_Rect tile_map;
+					tile_map.x = 185 + map_x * 45;
+					tile_map.y = 60 + (map_y - 1) * 45;
+					tile_map.w = 45;
+					tile_map.h = 45;
+					bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);
+					if (Col && (map_data.tile[map_y][map_x] == 4 || map_data.tile[map_y][map_x] == 5 || map_data.tile[map_y][map_x] == 6))
+					{
+						map_data.tile[map_y][map_x] = Rand(9, 15);
+						
+					}
+
+
+				}
+				else if (p_bullet->get_bullet_dir() == BulletObject::DIR_LEFT)
+				{
+					p_bullet->set_is_move(false);
+					SDL_Rect rect_bullet = p_bullet->GetRect();
+					int map_x, map_y;
+
+					map_x = (rect_bullet.x - 185 ) / 45;
+					map_y = (rect_bullet.y - 60) / 45 + 1;
+
+					SDL_Rect tile_map;
+					tile_map.x = 185 + map_x * 45;
+					tile_map.y = 60 + (map_y - 1) * 45;
+					tile_map.w = 45;
+					tile_map.h = 45;
+					bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);
+					if (Col && (map_data.tile[map_y][map_x] == 4 || map_data.tile[map_y][map_x] == 5 || map_data.tile[map_y][map_x] == 6))
+					{
+						map_data.tile[map_y][map_x] = Rand(9, 15);
+					}
+
+				}
+				else if (p_bullet->get_bullet_dir() == BulletObject::DIR_DOWN)
+				{
+					p_bullet->set_is_move(false);
+					SDL_Rect rect_bullet = p_bullet->GetRect();
+					int map_x, map_y;
+
+					map_x = (rect_bullet.x - 185) / 45 ;
+					map_y = (rect_bullet.y - 60) / 45 + 2;    // vì x_pos + height_frame bao h cũng không ở mép ô
+
+					SDL_Rect tile_map;
+					tile_map.x = 185 + map_x * 45;
+					tile_map.y = 60 + (map_y - 1) * 45;
+					tile_map.w = 45;
+					tile_map.h = 45;
+					bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);
+					if (Col && (map_data.tile[map_y][map_x] == 4 || map_data.tile[map_y][map_x] == 5 || map_data.tile[map_y][map_x] == 6))
+					{
+						map_data.tile[map_y][map_x] = Rand(9, 15);
+					}
+					
+				}
+				else if (p_bullet->get_bullet_dir() == BulletObject::DIR_UP)
+				{
+					p_bullet->set_is_move(false);
+					SDL_Rect rect_bullet = p_bullet->GetRect();
+					int map_x, map_y;
+
+					map_x = (rect_bullet.x - 185) / 45;
+					map_y = (rect_bullet.y - 60) / 45 + 1;
+
+					SDL_Rect tile_map;
+					tile_map.x = 185 + map_x * 45;
+					tile_map.y = 60 + (map_y - 1) * 45;
+					tile_map.w = 45;
+					tile_map.h = 45;
+					bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);
+					if (Col && (map_data.tile[map_y][map_x] == 4 || map_data.tile[map_y][map_x] == 5 || map_data.tile[map_y][map_x] == 6))
+					{
+						map_data.tile[map_y][map_x] = Rand(9, 15);
+					}
+
+				}
+			}
+		}
+	}
+}
+
+
+void MainObject::RemoveBullet_Tenlua(Map& map_data, SDL_Renderer*des , BulletObject * p_bullet , int map_y , int map_x )
+{
+	if (p_bullet->get_bullet_dir() == BulletObject::DIR_RIGHT)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if (map_x + dx[k] - 1 >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14 && map_x + dx[k] - 1 <= 14)
+			{
+				if (!(map_data.tile[map_y + dy[k]][map_x + dx[k] - 1] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k] - 1] == 3))
+				{
+					if (map_data.tile[map_y + dy[k]][map_x + dx[k] - 1] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k] - 1] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k] - 1] == 6)
+					{
+						map_data.tile[map_y + dy[k]][map_x + dx[k] - 1] = Rand(9, 15);
+					}
+				}
+			}
+		}
+
+		no_tenlua.push_back({ p_bullet->get_nobom_doc(),p_bullet->get_nobom_ngang() });
+		(*no_tenlua.rbegin()).first.LoadImg("map1/nobom_doc.png", des);
+		(*no_tenlua.rbegin()).second.LoadImg("map1/nobom_ngang.png", des);
+
+		(*no_tenlua.rbegin()).first.SetRect(185 + (map_x - 1)*45 + 2, 60 + (map_y - 2)* 45 );
+		(*no_tenlua.rbegin()).second.SetRect(185 + (map_x - 2)* 45 , 60 + (map_y - 1)*45 + 2 );
+
+		ImpTimer ret; Delay_time_tenlua.push_back(ret);
+		(*Delay_time_tenlua.rbegin()).start();
+	}
+	else if (p_bullet->get_bullet_dir() == BulletObject::DIR_LEFT)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if (map_x + dx[k] + 1 >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14 && map_x + dx[k] + 1 <= 14)
+			{
+				if (!(map_data.tile[map_y + dy[k]][map_x + dx[k] + 1] == 7 || map_data.tile[map_y + dy[k]][map_x + dx[k] + 1] == 3))
+				{
+					if (map_data.tile[map_y + dy[k]][map_x + dx[k] + 1] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k] + 1] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k] + 1] == 6)
+					{
+						map_data.tile[map_y + dy[k]][map_x + dx[k] + 1] = Rand(9, 15);
+					}
+				}
+			}
+		}
+
+		no_tenlua.push_back({ p_bullet->get_nobom_doc(),p_bullet->get_nobom_ngang() });
+		(*no_tenlua.rbegin()).first.LoadImg("map1/nobom_doc.png", des);
+		(*no_tenlua.rbegin()).second.LoadImg("map1/nobom_ngang.png", des);
+
+		(*no_tenlua.rbegin()).first.SetRect(185 + (map_x + 1) * 45 + 2, 60 + (map_y - 2) * 45);
+		(*no_tenlua.rbegin()).second.SetRect(185 + (map_x) * 45, 60 + (map_y - 1) * 45 + 2);
+
+		ImpTimer ret; Delay_time_tenlua.push_back(ret);
+		(*Delay_time_tenlua.rbegin()).start();
+	}
+	else if (p_bullet->get_bullet_dir() == BulletObject::DIR_UP)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if (map_x + dx[k] >= 0 && map_y + dy[k] + 1 > 0 && map_y + dy[k] + 1 < 14 && map_x + dx[k] <= 14)
+			{
+				if (!(map_data.tile[map_y + dy[k] + 1][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k] + 1][map_x + dx[k]] == 3))
+				{
+					if (map_data.tile[map_y + dy[k] + 1][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k] + 1][map_x + dx[k] ] == 5 || map_data.tile[map_y + dy[k] + 1][map_x + dx[k]] == 6)
+					{
+						map_data.tile[map_y + dy[k] + 1][map_x + dx[k]] = Rand(9, 15);
+					}
+				}
+			}
+		}
+
+		no_tenlua.push_back({ p_bullet->get_nobom_doc(),p_bullet->get_nobom_ngang() });
+		(*no_tenlua.rbegin()).first.LoadImg("map1/nobom_doc.png", des);
+		(*no_tenlua.rbegin()).second.LoadImg("map1/nobom_ngang.png", des);
+
+		(*no_tenlua.rbegin()).first.SetRect(185 + (map_x) * 45 + 2, 60 + (map_y - 1) * 45);
+		(*no_tenlua.rbegin()).second.SetRect(185 + (map_x - 1) * 45, 60 + (map_y) * 45 + 2);
+
+		ImpTimer ret; Delay_time_tenlua.push_back(ret);
+		(*Delay_time_tenlua.rbegin()).start();
+	}
+	else if (p_bullet->get_bullet_dir() == BulletObject::DIR_DOWN)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if (map_x + dx[k] >= 0 && map_y + dy[k] - 1 > 0 && map_y + dy[k] - 1 < 14 && map_x + dx[k] <= 14)
+			{
+				if (!(map_data.tile[map_y + dy[k] - 1][map_x + dx[k]] == 7 || map_data.tile[map_y + dy[k] - 1][map_x + dx[k]] == 3))
+				{
+					if (map_data.tile[map_y + dy[k] - 1][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k] - 1][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k] - 1][map_x + dx[k]] == 6)
+					{
+						map_data.tile[map_y + dy[k] - 1][map_x + dx[k]] = Rand(9, 15);
+					}
+				}
+			}
+		}
+
+		no_tenlua.push_back({ p_bullet->get_nobom_doc(),p_bullet->get_nobom_ngang() });
+		(*no_tenlua.rbegin()).first.LoadImg("map1/nobom_doc.png", des);
+		(*no_tenlua.rbegin()).second.LoadImg("map1/nobom_ngang.png", des);
+
+		(*no_tenlua.rbegin()).first.SetRect(185 + (map_x) * 45 + 2, 60 + (map_y - 3) * 45);
+		(*no_tenlua.rbegin()).second.SetRect(185 + (map_x - 1) * 45, 60 + (map_y - 2) * 45 + 2);
+
+		ImpTimer ret; Delay_time_tenlua.push_back(ret);
+		(*Delay_time_tenlua.rbegin()).start();
+	}
+}
+
+
+void MainObject::check_around_MainObject(Map& map_data, SDL_Renderer* des, BulletObject* p_bullet, double x_pos, double y_pos)
+{
+	int map_x = (x_pos - 185) / 45;
+	int map_y = (y_pos - 60) / 45 + 1;
+
+	std :: cout << map_x << " " << map_y;
+	for (int k = 0; k < 4; k++)
+	{
+		if (map_x + dx[k] >= 0 && map_y + dy[k] > 0 && map_y + dy[k] < 14 && map_x + dx[k] <= 14)
+		{
+			if (map_data.tile[map_y + dy[k]][map_x + dx[k]] == 4 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 5 || map_data.tile[map_y + dy[k]][map_x + dx[k]] == 6)
+			{
+				map_data.tile[map_y + dy[k]][map_x + dx[k]] = Rand(9, 15);
+				std::cout << 1; 
+			}
+		}
+	}
+
+	no_tenlua.push_back({ p_bullet->get_nobom_doc(),p_bullet->get_nobom_ngang() });
+	(*no_tenlua.rbegin()).first.LoadImg("map1/nobom_doc.png", des);
+	(*no_tenlua.rbegin()).second.LoadImg("map1/nobom_ngang.png", des);
+
+	(*no_tenlua.rbegin()).first.SetRect(185 + (map_x) * 45 + 2, 60 + (map_y - 2) * 45);
+	(*no_tenlua.rbegin()).second.SetRect(185 + (map_x - 1) * 45, 60 + (map_y - 1) * 45 + 2);
+	ImpTimer ret; Delay_time_tenlua.push_back(ret);
+	(*Delay_time_tenlua.rbegin()).start();
+}
+
+
+
+// check va chạm giữa tên lửa vs ô chứa vật phẩm
+void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des)
+{
+	for (int i = 0; i < bullet_list_tenlua.size(); i++)
+	{
+		BulletObject* p_bullet = bullet_list_tenlua.at(i);
+		if (p_bullet != NULL)
+		{
+			SDL_Rect rect_bullet = p_bullet->GetRect();
+			int map_x, map_y;
+			map_x = (rect_bullet.x - 185) / 45;
+			map_y = (rect_bullet.y - 60) / 45 + 1;
+			SDL_Rect tile_map;
+			tile_map.x = 185 + (map_x) * 45;
+			tile_map.y = 60 + (map_y - 1) * 45;
+			tile_map.w = 45;
+			tile_map.h = 45;
+			
+			if (map_data.tile[map_y][map_x] <= 7 && map_data.tile[map_y][map_x] >= 1)
+			{
+				bool Col = SDLCommonFunc::CheckCollision(rect_bullet , tile_map);
+				if (Col && (map_data.tile[map_y][map_x] == 2 || map_data.tile[map_y][map_x] == 3 || map_data.tile[map_y][map_x] == 7))
+				{
+					p_bullet->set_is_move(false);
+					RemoveBullet_Tenlua(map_data, des, p_bullet, map_y, map_x);
+				}
+				else if (Col && !(map_data.tile[map_y][map_x] == 2 || map_data.tile[map_y][map_x] == 3 || map_data.tile[map_y][map_x] == 7))
+				{
+					RemoveBullet_Tenlua(map_data, des, p_bullet, map_y, map_x);
+					p_bullet->set_is_move(false);
+				}
+
+			}
+			else if (p_bullet->GetRect().x > 185 + 45 * 14)
+			{
+				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y, map_x + 1);
+				p_bullet->set_is_move(false);
+			}
+			else if (p_bullet->GetRect().x < 185 + 45)
+			{
+				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y, map_x - 1);
+				p_bullet->set_is_move(false);
+			}
+		}
+	}
+
+}
 
 
 // xu ly hinh anh la chan
@@ -870,24 +1425,10 @@ void MainObject::show_sung_dan(SDL_Renderer* screen)
 }
 
 
+
+
+
 //  check va chạm giữa viên đạn và tường + ô có vật phẩm
-
-void MainObject::RemoveBullet_Col(const int& idx)
-{
-	int size = bullet_list.size();
-	if (size > 0 && idx < size)
-	{
-		BulletObject* p_bullet = bullet_list.at(idx);
-		bullet_list.erase(bullet_list.begin() + idx);
-		if (p_bullet)
-		{
-			delete p_bullet;
-			p_bullet = NULL;
-		}
-	}
-}
-
-
 void MainObject::check_col_sungdan(Map& map_data)
 {
 	for (int i = 0; i < bullet_list.size(); i++)
@@ -922,6 +1463,97 @@ void MainObject::check_col_sungdan(Map& map_data)
 		}
 	}
 }
+
+void MainObject::RemoveBullet_Col(const int& idx)
+{
+	int size = bullet_list.size();
+	if (size > 0 && idx < size)
+	{
+		BulletObject* p_bullet = bullet_list.at(idx);
+		bullet_list.erase(bullet_list.begin() + idx);
+		if (p_bullet)
+		{
+			delete p_bullet;
+			p_bullet = NULL;
+		}
+	}
+}
+//
+
+void MainObject::RemoveTenLua_Col(const int& idx)
+{
+	int size = bullet_list_tenlua.size();
+	if (size > 0 && idx < size)
+	{
+		BulletObject* p_bullet = bullet_list_tenlua.at(idx);
+		bullet_list_tenlua.erase(bullet_list_tenlua.begin() + idx);
+		if (p_bullet)
+		{
+			delete p_bullet;
+			p_bullet = NULL;
+		}
+	}
+}
+
+void MainObject::check_item_sunglua(int val_1, int val_2)
+{
+	if ((val_1 == 9 && val_2 == 9) || (val_1 == 9 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 9 && val_2 == 0) || (val_1 == 0 && val_2 == 9))
+	{
+		num_sung_lua = 1;
+		num_sung_dan = 0;
+		type_bullet = 9;
+		max_bom = 0;
+		num_min = 0;
+		num_ten_lua = 0;
+		num_sung_dien = 0;
+	}
+}
+
+void MainObject::init_sung_lua(SDL_Renderer* screen, double x, double y)
+{
+	sung_lua.LoadImg("map1/sung_lua.png", screen);
+	sung_lua.SetRect(x, y);
+}
+void MainObject::show_sung_lua(SDL_Renderer* screen)
+{
+	for (int i = 1; i <= num_sung_lua; i++)
+	{
+		sung_lua.Render(screen);
+	}
+}
+
+
+
+// xử lý tên lửa
+void MainObject::check_item_tenlua(int val_1, int val_2)
+{
+	if ((val_1 == 12 && val_2 == 12) || (val_1 == 12 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 12 && val_2 == 0) || (val_1 == 0 && val_2 == 12))
+	{
+		num_sung_lua = 0;
+		num_sung_dan = 0;
+		type_bullet = 12;
+		max_bom = 0;
+		num_min = 0;
+		num_ten_lua = 1;
+		num_sung_dien = 0;
+	}
+
+}
+
+
+void MainObject::init_ten_lua(SDL_Renderer* screen, double x, double y)
+{
+	ten_lua.LoadImg("map1/icon_ten_lua.png", screen);
+	ten_lua.SetRect(x, y);
+}
+void MainObject::show_ten_lua(SDL_Renderer* screen)
+{
+	for (int i = 1; i <= num_ten_lua; i++)
+	{
+		ten_lua.Render(screen);
+	}
+}
+
 
 
 
@@ -965,9 +1597,11 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
 			check_item_sungdan(val_1,val_2);
-
+			check_item_sunglua(val_1, val_2);
+			check_item_tenlua(val_1, val_2);
 			// check xem nhân vật có đi vào mìn không 
 			check_col_min(val_1, val_2, map_data, des);
+
 
 			if (9 <= val_1 && 9 <= val_2 && val_1 <= 15 && val_2 <= 15)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
 																				   // nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
@@ -997,7 +1631,8 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
 			check_item_sungdan(val_1, val_2);
-
+			check_item_sunglua(val_1, val_2);
+			check_item_tenlua(val_1, val_2);
 			check_col_min(val_1, val_2, map_data, des);
 			if (9 <= val_1 && 9 <= val_2 && val_1 <= 15 && val_2 <= 15)           		
 			{
@@ -1014,7 +1649,7 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			}
 
 			if (map_data.tile[map_y1][map_x1] != BLANK_TILE || map_data.tile[map_y2][map_x1] != BLANK_TILE) {
-				x_pos = 185 + (map_x1 + 1) * TILE_SIZE;
+				x_pos = 185 + (map_x1 + 1) * TILE_SIZE ;
 				x_val = 0;
 			}
 		}
@@ -1032,7 +1667,8 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
 			check_item_sungdan(val_1, val_2);
-
+			check_item_sunglua(val_1, val_2);
+			check_item_tenlua(val_1, val_2);
 			check_col_min(val_1, val_2, map_data, des);
 			if (9 <= val_1 && 9 <= val_2 && val_1 <= 15 && val_2 <= 15)            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
 				// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 
@@ -1063,7 +1699,8 @@ void MainObject::CheckToMap(Map& map_data , SDL_Renderer *des) {
 			check_item_bom(val_1, val_2);
 			check_item_min(val_1, val_2);
 			check_item_sungdan(val_1, val_2);
-
+			check_item_sunglua(val_1, val_2);
+			check_item_tenlua(val_1, val_2);
 			check_col_min(val_1, val_2, map_data, des);
 			if (9 <= val_1 && 9 <= val_2 && val_1 <= 15 && val_2 <= 15 )            // dấu && chứ không phải || ( vì nếu là || thì ví dụ ô [1][2] là ô item, ô [2][2] là ô không phải item
 				// nếu ta đi giữa dòng 1 và dòng 2 thì cả 2 ô đều mất trong khi chỉ có ô [1][2] mới có thể mất đi 

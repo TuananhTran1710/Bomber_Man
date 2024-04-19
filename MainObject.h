@@ -49,6 +49,7 @@ public:
 
 	std::vector <std::pair <NoBom, NoBom>> get_no_bom_list() const { return nobom; }
 	std::vector <std::pair <NoBom, NoBom>> get_no_min_list() const { return nomin; }
+	std::vector <std::pair <NoBom, NoBom>> get_no_tenlua_list() const { return no_tenlua; }
 
 
 	void set_bat_tu(bool con) { bat_tu = con; }
@@ -85,6 +86,13 @@ public:
 	void init_sung_dan(SDL_Renderer* screen, double x, double y);
 	void show_sung_dan(SDL_Renderer* screen);
 
+	void init_sung_lua(SDL_Renderer* screen, double x, double y);
+	void show_sung_lua(SDL_Renderer* screen);
+
+	void init_ten_lua(SDL_Renderer* screen, double x, double y);
+	void show_ten_lua(SDL_Renderer* screen);
+
+	void check_item_tenlua(int val_1, int val_2);
 
 	int get_num_sung_dien() { return num_sung_dien; }
 	void set_num_sung_dien(int x) { num_sung_dien = x; }
@@ -104,6 +112,7 @@ public:
 	void check_col_min(int val_1, int val_2, Map& map_data, SDL_Renderer* des);
 
 	void set_bullet_list(std::vector <BulletObject*> Bullet_list) {	bullet_list_bom = Bullet_list; }
+
 	std::vector <BulletObject*>  get_bullet_list_bom() const { return bullet_list_bom; }
 
 	std::vector <BulletObject*>  get_bullet_list_min() const { return bullet_list_min; }
@@ -112,14 +121,36 @@ public:
 
 	void check_item_sungdan(int val_1, int val_2);
 
+	void check_item_sunglua(int val_1, int val_2);
+
 	void HandleBullet_Dan(SDL_Renderer* des);
 
 
 	void check_col_sungdan(Map& map_data);
 
 	void RemoveBullet_Col(const int& idx);
+
+	void RemoveTenLua_Col(const int& idx);
+	std::vector<BulletObject*> get_bullet_list_lua() { return bullet_list_lua; }
+
+	std::vector<BulletObject*> get_bullet_list_tenlua() { return bullet_list_tenlua; }
+
+	void HandleBullet_Lua(SDL_Renderer* des);
+
+	void HandleBullet_TenLua(SDL_Renderer* des,Map& map_data);
+
+	void RemoveBullet_Lua(Map& map_data, SDL_Renderer* des);
+
+	void check_col_tenlua(Map& map_data,SDL_Renderer *des);
+
+	void RemoveBullet_Tenlua(Map& map_data, SDL_Renderer*des,BulletObject* p_bullet, int map_y, int map_x);
+
+	void check_around_MainObject(Map& map_data, SDL_Renderer* des, BulletObject* p_bullet, double x_pos, double y_pos);
 private:
 	std::vector <BulletObject* > bullet_list;
+
+	std::vector <BulletObject* > bullet_list_lua;
+	std::vector <BulletObject* > bullet_list_tenlua;
 	std::vector <BulletObject* > bullet_list_min;
 	std::vector <BulletObject* > bullet_list_bom; //vector chua c�c vi�n dann 
 	float x_val, y_val, x_pos, y_pos;
@@ -135,6 +166,8 @@ private:
 
 	std::vector< std :: pair <NoBom,NoBom> > nobom;
 	std::vector< std::pair <NoBom, NoBom>> nomin;
+
+	std::vector<std::pair<NoBom, NoBom>> no_tenlua;
 
 	int num_kill;
 	int have_lachan;

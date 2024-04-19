@@ -7,7 +7,7 @@ BulletObject::BulletObject() {
 	y_val = 0;
 }
 
-void BulletObject::HandleMove(const int& x_border, const int& y_border)
+void BulletObject::HandleMove_Dan(const int& x_border, const int& y_border)
 {
 	if (bullet_dir == DIR_RIGHT)
 	{
@@ -35,6 +35,29 @@ void BulletObject::HandleMove(const int& x_border, const int& y_border)
 	}
 }
 
+void BulletObject::HandleMove_TenLua(const int& x_border, const int& y_border)
+{
+	if (bullet_dir == DIR_RIGHT)
+	{
+		rect.x += x_val;
+		if (rect.x > x_border) is_move = false;
+	}
+	else if (bullet_dir == DIR_LEFT)
+	{
+		rect.x -= x_val;
+		if (rect.x <= 185)  is_move = false;
+	}
+	else if (bullet_dir == DIR_DOWN)
+	{
+		rect.y += y_val;
+		if (rect.y >= y_border) is_move = false;
+	}
+	else if (bullet_dir == DIR_UP)
+	{
+		rect.y -= y_val;
+		if (rect.y < 15) is_move = false;
+	}
+}
 
 void BulletObject::LoadImgBullet(SDL_Renderer* des)
 {
@@ -45,6 +68,14 @@ void BulletObject::LoadImgBullet(SDL_Renderer* des)
 	else if (bullet_type == SUNG_DAN)
 	{
 		LoadImg("map1/dan.png", des);
+	}
+	else if (bullet_type == SUNG_LUA)
+	{
+		LoadImg("map1/lua_right.png", des);
+	}
+	else if (bullet_type == TEN_LUA)
+	{
+		LoadImg("map1/ten_lua1.png", des);
 	}
 	else
 	{

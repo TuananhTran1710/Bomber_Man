@@ -90,6 +90,15 @@ int main(int argv, char* arg[]) {
 	p_player1.init_sung_dan(g_screen, 105, 103);
 	p_player2.init_sung_dan(g_screen, 105, 222);
 
+
+	// xử lý hình ảnh súng lửa
+	p_player1.init_sung_lua(g_screen, 108, 110);
+	p_player2.init_sung_lua(g_screen, 108, 230);
+
+	p_player1.init_ten_lua(g_screen, 108, 110);
+	p_player2.init_ten_lua(g_screen, 108, 230);
+
+
 	bool quit = 0;
 
 	//Time Text ;
@@ -154,6 +163,13 @@ int main(int argv, char* arg[]) {
 		if (p_player1.get_num_sung_dan()) p_player1.show_sung_dan(g_screen);
 		if (p_player2.get_num_sung_dan()) p_player2.show_sung_dan(g_screen);
 
+		// xử lý hình ảnh súng lửa ở bảng tổng hợp
+		if (p_player1.get_num_sung_lua()) p_player1.show_sung_lua(g_screen);
+		if (p_player2.get_num_sung_lua()) p_player2.show_sung_lua(g_screen);
+
+		if (p_player1.get_num_ten_lua()) p_player1.show_ten_lua(g_screen);
+		if (p_player2.get_num_ten_lua()) p_player2.show_ten_lua(g_screen);
+
 		p_player1.HandleBullet_Dan(g_screen); // xu ly dan
 		p_player2.HandleBullet_Dan(g_screen);
 
@@ -161,13 +177,31 @@ int main(int argv, char* arg[]) {
 		p_player1.HandleBullet(g_screen);  // xử lý bom & min 
 		p_player2.HandleBullet(g_screen);  // xử lý bom & min
 		 
+
+		p_player1.HandleBullet_Lua(g_screen); // xử lý lửa
+		p_player2.HandleBullet_Lua(g_screen);
+
+		p_player1.HandleBullet_TenLua(g_screen, map_data); // xử lý tên lửa
+		p_player2.HandleBullet_TenLua(g_screen,map_data);
+
 		p_player1.RemoveBullet_Bom(map_data,g_screen);
 		p_player2.RemoveBullet_Bom(map_data,g_screen);
+		
+		//  xử lý súng lửa
+		p_player1.RemoveBullet_Lua(map_data, g_screen);
+		p_player2.RemoveBullet_Lua(map_data, g_screen);
 
+		// xử lý va chạm giữa ô chứa vật phẩm và súng đạn
 		p_player1.check_col_sungdan(map_data);
 		p_player2.check_col_sungdan(map_data);
 
-		map.SetMap(map_data);      // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
+		//xử lý va chạm giữa ô chứa vật phẩm và tên lửa
+		p_player1.check_col_tenlua(map_data,g_screen);
+		p_player2.check_col_tenlua(map_data,g_screen);
+
+
+		map.SetMap(map_data); 
+		     // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 
 		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
 		p_player2.Show2(g_screen);
@@ -340,6 +374,195 @@ int main(int argv, char* arg[]) {
 			}
  		}
 		
+		// xử lý va chạm giữa lửa của 2 với nhân vật 1 
+		std::vector <BulletObject*> list_lua2 = p_player2.get_bullet_list_lua();
+		for (int i = 0; i < list_lua2.size(); i++)
+		{
+			BulletObject* p_bullet = list_lua2.at(i);
+			if (p_bullet != NULL)
+			{
+				SDL_Rect tRect;
+
+				tRect.x = p_player1.GetRect().x;
+				tRect.y = p_player1.GetRect().y;
+				tRect.w = p_player1.get_width_frame();
+				tRect.h = p_player1.get_height_frame();
+
+				bool Col = SDLCommonFunc::CheckCollision(p_bullet->GetRect(), tRect);
+
+
+
+				if (p_player1.get_bat_tu() == false)
+				{
+					if (Col)
+					{
+						p_player2.RemoveBullet_Col(i);
+
+						p_player2.Increase_num_kill();
+						if (p_player2.get_num_kill() == 3)
+						{
+							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+								
+								close();
+								SDL_Quit();
+								return 0;
+							}
+						}
+
+						p_player1.Decrease_num_life();
+
+						p_player1.set_pos2(185, 60);
+
+						time_bat_tu1.start();  
+
+						p_player1.set_bat_tu(true);
+					
+					}
+				}
+				if (Col && p_player1.get_have_lachan())
+				{
+					p_player2.RemoveBullet_Col(i);
+					p_player1.set_have_lachan(0);
+					p_player1.set_bat_tu(true);
+					time_bat_tu1.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
+				}
+			}
+		}
+
+		// xử lý va chạm TÊN LỬA - nhân vật 1;
+		std::vector <std::pair<NoBom, NoBom>> no_tenlua_list_1 = p_player1.get_no_tenlua_list();
+		std::vector <std::pair<NoBom, NoBom>> no_tenlua_list_2 = p_player2.get_no_tenlua_list();
+		std::vector < std::pair<NoBom, NoBom>> no_tenlua1, no_tenlua2;
+
+		for (int i = 0; i < no_tenlua_list_1.size(); i++)
+		{
+			no_tenlua1.push_back(no_tenlua_list_1[i]);
+			no_tenlua2.push_back(no_tenlua_list_1[i]);
+		}
+		for (int i = 0; i < no_tenlua_list_2.size(); i++)
+		{
+			no_tenlua1.push_back(no_tenlua_list_2[i]);
+			no_tenlua2.push_back(no_tenlua_list_2[i]);
+		}
+
+
+		std::vector<BulletObject*> list_tenlua2 = p_player2.get_bullet_list_tenlua();
+		// đây là khi đạn tên lửa trúng nhân vật
+		for (int i = 0; i < list_tenlua2.size(); i++)
+		{
+			BulletObject* p_bullet = list_tenlua2.at(i);
+			if (p_bullet != NULL)
+			{
+				SDL_Rect tRect;
+
+				tRect.x = p_player1.GetRect().x;
+				tRect.y = p_player1.GetRect().y;
+				tRect.w = p_player1.get_width_frame();
+				tRect.h = p_player1.get_height_frame();
+
+				bool Col = SDLCommonFunc::CheckCollision(p_bullet->GetRect(), tRect);
+				if (p_player1.get_bat_tu() == false)
+				{
+					if (Col)
+					{
+
+						p_player1.check_around_MainObject(map_data, g_screen, p_bullet, tRect.x, tRect.y);
+						map.SetMap(map_data);
+						p_player2.RemoveTenLua_Col(i);
+
+						p_player2.Increase_num_kill();
+						if (p_player2.get_num_kill() == 3)
+						{
+							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+								close();
+								SDL_Quit();
+								return 0;
+							}
+						}
+
+						p_player1.Decrease_num_life();
+
+						p_player1.set_pos2(185, 60);
+
+						time_bat_tu1.start();   //
+
+						p_player1.set_bat_tu(true);
+						//continue;	
+					}
+				}
+				if (Col && p_player1.get_have_lachan())
+				{
+					p_player2.RemoveTenLua_Col(i);
+					p_player1.set_have_lachan(0);
+					p_player1.set_bat_tu(true);
+					time_bat_tu1.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
+				}
+			}
+		}
+		// đây là khi đạn tên lửa không trúng nhân vật nhưng hiệu ứng nổ lại trúng
+		for (int r = 0; r < no_tenlua1.size(); r++) {
+
+			std::pair<NoBom, NoBom> no_bom = no_tenlua1.at(r);
+
+			NoBom doc = no_tenlua1.at(r).first;
+			NoBom ngang = no_tenlua1.at(r).second;
+
+			SDL_Rect tRect;
+
+			tRect.x = p_player1.GetRect().x;
+			tRect.y = p_player1.GetRect().y;
+			tRect.w = p_player1.get_width_frame();
+			tRect.h = p_player1.get_height_frame();
+
+
+
+			SDL_Rect bRect_doc = doc.GetRect();
+			SDL_Rect bRect_ngang = ngang.GetRect();
+
+			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
+			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
+
+			if (p_player1.get_bat_tu() == false)
+			{
+				if (bCol_doc || bCol_ngang)
+				{
+					if (r >= no_tenlua_list_1.size())    // tức là tên lửa của 2 đã giết 1 
+					{
+						p_player2.Increase_num_kill();
+						if (p_player2.get_num_kill() == 3)
+						{
+							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+								no_tenlua1.erase(no_tenlua1.begin() + r);
+								close();
+								SDL_Quit();
+								return 0;
+							}
+						}
+					}
+					p_player1.Decrease_num_life();
+
+					p_player1.set_pos2(185, 60);
+
+					time_bat_tu1.start();   //
+
+					p_player1.set_bat_tu(true);
+					//continue;	
+				}
+			}
+			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan())
+			{
+				p_player1.set_have_lachan(0);
+				p_player1.set_bat_tu(true);
+				time_bat_tu1.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
+			}
+
+
+
+		}
+
 		if (time_bat_tu1.get_ticks() >= 2000) 
 		{ 
 			p_player1.set_bat_tu(false); 
@@ -481,6 +704,182 @@ int main(int argv, char* arg[]) {
 				}
 			}
 		}
+
+		// xử lý va chạm giữa lửa của 1 với nhân vật 2 
+		std::vector <BulletObject*> list_lua1 = p_player1.get_bullet_list_lua();
+		for (int i = 0; i < list_lua1.size(); i++)
+		{
+			BulletObject* p_bullet = list_lua1.at(i);
+			if (p_bullet != NULL)
+			{
+				SDL_Rect tRect;
+
+				tRect.x = p_player2.GetRect().x;
+				tRect.y = p_player2.GetRect().y;
+				tRect.w = p_player2.get_width_frame();
+				tRect.h = p_player2.get_height_frame();
+
+				bool Col = SDLCommonFunc::CheckCollision(p_bullet->GetRect(), tRect);
+
+
+
+				if (p_player2.get_bat_tu() == false)
+				{
+					if (Col)
+					{
+						p_player1.RemoveBullet_Col(i);
+
+						p_player1.Increase_num_kill();
+						if (p_player1.get_num_kill() == 3)
+						{
+							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+
+								close();
+								SDL_Quit();
+								return 0;
+							}
+						}
+
+
+						p_player2.Decrease_num_life();
+						p_player2.set_pos2(185 + 45 * 14, 60);
+
+						time_bat_tu2.start();
+
+						p_player2.set_bat_tu(true);
+
+					}
+				}
+				if (Col && p_player2.get_have_lachan())
+				{
+					p_player1.RemoveBullet_Col(i);
+					p_player2.set_have_lachan(0);
+					p_player2.set_bat_tu(true);
+					time_bat_tu2.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
+				}
+			}
+		}
+
+
+		// xử lý va chạm tên lửa - nhân vật 2 
+
+		std::vector<BulletObject*> list_tenlua1 = p_player1.get_bullet_list_tenlua();
+
+		for (int i = 0; i < list_tenlua1.size(); i++)
+		{
+			BulletObject* p_bullet = list_tenlua1.at(i);
+			if (p_bullet != NULL)
+			{
+				SDL_Rect tRect;
+
+				tRect.x = p_player2.GetRect().x;
+				tRect.y = p_player2.GetRect().y;
+				tRect.w = p_player2.get_width_frame();
+				tRect.h = p_player2.get_height_frame();
+
+				bool Col = SDLCommonFunc::CheckCollision(p_bullet->GetRect(), tRect);
+				if (p_player1.get_bat_tu() == false)
+				{
+					if (Col)
+					{
+
+						p_player2.check_around_MainObject(map_data, g_screen, p_bullet, tRect.x, tRect.y);
+						map.SetMap(map_data);
+						p_player1.RemoveTenLua_Col(i);
+
+						p_player1.Increase_num_kill();
+						if (p_player1.get_num_kill() == 3)
+						{
+							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+								close();
+								SDL_Quit();
+								return 0;
+							}
+						}
+
+						p_player2.Decrease_num_life();
+
+						p_player2.set_pos2(185 + 45 * 14, 60);
+
+						time_bat_tu2.start();   //
+
+						p_player2.set_bat_tu(true);
+						//continue;	
+					}
+				}
+				if (Col && p_player2.get_have_lachan())
+				{
+					p_player1.RemoveTenLua_Col(i);
+					p_player2.set_have_lachan(0);
+					p_player2.set_bat_tu(true);
+					time_bat_tu2.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
+				}
+			}
+		}
+
+		for (int r = 0; r < no_tenlua2.size(); r++) {
+
+			std::pair<NoBom, NoBom> no_bom = no_tenlua2.at(r);
+
+			NoBom doc = no_tenlua2.at(r).first;
+			NoBom ngang = no_tenlua2.at(r).second;
+
+			SDL_Rect tRect;
+
+			tRect.x = p_player2.GetRect().x;
+			tRect.y = p_player2.GetRect().y;
+			tRect.w = p_player2.get_width_frame();
+			tRect.h = p_player2.get_height_frame();
+
+
+
+			SDL_Rect bRect_doc = doc.GetRect();
+			SDL_Rect bRect_ngang = ngang.GetRect();
+
+			bool bCol_doc = SDLCommonFunc::CheckCollision(bRect_doc, tRect);
+			bool bCol_ngang = SDLCommonFunc::CheckCollision(bRect_ngang, tRect);
+
+			if (p_player2.get_bat_tu() == false)
+			{
+				if (bCol_doc || bCol_ngang)
+				{
+					if (r < no_tenlua_list_1.size())    // tức là tên lửa của 2 đã giết 1 
+					{
+						p_player1.Increase_num_kill();
+						if (p_player1.get_num_kill() == 3)
+						{
+							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+							{
+								no_tenlua2.erase(no_tenlua2.begin() + r);
+								close();
+								SDL_Quit();
+								return 0;
+							}
+						}
+					}
+					p_player2.Decrease_num_life();
+
+					p_player2.set_pos2(185 + 45 *14, 60);
+
+					time_bat_tu2.start();   //
+
+					p_player2.set_bat_tu(true);
+					//continue;	
+				}
+			}
+			if ((bCol_doc || bCol_ngang) && p_player2.get_have_lachan())
+			{
+				p_player2.set_have_lachan(0);
+				p_player2.set_bat_tu(true);
+				time_bat_tu2.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
+			}
+
+
+
+		}
+
 
 		if (time_bat_tu2.get_ticks() >= 2000)
 		{

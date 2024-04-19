@@ -58,7 +58,10 @@ public:
 	void set_y_val(const int& x) { y_val = x; }
 	int get_y_val() { return y_val; }
 
-	void HandleMove(const int& x_border, const int& y_border);
+	void HandleMove_Dan(const int& x_border, const int& y_border);
+
+	void HandleMove_TenLua(const int& x_border, const int& y_border);
+
 
 	void set_bullet_dir(const int& x) { bullet_dir = x; }
 	int get_bullet_dir() { return bullet_dir; }
