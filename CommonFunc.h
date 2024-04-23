@@ -63,6 +63,7 @@ typedef struct Input {
 namespace SDLCommonFunc
 {
 	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
+	bool CheckToado(const SDL_Rect& object, int x, int y);
 }
 
 #endif

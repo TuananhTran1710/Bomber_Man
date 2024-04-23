@@ -64,11 +64,82 @@ void close() {
 	IMG_Quit();
 	SDL_Quit();
 }
+int Menu() {
+	BaseObject p_menu,p_nut[5];
+	p_menu.LoadImg("map1/menu_game.png", g_screen);
+	p_nut[0].LoadImg("map1/Start.png", g_screen);
+	p_nut[1].LoadImg("map1/guide.png", g_screen);
+	p_nut[2].LoadImg("map1/exit.png", g_screen);
+	int Kt = -1;
+	do {
+		p_menu.Render(g_screen);
+		p_nut[0].SetRect(640, 320);
+		p_nut[0].Render(g_screen);
+		p_nut[1].SetRect(640, 380);
+		p_nut[1].Render(g_screen);
+		p_nut[2].SetRect(640, 440);
+		p_nut[2].Render(g_screen);
+		while (SDL_PollEvent(&g_event) != 0) {
+			if (g_event.type == SDL_QUIT) {
+				return -1;
+			}
+			if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+				int mouseX, mouseY;
+				const Uint8* state = SDL_GetKeyboardState(NULL);
+				SDL_GetMouseState(&mouseX, &mouseY);
+				for (int i = 0; i <= 2; i++) {
+					if (SDLCommonFunc::CheckToado(p_nut[i].GetRect(), mouseX, mouseY)) Kt = i;
+				}
+			}
+		}
+		if (Kt == 1)
+		{
+			BaseObject p_huongdan;
+			SDL_Rect Rect = { 350,610,190,60 };
+			p_huongdan.LoadImg("map1/huongdan.png", g_screen);
+			p_huongdan.Render(g_screen);
+			do {
+				while (SDL_PollEvent(&g_event) != 0) {
+					if (g_event.type == SDL_QUIT) {
+						return -1;
+					}
+					if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+						int mouseX, mouseY;
+						const Uint8* state = SDL_GetKeyboardState(NULL);
+						SDL_GetMouseState(&mouseX, &mouseY);
 
-int main(int argv, char* arg[]) {
-
+						if (SDLCommonFunc::CheckToado(Rect, mouseX, mouseY)) Kt = -1;
+					}
+				}
+				SDL_RenderPresent(g_screen);
+			} while (Kt == 1);
+		}
+			SDL_RenderPresent(g_screen);
+	} while (Kt < 0);
+	return Kt;
+}
+int Over(SDL_Rect rect1, SDL_Rect rect2)
+{
+	while (SDL_PollEvent(&g_event) != 0) {
+		if (g_event.type == SDL_QUIT) {
+			return -1;
+		}
+		if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+			int mouseX, mouseY;
+			const Uint8* state = SDL_GetKeyboardState(NULL);
+			SDL_GetMouseState(&mouseX, &mouseY);
+			
+			if (SDLCommonFunc::CheckToado(rect1, mouseX, mouseY)) return 1;
+			if (SDLCommonFunc::CheckToado(rect2, mouseX, mouseY)) return 2;
+			
+		}
+	}
+	return -1;
+}
+int Playgame()
+{
 	ImpTimer fps_timer;
-	if (!Init()) return -1;
+	//if (!Init()) return -1;
 	if (!LoadBackground()) return -1;
 	g_background.Render(g_screen);
 
@@ -91,7 +162,7 @@ int main(int argv, char* arg[]) {
 	p_player2.set_clips();
 
 	// xu ly hinh anh la chan
-	p_player1.init_lachan(g_screen, 105 ,80);
+	p_player1.init_lachan(g_screen, 105, 80);
 	p_player2.init_lachan(g_screen, 107, 210);
 	// xu ly hinh anh min
 	p_player1.init_min(g_screen, 105, 103);
@@ -103,8 +174,8 @@ int main(int argv, char* arg[]) {
 
 
 	// xử lý hình ảnh súng lửa
-	p_player1.init_sung_lua(g_screen, 108, 110);
-	p_player2.init_sung_lua(g_screen, 108, 230);
+	p_player1.init_sunglua(g_screen);
+	p_player2.init_sunglua(g_screen);
 
 	p_player1.init_ten_lua(g_screen, 108, 110);
 	p_player2.init_ten_lua(g_screen, 108, 230);
@@ -129,13 +200,13 @@ int main(int argv, char* arg[]) {
 
 
 	ImpTimer time_bat_tu1;  //xu ly thoi gian bất tử cho nhan vat 
-	ImpTimer time_bat_tu2;   
+	ImpTimer time_bat_tu2;
 
 	srand((int)time(0));
 
 	while (!quit)
 	{
-		
+
 		Map map_data = map.getMap();
 
 		fps_timer.start();
@@ -143,8 +214,8 @@ int main(int argv, char* arg[]) {
 			if (g_event.type == SDL_QUIT) {
 				quit = 1;
 			}
-			p_player1.HandleInputAction1(g_event, g_screen, map_data,g_sound_bullet);
-			p_player2.HandleInputAction2(g_event, g_screen, map_data,g_sound_bullet);
+			p_player1.HandleInputAction1(g_event, g_screen, map_data, g_sound_bullet);
+			p_player2.HandleInputAction2(g_event, g_screen, map_data, g_sound_bullet);
 
 		}
 
@@ -154,8 +225,8 @@ int main(int argv, char* arg[]) {
 
 		map.DrawMap(g_screen);
 
-		p_player1.DoPlayer(map_data,g_screen);    // xử lý di chuyển và va chạm
-		p_player2.DoPlayer(map_data,g_screen);    // xử lý di chuyển và va chạm
+		p_player1.DoPlayer(map_data, g_screen);    // xử lý di chuyển và va chạm
+		p_player2.DoPlayer(map_data, g_screen);    // xử lý di chuyển và va chạm
 
 		// xu ly hinh anh la chan ở bảng tồng hợp 
 		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
@@ -186,17 +257,17 @@ int main(int argv, char* arg[]) {
 
 		p_player1.HandleBullet(g_screen);  // xử lý bom & min 
 		p_player2.HandleBullet(g_screen);  // xử lý bom & min
-		 
+
 
 		p_player1.HandleBullet_Lua(g_screen); // xử lý lửa
 		p_player2.HandleBullet_Lua(g_screen);
 
 		p_player1.HandleBullet_TenLua(g_screen, map_data); // xử lý tên lửa
-		p_player2.HandleBullet_TenLua(g_screen,map_data);
+		p_player2.HandleBullet_TenLua(g_screen, map_data);
 
-		p_player1.RemoveBullet_Bom(map_data,g_screen,g_sound_exp);
-		p_player2.RemoveBullet_Bom(map_data,g_screen,g_sound_exp);
-		
+		p_player1.RemoveBullet_Bom(map_data, g_screen, g_sound_exp);
+		p_player2.RemoveBullet_Bom(map_data, g_screen, g_sound_exp);
+
 		//  xử lý súng lửa
 		p_player1.RemoveBullet_Lua(map_data, g_screen);
 		p_player2.RemoveBullet_Lua(map_data, g_screen);
@@ -206,16 +277,16 @@ int main(int argv, char* arg[]) {
 		p_player2.check_col_sungdan(map_data);
 
 		//xử lý va chạm giữa ô chứa vật phẩm và tên lửa
-		p_player1.check_col_tenlua(map_data,g_screen, g_sound_bullet);
-		p_player2.check_col_tenlua(map_data,g_screen,g_sound_bullet);
+		p_player1.check_col_tenlua(map_data, g_screen, g_sound_bullet);
+		p_player2.check_col_tenlua(map_data, g_screen, g_sound_bullet);
 
 
-		map.SetMap(map_data); 
+		map.SetMap(map_data);
 		// cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 
 		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
 		p_player2.Show2(g_screen);
-	
+
 		// xu ly va cham giua nguoi va bom
 		std::vector <std::pair<NoBom, NoBom>> nobom_list_1 = p_player1.get_no_bom_list();
 		std::vector <std::pair<NoBom, NoBom>> nobom_list_2 = p_player2.get_no_bom_list();
@@ -233,7 +304,7 @@ int main(int argv, char* arg[]) {
 			nobom_list2.push_back(nobom_list_2[i]);
 		}
 
-		
+
 
 
 		// xu ly va cham giữa người - mìn
@@ -252,7 +323,7 @@ int main(int argv, char* arg[]) {
 			nomin_list1.push_back(nomin_list_2[i]);
 			nomin_list2.push_back(nomin_list_2[i]);
 		}
-		
+
 		// lấy ra list nổ chung gồm cả nổ bom và mìn để xử lý cho tiện
 		for (int i = 0; i < nomin_list1.size() + nobom_list1.size(); i++)
 		{
@@ -262,14 +333,14 @@ int main(int argv, char* arg[]) {
 
 		for (int i = 0; i < nomin_list2.size() + nobom_list2.size(); i++)
 		{
-			if (i < nobom_list2.size()) no2.push_back( nobom_list2[i] );
-			else no2.push_back(nomin_list2[ i - nobom_list2.size() ]);
+			if (i < nobom_list2.size()) no2.push_back(nobom_list2[i]);
+			else no2.push_back(nomin_list2[i - nobom_list2.size()]);
 		}
 
 
 		// xử lý va chạm giữa nhân vật 1 và nổ bom && nổ mìn 
 
-		for (int r = 0; r < no1.size(); r++){
+		for (int r = 0; r < no1.size(); r++) {
 
 			std::pair<NoBom, NoBom> no_bom = no1.at(r);
 
@@ -296,32 +367,22 @@ int main(int argv, char* arg[]) {
 			{
 				if (bCol_doc || bCol_ngang)
 				{
-					if ( (r >= nobom_list_1.size() && r < nobom_list1.size() ) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size()) )    // tức là bom (mìn) của 2 đã giết 1 
+					if ((r >= nobom_list_1.size() && r < nobom_list1.size()) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size()))    // tức là bom (mìn) của 2 đã giết 1 
 					{
-						p_player2.Increase_num_kill();    
-						if (p_player2.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								no1.erase(no1.begin() + r);
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+						p_player2.Increase_num_kill();
 					}
-					
+
 
 					p_player1.Decrease_num_life();
-					
+
 					time_bat_tu1.start();   //
 
 					p_player1.set_bat_tu(true);
-		
+
 
 				}
 			}
-			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan()) 
+			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan())
 			{
 				p_player1.set_have_lachan(0);
 				p_player1.set_bat_tu(true);
@@ -330,8 +391,8 @@ int main(int argv, char* arg[]) {
 
 
 		}
-	
-		
+
+
 		// xử lý va chạm giữa đạn của 2 với nhân vật 1 
 		std::vector<BulletObject*> list_dan2 = p_player2.get_bullet_list();
 
@@ -348,8 +409,8 @@ int main(int argv, char* arg[]) {
 				tRect.h = p_player1.get_height_frame();
 
 				bool Col = SDLCommonFunc::CheckCollision(p_bullet->GetRect(), tRect);
-				
-				
+
+
 
 				if (p_player1.get_bat_tu() == false)
 				{
@@ -357,20 +418,11 @@ int main(int argv, char* arg[]) {
 					{
 						p_player2.RemoveBullet_Col(i);
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								//list_dan2.erase(list_dan2.begin() + i);
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+
 
 						p_player1.Decrease_num_life();
 
-						
+
 
 						time_bat_tu1.start();   //
 
@@ -378,7 +430,7 @@ int main(int argv, char* arg[]) {
 						//continue;	
 					}
 				}
-				if ( Col && p_player1.get_have_lachan()) 
+				if (Col && p_player1.get_have_lachan())
 				{
 					p_player2.RemoveBullet_Col(i);
 					p_player1.set_have_lachan(0);
@@ -386,8 +438,8 @@ int main(int argv, char* arg[]) {
 					time_bat_tu1.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
 				}
 			}
- 		}
-		
+		}
+
 		// xử lý va chạm giữa lửa của 2 với nhân vật 1 
 		std::vector <BulletObject*> list_lua2 = p_player2.get_bullet_list_lua();
 		for (int i = 0; i < list_lua2.size(); i++)
@@ -413,25 +465,16 @@ int main(int argv, char* arg[]) {
 						p_player2.RemoveBullet_Col(i);
 
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+
 
 						p_player1.Decrease_num_life();
 
-					
 
-						time_bat_tu1.start();  
+
+						time_bat_tu1.start();
 
 						p_player1.set_bat_tu(true);
-					
+
 					}
 				}
 				if (Col && p_player1.get_have_lachan())
@@ -488,19 +531,11 @@ int main(int argv, char* arg[]) {
 						p_player2.RemoveTenLua_Col(i);
 
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+
 
 						p_player1.Decrease_num_life();
 
-						
+
 
 						time_bat_tu1.start();   //
 
@@ -550,20 +585,11 @@ int main(int argv, char* arg[]) {
 					if (r >= no_tenlua_list_1.size())    // tức là tên lửa của 2 đã giết 1 
 					{
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								no_tenlua1.erase(no_tenlua1.begin() + r);
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+
 					}
 					p_player1.Decrease_num_life();
 
-				
+
 
 					time_bat_tu1.start();   //
 
@@ -579,10 +605,10 @@ int main(int argv, char* arg[]) {
 			}
 		}
 
-		if (time_bat_tu1.get_ticks() >= 2000) 
-		{ 
-			p_player1.set_bat_tu(false); 
-		}	
+		if (time_bat_tu1.get_ticks() >= 2000)
+		{
+			p_player1.set_bat_tu(false);
+		}
 		// xử lý chỉ số kill cho nhân vật 2 
 		std::string str_kill_2 = std::to_string(p_player2.get_num_kill());
 		str_kill_2 += "/7";
@@ -599,7 +625,7 @@ int main(int argv, char* arg[]) {
 
 
 		// xử lý va chạm giữa nhân vật 2 và nổ bom & mìn
-		for (int r = 0; r < no2.size(); r++)     
+		for (int r = 0; r < no2.size(); r++)
 		{
 
 			std::pair<NoBom, NoBom> no_bom = no2.at(r);
@@ -626,23 +652,14 @@ int main(int argv, char* arg[]) {
 			{
 				if (bCol_doc || bCol_ngang)
 				{
-					if ( ! ( (r >= nobom_list_1.size() && r < nobom_list1.size()) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size() ) ) )    // tức là bom (mìn) của 1 đã giết 2
+					if (!((r >= nobom_list_1.size() && r < nobom_list1.size()) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size())))    // tức là bom (mìn) của 1 đã giết 2
 					{
-						p_player1.Increase_num_kill();					
-						if (p_player1.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								no2.erase(no2.begin() + r);
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+						p_player1.Increase_num_kill();
+
 					}
 					p_player2.Decrease_num_life();
 
-					
+
 
 					time_bat_tu2.start();   //
 
@@ -684,20 +701,11 @@ int main(int argv, char* arg[]) {
 						p_player1.RemoveBullet_Col(i);
 
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								//list_dan2.erase(list_dan2.begin() + i);
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+
 
 						p_player2.Decrease_num_life();
 
-						
+
 
 						time_bat_tu2.start();   //
 
@@ -740,20 +748,11 @@ int main(int argv, char* arg[]) {
 						p_player1.RemoveBullet_Col(i);
 
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
 
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
 
 
 						p_player2.Decrease_num_life();
-					
+
 
 						time_bat_tu2.start();
 
@@ -801,19 +800,11 @@ int main(int argv, char* arg[]) {
 						p_player1.RemoveTenLua_Col(i);
 
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
+
 
 						p_player2.Decrease_num_life();
 
-					
+
 						time_bat_tu2.start();   //
 
 						p_player2.set_bat_tu(true);
@@ -862,20 +853,10 @@ int main(int argv, char* arg[]) {
 					if (r < no_tenlua_list_1.size())    // tức là tên lửa của 2 đã giết 1 
 					{
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == MAX_KILL)
-						{
-							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-							{
-								no_tenlua2.erase(no_tenlua2.begin() + r);
-								close();
-								SDL_Quit();
-								return 0;
-							}
-						}
 					}
 					p_player2.Decrease_num_life();
 
-					
+
 
 					time_bat_tu2.start();   //
 
@@ -893,7 +874,7 @@ int main(int argv, char* arg[]) {
 
 
 		}
-		
+
 		if (time_bat_tu2.get_ticks() >= 2000)
 		{
 			p_player2.set_bat_tu(false);
@@ -918,43 +899,61 @@ int main(int argv, char* arg[]) {
 		std::string str_time = "Time: ";
 		Uint32 time_val = SDL_GetTicks() / 1000;
 		Uint32 val_time = 300 - time_val;
-		if (val_time <= 0)       
+
+
+
+		std::string str_val = std::to_string(val_time);
+		str_time += str_val;
+		time_game.SetText(str_time);
+		time_game.LoadFromRenderText(font_time, g_screen);
+		time_game.RenderText(g_screen, 35, 550);       // set vi tri hien thi text
+		if (p_player1.get_num_kill() >= MAX_KILL || p_player2.get_num_kill() >= MAX_KILL || val_time <= 0)
 		{
-			if (p_player1.get_num_kill() > p_player2.get_num_kill())
-			{
-				if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-				{
-					quit = true;
-					break;
-				}
+			BaseObject p_over;
+			int Kt_Over = -1;
+			SDL_Rect Rect_1 = { 340,475,165,35 };
+			SDL_Rect Rect_2 = { 525,475,165,35 };
+			if (p_player1.get_num_kill() >= MAX_KILL || (val_time <= 0 && p_player1.get_num_kill() > p_player2.get_num_kill())) {
+				p_over.LoadImg("map1/table2.png", g_screen);
+				p_over.SetRect(227, 150);
+				do {
+
+					p_over.Render(g_screen);
+					Kt_Over = Over(Rect_1, Rect_2);
+					SDL_RenderPresent(g_screen);
+				} while (Kt_Over == -1);
+
 			}
-			else if (p_player1.get_num_kill() < p_player2.get_num_kill())
+			else if (p_player2.get_num_kill() >= MAX_KILL || (val_time <= 0 && p_player2.get_num_kill() > p_player1.get_num_kill()))
 			{
-				if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-				{
-					quit = true;
-					break;
-				}
+				p_over.LoadImg("map1/table1.png", g_screen);
+				p_over.SetRect(227, 150);
+				do {
+
+					p_over.Render(g_screen);
+					Kt_Over = Over(Rect_1, Rect_2);
+
+				} while (Kt_Over == -1);
 			}
 			else
 			{
-				if (MessageBox(NULL, L"Equal", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
-				{
-					quit = true;
-					break;
-				}
-			}
-			
-		}
-		else
-		{
-			std::string str_val = std::to_string(val_time);
-			str_time += str_val;
-			time_game.SetText(str_time);
-			time_game.LoadFromRenderText(font_time, g_screen);
-			time_game.RenderText(g_screen, 35, 550);       // set vi tri hien thi text
-		}
+				p_over.LoadImg("map1/table3.png", g_screen);
+				p_over.SetRect(227, 150);
+				do {
+					p_over.Render(g_screen);
+					Kt_Over = Over(Rect_1, Rect_2);
 
+				} while (Kt_Over == -1);
+			}
+			if (Kt_Over == 2)
+			{
+				return -1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
 		time_game.Free();  // giải phóng cho đỡ tốn bộ nhớ
 		num_bom1.Free();
 		num_bom2.Free();
@@ -977,8 +976,18 @@ int main(int argv, char* arg[]) {
 
 	std::this_thread::sleep_for
 	(std::chrono::milliseconds(500));
-
+}
+int main(int argv, char* arg[]) {
+	Init();
+	int Kt = -1;
+	do
+	{
+		Kt = Menu();
+		if (Kt == 0) {
+			Kt =Playgame(); 
+		}
+	} while (Kt == 0);
 	close();
-
+	
 	return 0;
 }

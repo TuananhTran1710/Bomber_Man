@@ -27,7 +27,7 @@ public:
 
 	void Show1(SDL_Renderer* des);             // load 1 frame len man hinh       
 	void Show2(SDL_Renderer* des);
-	void Show(SDL_Renderer* des, double rect_x , double rect_y);
+	
 	void HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]); // xu ly su kien cho nhan vat 1 
 	void HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]);  // xu ly su kien cho nhan vat 2 
 
@@ -40,10 +40,9 @@ public:
 	void HandleBullet(SDL_Renderer* des);
 
 	void RemoveBullet_Bom(Map& map_data, SDL_Renderer* des, Mix_Chunk* sound[2]);
-	void RemoveBullet_Min(Map& map_data, SDL_Renderer* des);
 
 
-	void set_pos2(float x, float y);
+	void set_pos2(float x, float y);       // hàm để set vị trí cho nhân vật
 
 	int get_width_frame() { return width_frame; }
 	int get_height_frame() { return height_frame; }
@@ -56,9 +55,8 @@ public:
 	void set_bat_tu(bool con) { bat_tu = con; }
 	bool get_bat_tu() { return bat_tu; }
 
-	void set_num_life(int x) { num_life = x; }
 	int get_num_life() { return num_life; }
-	void Increase_num_life() { num_life++; }
+
 	void Decrease_num_life() { num_life--; input_type.die = 1; }
 	
 	void set_max_bom(int x) { max_bom = x; }
@@ -77,7 +75,7 @@ public:
 	int get_have_lachan() { return have_lachan; }
 	void set_have_lachan(int x) { have_lachan = x; }
 
-	// xử lý hình ảnh thông tin lá chắn
+	// xử lý hình ảnh thông tin lá chắn -----------------------------------------
 	void init_lachan(SDL_Renderer* screen , double x, double y);
 	void show_la_chan(SDL_Renderer* screen);
 
@@ -93,7 +91,22 @@ public:
 	void init_ten_lua(SDL_Renderer* screen, double x, double y);
 	void show_ten_lua(SDL_Renderer* screen);
 
-	void check_item_tenlua(int val_1, int val_2);
+	// hiển thị lên đầu nhân vật 
+	void init_sunglua(SDL_Renderer* screen);
+	void show_sunglua(SDL_Renderer* screen,double x, double y);
+
+
+	void init_tenlua(SDL_Renderer* screen);
+	void show_tenlua(SDL_Renderer* screen, double x, double y);
+
+
+	void init_min_(SDL_Renderer* screen);
+	void show_min_(SDL_Renderer* screen, double x, double y);
+
+	void init_sungdan(SDL_Renderer* screen);
+	void show_sungdan(SDL_Renderer* screen, double x, double y);
+
+	//-----------------------------------------------------------------
 
 	int get_num_sung_dien() { return num_sung_dien; }
 	void set_num_sung_dien(int x) { num_sung_dien = x; }
@@ -110,7 +123,6 @@ public:
 	int get_num_ten_lua() { return num_ten_lua; }
 	void set_num_ten_lua(int x) { num_ten_lua = x; }
 
-	void check_col_min(int val_1, int val_2, Map& map_data, SDL_Renderer* des);
 
 	void set_bullet_list(std::vector <BulletObject*> Bullet_list) {	bullet_list_bom = Bullet_list; }
 
@@ -119,9 +131,10 @@ public:
 	std::vector <BulletObject*>  get_bullet_list_min() const { return bullet_list_min; }
 	
 	std::vector<BulletObject*> get_bullet_list() { return bullet_list; }
-
+	//-----------------------------------------------------------------------------
 	void check_item_sungdan(int val_1, int val_2);
 
+	void check_item_tenlua(int val_1, int val_2);
 	void check_item_sunglua(int val_1, int val_2);
 
 	void HandleBullet_Dan(SDL_Renderer* des);
@@ -147,8 +160,6 @@ public:
 	void RemoveBullet_Tenlua(Map& map_data, SDL_Renderer*des,BulletObject* p_bullet, int map_y, int map_x, Mix_Chunk* sound[4]);
 
 	void check_around_MainObject(Map& map_data, SDL_Renderer* des, BulletObject* p_bullet, double x_pos, double y_pos);
-
-	void AddList_NoMin(BulletObject* p_bullet, SDL_Renderer * des);
 
 	int Rand(int l, int r);
 
