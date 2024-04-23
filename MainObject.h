@@ -11,6 +11,7 @@
 class MainObject : public BaseObject
 {
 public:
+
 	MainObject();
 
 	~MainObject();
@@ -26,9 +27,9 @@ public:
 
 	void Show1(SDL_Renderer* des);             // load 1 frame len man hinh       
 	void Show2(SDL_Renderer* des);
-
-	void HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map& map_data); // xu ly su kien cho nhan vat 1 
-	void HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data);  // xu ly su kien cho nhan vat 2 
+	void Show(SDL_Renderer* des, double rect_x , double rect_y);
+	void HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]); // xu ly su kien cho nhan vat 1 
+	void HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]);  // xu ly su kien cho nhan vat 2 
 
 	void set_clips();
 
@@ -38,7 +39,7 @@ public:
 
 	void HandleBullet(SDL_Renderer* des);
 
-	void RemoveBullet_Bom(Map& map_data, SDL_Renderer* des);
+	void RemoveBullet_Bom(Map& map_data, SDL_Renderer* des, Mix_Chunk* sound[2]);
 	void RemoveBullet_Min(Map& map_data, SDL_Renderer* des);
 
 
@@ -58,8 +59,8 @@ public:
 	void set_num_life(int x) { num_life = x; }
 	int get_num_life() { return num_life; }
 	void Increase_num_life() { num_life++; }
-	void Decrease_num_life() { num_life--; }
-
+	void Decrease_num_life() { num_life--; input_type.die = 1; }
+	
 	void set_max_bom(int x) { max_bom = x; }
 	int	 get_max_bom() { return max_bom; }
 	void Increase_max_bom() { max_bom++; }
@@ -141,11 +142,24 @@ public:
 
 	void RemoveBullet_Lua(Map& map_data, SDL_Renderer* des);
 
-	void check_col_tenlua(Map& map_data,SDL_Renderer *des);
+	void check_col_tenlua(Map& map_data,SDL_Renderer *des,Mix_Chunk * sound[4]);
 
-	void RemoveBullet_Tenlua(Map& map_data, SDL_Renderer*des,BulletObject* p_bullet, int map_y, int map_x);
+	void RemoveBullet_Tenlua(Map& map_data, SDL_Renderer*des,BulletObject* p_bullet, int map_y, int map_x, Mix_Chunk* sound[4]);
 
 	void check_around_MainObject(Map& map_data, SDL_Renderer* des, BulletObject* p_bullet, double x_pos, double y_pos);
+
+	void AddList_NoMin(BulletObject* p_bullet, SDL_Renderer * des);
+
+	int Rand(int l, int r);
+
+	void RemoveBullet_Min(const int& idx);
+
+	int get_status() { return status; }
+
+	void set_num_min() { num_min--; }
+
+	void set_type_bullet(int x) { type_bullet = x; }
+	
 private:
 	std::vector <BulletObject* > bullet_list;
 

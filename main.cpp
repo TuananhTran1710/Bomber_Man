@@ -35,6 +35,17 @@ bool Init() {
 			success = false;
 		}
 	}
+
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+	{
+		success = false;
+	}
+	g_sound_bullet[0] = Mix_LoadWAV("Ticking+Bomb.wav");  // âm thanh cho quả bom thường sau khi đặt
+	g_sound_bullet[1] = Mix_LoadWAV("Bomb+4.wav");     // âm thanh cho tên lửa
+	g_sound_bullet[2] = Mix_LoadWAV("Fire1.wav");    // âm thanh cho súng đạn
+	g_sound_bullet[3] = Mix_LoadWAV("Fireball+3.wav");
+	g_sound_exp[0] = Mix_LoadWAV("Explosion+5.wav");  // âm thanh cho vụ nổ mìn
+
 	return success;
 }
 bool LoadBackground() {
@@ -106,9 +117,8 @@ int main(int argv, char* arg[]) {
 	time_game.SetColor(TextObject::WHITE_TEXT);
 
 	// xử lý text sinh mạng và số bom hiện có
-	TextObject life1, life2,num_bom1, num_bom2;
-	life1.SetColor(TextObject::BLACK_TEXT);
-	life2.SetColor(TextObject::BLACK_TEXT);
+	TextObject num_bom1, num_bom2;
+
 	num_bom1.SetColor(TextObject::BLACK_TEXT);
 	num_bom2.SetColor(TextObject::BLACK_TEXT);
 
@@ -133,8 +143,8 @@ int main(int argv, char* arg[]) {
 			if (g_event.type == SDL_QUIT) {
 				quit = 1;
 			}
-			p_player1.HandleInputAction1(g_event, g_screen, map_data);
-			p_player2.HandleInputAction2(g_event, g_screen, map_data);
+			p_player1.HandleInputAction1(g_event, g_screen, map_data,g_sound_bullet);
+			p_player2.HandleInputAction2(g_event, g_screen, map_data,g_sound_bullet);
 
 		}
 
@@ -184,8 +194,8 @@ int main(int argv, char* arg[]) {
 		p_player1.HandleBullet_TenLua(g_screen, map_data); // xử lý tên lửa
 		p_player2.HandleBullet_TenLua(g_screen,map_data);
 
-		p_player1.RemoveBullet_Bom(map_data,g_screen);
-		p_player2.RemoveBullet_Bom(map_data,g_screen);
+		p_player1.RemoveBullet_Bom(map_data,g_screen,g_sound_exp);
+		p_player2.RemoveBullet_Bom(map_data,g_screen,g_sound_exp);
 		
 		//  xử lý súng lửa
 		p_player1.RemoveBullet_Lua(map_data, g_screen);
@@ -196,12 +206,12 @@ int main(int argv, char* arg[]) {
 		p_player2.check_col_sungdan(map_data);
 
 		//xử lý va chạm giữa ô chứa vật phẩm và tên lửa
-		p_player1.check_col_tenlua(map_data,g_screen);
-		p_player2.check_col_tenlua(map_data,g_screen);
+		p_player1.check_col_tenlua(map_data,g_screen, g_sound_bullet);
+		p_player2.check_col_tenlua(map_data,g_screen,g_sound_bullet);
 
 
 		map.SetMap(map_data); 
-		     // cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
+		// cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 
 		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
 		p_player2.Show2(g_screen);
@@ -222,6 +232,9 @@ int main(int argv, char* arg[]) {
 			nobom_list1.push_back(nobom_list_2[i]);
 			nobom_list2.push_back(nobom_list_2[i]);
 		}
+
+		
+
 
 		// xu ly va cham giữa người - mìn
 		std::vector <std::pair<NoBom, NoBom>> nomin_list_1 = p_player1.get_no_min_list();
@@ -252,6 +265,7 @@ int main(int argv, char* arg[]) {
 			if (i < nobom_list2.size()) no2.push_back( nobom_list2[i] );
 			else no2.push_back(nomin_list2[ i - nobom_list2.size() ]);
 		}
+
 
 		// xử lý va chạm giữa nhân vật 1 và nổ bom && nổ mìn 
 
@@ -285,7 +299,7 @@ int main(int argv, char* arg[]) {
 					if ( (r >= nobom_list_1.size() && r < nobom_list1.size() ) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size()) )    // tức là bom (mìn) của 2 đã giết 1 
 					{
 						p_player2.Increase_num_kill();    
-						if (p_player2.get_num_kill() == 3)
+						if (p_player2.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -296,14 +310,15 @@ int main(int argv, char* arg[]) {
 							}
 						}
 					}
+					
+
 					p_player1.Decrease_num_life();
-
-					p_player1.set_pos2(185, 60);
-
+					
 					time_bat_tu1.start();   //
 
 					p_player1.set_bat_tu(true);
-					//continue;	
+		
+
 				}
 			}
 			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan()) 
@@ -316,7 +331,7 @@ int main(int argv, char* arg[]) {
 
 		}
 	
-
+		
 		// xử lý va chạm giữa đạn của 2 với nhân vật 1 
 		std::vector<BulletObject*> list_dan2 = p_player2.get_bullet_list();
 
@@ -341,9 +356,8 @@ int main(int argv, char* arg[]) {
 					if (Col)
 					{
 						p_player2.RemoveBullet_Col(i);
-
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == 3)
+						if (p_player2.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -356,7 +370,7 @@ int main(int argv, char* arg[]) {
 
 						p_player1.Decrease_num_life();
 
-						p_player1.set_pos2(185, 60);
+						
 
 						time_bat_tu1.start();   //
 
@@ -399,7 +413,7 @@ int main(int argv, char* arg[]) {
 						p_player2.RemoveBullet_Col(i);
 
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == 3)
+						if (p_player2.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -412,7 +426,7 @@ int main(int argv, char* arg[]) {
 
 						p_player1.Decrease_num_life();
 
-						p_player1.set_pos2(185, 60);
+					
 
 						time_bat_tu1.start();  
 
@@ -466,13 +480,15 @@ int main(int argv, char* arg[]) {
 				{
 					if (Col)
 					{
-
+						Mix_FreeChunk(g_sound_bullet[1]);
+						g_sound_bullet[1] = Mix_LoadWAV("Explosion+5.wav");
+						Mix_PlayChannel(-1, g_sound_bullet[1], 0);
 						p_player1.check_around_MainObject(map_data, g_screen, p_bullet, tRect.x, tRect.y);
 						map.SetMap(map_data);
 						p_player2.RemoveTenLua_Col(i);
 
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == 3)
+						if (p_player2.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -484,7 +500,7 @@ int main(int argv, char* arg[]) {
 
 						p_player1.Decrease_num_life();
 
-						p_player1.set_pos2(185, 60);
+						
 
 						time_bat_tu1.start();   //
 
@@ -494,6 +510,9 @@ int main(int argv, char* arg[]) {
 				}
 				if (Col && p_player1.get_have_lachan())
 				{
+					Mix_FreeChunk(g_sound_bullet[1]);
+					g_sound_bullet[1] = Mix_LoadWAV("Explosion+5.wav");
+					Mix_PlayChannel(-1, g_sound_bullet[1], 0);
 					p_player2.RemoveTenLua_Col(i);
 					p_player1.set_have_lachan(0);
 					p_player1.set_bat_tu(true);
@@ -531,7 +550,7 @@ int main(int argv, char* arg[]) {
 					if (r >= no_tenlua_list_1.size())    // tức là tên lửa của 2 đã giết 1 
 					{
 						p_player2.Increase_num_kill();
-						if (p_player2.get_num_kill() == 3)
+						if (p_player2.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P2 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -544,7 +563,7 @@ int main(int argv, char* arg[]) {
 					}
 					p_player1.Decrease_num_life();
 
-					p_player1.set_pos2(185, 60);
+				
 
 					time_bat_tu1.start();   //
 
@@ -558,9 +577,6 @@ int main(int argv, char* arg[]) {
 				p_player1.set_bat_tu(true);
 				time_bat_tu1.start();    // sau khi mất lá chắn, cho bất tử trong 2s sau đó
 			}
-
-
-
 		}
 
 		if (time_bat_tu1.get_ticks() >= 2000) 
@@ -569,17 +585,11 @@ int main(int argv, char* arg[]) {
 		}	
 		// xử lý chỉ số kill cho nhân vật 2 
 		std::string str_kill_2 = std::to_string(p_player2.get_num_kill());
-		str_kill_2 += "/3";
+		str_kill_2 += "/7";
 		kill_2.SetText(str_kill_2);
 		kill_2.LoadFromRenderText(font_time, g_screen);
 		kill_2.RenderText(g_screen, 60, 243);
 
-
-		// xử lý text chỉ số sinh mang cho nhân vật 1
-		std::string str_life1 = std:: to_string(p_player1.get_num_life());
-		life1.SetText(str_life1);
-		life1.LoadFromRenderText(font_time, g_screen);
-		life1.RenderText(g_screen, 135, 39);
 
 		// xu ly text chi so bom cho nhan vat 1 
 		std::string str_num_bom1 = std::to_string(p_player1.get_max_bom());
@@ -619,7 +629,7 @@ int main(int argv, char* arg[]) {
 					if ( ! ( (r >= nobom_list_1.size() && r < nobom_list1.size()) || (r >= nobom_list1.size() + nomin_list_1.size() && r < no1.size() ) ) )    // tức là bom (mìn) của 1 đã giết 2
 					{
 						p_player1.Increase_num_kill();					
-						if (p_player1.get_num_kill() == 3)
+						if (p_player1.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -632,7 +642,7 @@ int main(int argv, char* arg[]) {
 					}
 					p_player2.Decrease_num_life();
 
-					p_player2.set_pos2(185 + 45 * 14, 60);
+					
 
 					time_bat_tu2.start();   //
 
@@ -674,7 +684,7 @@ int main(int argv, char* arg[]) {
 						p_player1.RemoveBullet_Col(i);
 
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == 3)
+						if (p_player1.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -687,7 +697,7 @@ int main(int argv, char* arg[]) {
 
 						p_player2.Decrease_num_life();
 
-						p_player2.set_pos2(185 + 45 * 14, 60);
+						
 
 						time_bat_tu2.start();   //
 
@@ -730,7 +740,7 @@ int main(int argv, char* arg[]) {
 						p_player1.RemoveBullet_Col(i);
 
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == 3)
+						if (p_player1.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -743,7 +753,7 @@ int main(int argv, char* arg[]) {
 
 
 						p_player2.Decrease_num_life();
-						p_player2.set_pos2(185 + 45 * 14, 60);
+					
 
 						time_bat_tu2.start();
 
@@ -783,13 +793,15 @@ int main(int argv, char* arg[]) {
 				{
 					if (Col)
 					{
-
+						Mix_FreeChunk(g_sound_bullet[1]);
+						g_sound_bullet[1] = Mix_LoadWAV("Explosion+5.wav");
+						Mix_PlayChannel(-1, g_sound_bullet[1], 0);
 						p_player2.check_around_MainObject(map_data, g_screen, p_bullet, tRect.x, tRect.y);
 						map.SetMap(map_data);
 						p_player1.RemoveTenLua_Col(i);
 
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == 3)
+						if (p_player1.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -801,8 +813,7 @@ int main(int argv, char* arg[]) {
 
 						p_player2.Decrease_num_life();
 
-						p_player2.set_pos2(185 + 45 * 14, 60);
-
+					
 						time_bat_tu2.start();   //
 
 						p_player2.set_bat_tu(true);
@@ -811,6 +822,9 @@ int main(int argv, char* arg[]) {
 				}
 				if (Col && p_player2.get_have_lachan())
 				{
+					Mix_FreeChunk(g_sound_bullet[1]);
+					g_sound_bullet[1] = Mix_LoadWAV("Explosion+5.wav");
+					Mix_PlayChannel(-1, g_sound_bullet[1], 0);
 					p_player1.RemoveTenLua_Col(i);
 					p_player2.set_have_lachan(0);
 					p_player2.set_bat_tu(true);
@@ -848,7 +862,7 @@ int main(int argv, char* arg[]) {
 					if (r < no_tenlua_list_1.size())    // tức là tên lửa của 2 đã giết 1 
 					{
 						p_player1.Increase_num_kill();
-						if (p_player1.get_num_kill() == 3)
+						if (p_player1.get_num_kill() == MAX_KILL)
 						{
 							if (MessageBox(NULL, L"P1 Win", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
 							{
@@ -861,7 +875,7 @@ int main(int argv, char* arg[]) {
 					}
 					p_player2.Decrease_num_life();
 
-					p_player2.set_pos2(185 + 45 *14, 60);
+					
 
 					time_bat_tu2.start();   //
 
@@ -879,8 +893,7 @@ int main(int argv, char* arg[]) {
 
 
 		}
-
-
+		
 		if (time_bat_tu2.get_ticks() >= 2000)
 		{
 			p_player2.set_bat_tu(false);
@@ -888,16 +901,11 @@ int main(int argv, char* arg[]) {
 
 		// xử lý chỉ số kill cho nhân vật 2
 		std::string str_kill_1 = std::to_string(p_player1.get_num_kill());
-		str_kill_1 += "/3";
+		str_kill_1 += "/7";
 		kill_1.SetText(str_kill_1);
 		kill_1.LoadFromRenderText(font_time, g_screen);
 		kill_1.RenderText(g_screen, 58, 122);
 
-		// xử lý text sinh mạng cho nhân vật 2 
-		std::string str_life2 = std::to_string(p_player2.get_num_life());
-		life2.SetText(str_life2);
-		life2.LoadFromRenderText(font_time, g_screen);
-		life2.RenderText(g_screen, 135, 163);
 
 		//xử lý text so bom cho nhân vật 2
 		std::string str_num_bom2 = std::to_string(p_player2.get_max_bom());
@@ -948,8 +956,6 @@ int main(int argv, char* arg[]) {
 		}
 
 		time_game.Free();  // giải phóng cho đỡ tốn bộ nhớ
-		life1.Free();
-		life2.Free();
 		num_bom1.Free();
 		num_bom2.Free();
 		kill_1.Free();

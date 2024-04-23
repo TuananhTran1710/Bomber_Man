@@ -18,9 +18,13 @@
 #include <stdlib.h>
 #include <cstdlib>
 
+
 static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
+
+static Mix_Chunk* g_sound_bullet[4];
+static Mix_Chunk* g_sound_exp[4];
 
 const int FRAME_PER_SECOND = 24;  //fps 
 
@@ -45,6 +49,7 @@ const int COLOR_B = 253;
 
 #define BLANK_TILE 0 //  gia tri cua o khong di duoc
 
+#define MAX_KILL 7
 
 typedef struct Map {
 	int tile[MAX_MAP_Y][MAX_MAP_X];
@@ -52,7 +57,7 @@ typedef struct Map {
 
 
 typedef struct Input {
-	int left, right, up, down;
+	int left, right, up, down,die;
 };
 
 namespace SDLCommonFunc
