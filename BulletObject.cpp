@@ -77,6 +77,10 @@ void BulletObject::LoadImgBullet(SDL_Renderer* des)
 	{
 		LoadImg("map1/ten_lua1.png", des);
 	}
+	else if (bullet_type == SUNG_DIEN)
+	{
+		LoadImg("map1/lazer_ngang.png", des);
+	}
 	else
 	{
 		LoadImg("map1/bom.png", des);

@@ -86,8 +86,10 @@ bool SDLCommonFunc::CheckCollision(const SDL_Rect& object1, const SDL_Rect& obje
 
     return false;
 }
+
+
 bool SDLCommonFunc::CheckToado(const SDL_Rect& object, int x, int y) {
-    if ((object.x < x&&x < object.x + object.w) && (object.y < y&& y < object.y + object.h)) {
+    if ((object.x < x && x < object.x + object.w) && (object.y < y && y < object.y + object.h)) {
         return true;
     }
     return false;

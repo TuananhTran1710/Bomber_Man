@@ -76,22 +76,13 @@ public:
 	void set_have_lachan(int x) { have_lachan = x; }
 
 	// xử lý hình ảnh thông tin lá chắn -----------------------------------------
-	void init_lachan(SDL_Renderer* screen , double x, double y);
-	void show_la_chan(SDL_Renderer* screen);
-
-	void init_min(SDL_Renderer* screen, double x, double y);
-	void show_min(SDL_Renderer* screen);
-
-	void init_sung_dan(SDL_Renderer* screen, double x, double y);
-	void show_sung_dan(SDL_Renderer* screen);
-
-	void init_sung_lua(SDL_Renderer* screen, double x, double y);
-	void show_sung_lua(SDL_Renderer* screen);
-
-	void init_ten_lua(SDL_Renderer* screen, double x, double y);
-	void show_ten_lua(SDL_Renderer* screen);
 
 	// hiển thị lên đầu nhân vật 
+
+	void init_la_chan(SDL_Renderer* screen, double x, double y);
+	void show_la_chan(SDL_Renderer* screen);
+
+
 	void init_sunglua(SDL_Renderer* screen);
 	void show_sunglua(SDL_Renderer* screen,double x, double y);
 
@@ -106,6 +97,9 @@ public:
 	void init_sungdan(SDL_Renderer* screen);
 	void show_sungdan(SDL_Renderer* screen, double x, double y);
 
+
+	void init_sungdien(SDL_Renderer* screen);
+	void show_sungdien(SDL_Renderer* screen, double x, double y);
 	//-----------------------------------------------------------------
 
 	int get_num_sung_dien() { return num_sung_dien; }
@@ -137,6 +131,8 @@ public:
 	void check_item_tenlua(int val_1, int val_2);
 	void check_item_sunglua(int val_1, int val_2);
 
+	void check_item_sungdien(int val_1, int val_2);
+
 	void HandleBullet_Dan(SDL_Renderer* des);
 
 
@@ -163,7 +159,8 @@ public:
 
 	int Rand(int l, int r);
 
-	void RemoveBullet_Min(const int& idx);
+	void Rand2( int l, int r , Map&map_data);
+	//void RemoveBullet_Min(const int& idx);
 
 	int get_status() { return status; }
 

@@ -4,8 +4,7 @@
 #include "MainObject.h"
 #include "ImpTimer.h"
 #include "TextObject.h"
-
-
+Uint32 val;
 BaseObject g_background;
 TTF_Font *font_time = NULL;
 bool Init() {
@@ -64,78 +63,92 @@ void close() {
 	IMG_Quit();
 	SDL_Quit();
 }
+
+
+
 int Menu() {
 	BaseObject p_menu,p_nut[5];
 	p_menu.LoadImg("map1/menu_game.png", g_screen);
 	p_nut[0].LoadImg("map1/Start.png", g_screen);
 	p_nut[1].LoadImg("map1/guide.png", g_screen);
-	p_nut[2].LoadImg("map1/exit.png", g_screen);
+	p_nut[2].LoadImg("map1/exit.png", g_screen);       // nút game khác là nút thoát chương trình
+
+
 	int Kt = -1;
-	do {
+
+	do{                                      // kt = -1 thì hiện lên menu chính
 		p_menu.Render(g_screen);
 		p_nut[0].SetRect(640, 320);
 		p_nut[0].Render(g_screen);
+
 		p_nut[1].SetRect(640, 380);
 		p_nut[1].Render(g_screen);
+
 		p_nut[2].SetRect(640, 440);
-		p_nut[2].Render(g_screen);
-		while (SDL_PollEvent(&g_event) != 0) {
-			if (g_event.type == SDL_QUIT) {
-				return -1;
-			}
-			if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+		p_nut[2].Render(g_screen); 
+		while (SDL_PollEvent(&g_event) != 0) 
+		{
+			if (g_event.type == SDL_QUIT) return -1;         // return -1 là thoát chương trình 
+					
+			if (g_event.type == SDL_MOUSEBUTTONDOWN) 
+			{
 				int mouseX, mouseY;
 				const Uint8* state = SDL_GetKeyboardState(NULL);
-				SDL_GetMouseState(&mouseX, &mouseY);
-				for (int i = 0; i <= 2; i++) {
-					if (SDLCommonFunc::CheckToado(p_nut[i].GetRect(), mouseX, mouseY)) Kt = i;
+				SDL_GetMouseState(&mouseX, &mouseY);           // lấy tọa độ chuột 
+				for (int i = 0; i <= 2; i++) 
+				{
+					if (SDLCommonFunc::CheckToado(p_nut[i].GetRect(), mouseX, mouseY)) Kt = i;       // cập nhật cửa sổ menu
 				}
 			}
 		}
-		if (Kt == 1)
+		if (Kt == 1)       // Kt bằng 1 thì chui vào phần hướng dẫn
 		{
 			BaseObject p_huongdan;
-			SDL_Rect Rect = { 350,610,190,60 };
+			SDL_Rect Rect = { 350,610,190,60 };           // rect của nút back trong phần hướng dẫn
 			p_huongdan.LoadImg("map1/huongdan.png", g_screen);
 			p_huongdan.Render(g_screen);
-			do {
-				while (SDL_PollEvent(&g_event) != 0) {
-					if (g_event.type == SDL_QUIT) {
-						return -1;
-					}
-					if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+			do 
+			{
+				while (SDL_PollEvent(&g_event) != 0) 
+				{
+					if (g_event.type == SDL_QUIT) return -1;
+
+					if (g_event.type == SDL_MOUSEBUTTONDOWN) 
+					{
 						int mouseX, mouseY;
 						const Uint8* state = SDL_GetKeyboardState(NULL);
 						SDL_GetMouseState(&mouseX, &mouseY);
-
-						if (SDLCommonFunc::CheckToado(Rect, mouseX, mouseY)) Kt = -1;
+						if (SDLCommonFunc::CheckToado(Rect, mouseX, mouseY)) Kt = -1;    // để thoát phần hướng dẫn ra ngoài menu chính
 					}
 				}
 				SDL_RenderPresent(g_screen);
 			} while (Kt == 1);
 		}
-			SDL_RenderPresent(g_screen);
+
+		SDL_RenderPresent(g_screen);
 	} while (Kt < 0);
+
 	return Kt;
 }
+
 int Over(SDL_Rect rect1, SDL_Rect rect2)
 {
 	while (SDL_PollEvent(&g_event) != 0) {
-		if (g_event.type == SDL_QUIT) {
-			return -1;
-		}
-		if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+		if (g_event.type == SDL_QUIT) return 0;
+
+		if (g_event.type == SDL_MOUSEBUTTONDOWN) 
+		{
 			int mouseX, mouseY;
 			const Uint8* state = SDL_GetKeyboardState(NULL);
 			SDL_GetMouseState(&mouseX, &mouseY);
 			
-			if (SDLCommonFunc::CheckToado(rect1, mouseX, mouseY)) return 1;
-			if (SDLCommonFunc::CheckToado(rect2, mouseX, mouseY)) return 2;
-			
+			if (SDLCommonFunc::CheckToado(rect1, mouseX, mouseY)) return 1;     // là khi ấn vào nút quay về menu ở bảng tổng kết 
+			if (SDLCommonFunc::CheckToado(rect2, mouseX, mouseY)) return 2;		// là khi ấn vào nút thoát (game khác) ở bảng tồng kết	
 		}
 	}
-	return -1;
+	return -1;             
 }
+
 int Playgame()
 {
 	ImpTimer fps_timer;
@@ -161,24 +174,25 @@ int Playgame()
 	p_player1.set_clips();
 	p_player2.set_clips();
 
-	// xu ly hinh anh la chan
-	p_player1.init_lachan(g_screen, 105, 80);
-	p_player2.init_lachan(g_screen, 107, 210);
 	// xu ly hinh anh min
-	p_player1.init_min(g_screen, 105, 103);
-	p_player2.init_min(g_screen, 105, 222);
+	p_player1.init_min_(g_screen);
+	p_player2.init_min_(g_screen);
 
-	// xử lý hình ảnh súng đạn
-	p_player1.init_sung_dan(g_screen, 105, 103);
-	p_player2.init_sung_dan(g_screen, 105, 222);
+	 //xử lý hình ảnh súng đạn
+	p_player1.init_sungdan(g_screen);
+	p_player2.init_sungdan(g_screen);
 
-
-	// xử lý hình ảnh súng lửa
+	p_player1.init_sungdien(g_screen);
+	p_player2.init_sungdien(g_screen);
+	 //xử lý hình ảnh súng lửa
 	p_player1.init_sunglua(g_screen);
 	p_player2.init_sunglua(g_screen);
 
-	p_player1.init_ten_lua(g_screen, 108, 110);
-	p_player2.init_ten_lua(g_screen, 108, 230);
+	p_player1.init_tenlua(g_screen);
+	p_player2.init_tenlua(g_screen);
+	//--------------------------------------------------
+	p_player1.init_la_chan(g_screen, 115, 160);
+	p_player2.init_la_chan(g_screen, 115, 430);
 
 
 	bool quit = 0;
@@ -187,7 +201,7 @@ int Playgame()
 	TextObject time_game;
 	time_game.SetColor(TextObject::WHITE_TEXT);
 
-	// xử lý text sinh mạng và số bom hiện có
+	// xử lý text số bom hiện có
 	TextObject num_bom1, num_bom2;
 
 	num_bom1.SetColor(TextObject::BLACK_TEXT);
@@ -204,10 +218,16 @@ int Playgame()
 
 	srand((int)time(0));
 
+	Map map_data = map.getMap();
+	p_player1.Rand2(0, 7, map_data);
+
+	//map.SetMap(map_data); 
+
 	while (!quit)
 	{
 
 		Map map_data = map.getMap();
+
 
 		fps_timer.start();
 		while (SDL_PollEvent(&g_event) != 0) {
@@ -228,28 +248,16 @@ int Playgame()
 		p_player1.DoPlayer(map_data, g_screen);    // xử lý di chuyển và va chạm
 		p_player2.DoPlayer(map_data, g_screen);    // xử lý di chuyển và va chạm
 
-		// xu ly hinh anh la chan ở bảng tồng hợp 
-		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
-		if (p_player2.get_have_lachan()) p_player2.show_la_chan(g_screen);
 		// set bất tử sau khi ăn lá chắn
 		if (p_player1.get_have_lachan()) p_player1.set_bat_tu(true);
 		if (p_player2.get_have_lachan()) p_player2.set_bat_tu(true);
 		//
 
-		// xu ly hinh anh mìn ở bàng tổng hợp
-		if (p_player1.get_num_min()) p_player1.show_min(g_screen);
-		if (p_player2.get_num_min()) p_player2.show_min(g_screen);
-
-		// xử lý hình ảnh súng đạn ở bảng tổng hợp
-		if (p_player1.get_num_sung_dan()) p_player1.show_sung_dan(g_screen);
-		if (p_player2.get_num_sung_dan()) p_player2.show_sung_dan(g_screen);
-
-		// xử lý hình ảnh súng lửa ở bảng tổng hợp
-		if (p_player1.get_num_sung_lua()) p_player1.show_sung_lua(g_screen);
-		if (p_player2.get_num_sung_lua()) p_player2.show_sung_lua(g_screen);
-
-		if (p_player1.get_num_ten_lua()) p_player1.show_ten_lua(g_screen);
-		if (p_player2.get_num_ten_lua()) p_player2.show_ten_lua(g_screen);
+	
+		
+		//---------------------------------
+		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
+		if (p_player2.get_have_lachan()) p_player2.show_la_chan(g_screen);
 
 		p_player1.HandleBullet_Dan(g_screen); // xu ly dan
 		p_player2.HandleBullet_Dan(g_screen);
@@ -610,18 +618,18 @@ int Playgame()
 			p_player1.set_bat_tu(false);
 		}
 		// xử lý chỉ số kill cho nhân vật 2 
-		std::string str_kill_2 = std::to_string(p_player2.get_num_kill());
+		std::string str_kill_2 =  std::to_string(p_player2.get_num_kill());
 		str_kill_2 += "/7";
 		kill_2.SetText(str_kill_2);
 		kill_2.LoadFromRenderText(font_time, g_screen);
-		kill_2.RenderText(g_screen, 60, 243);
+		kill_2.RenderText(g_screen, 40, 485);
 
 
 		// xu ly text chi so bom cho nhan vat 1 
-		std::string str_num_bom1 = std::to_string(p_player1.get_max_bom());
+		std::string str_num_bom1 = ":" + std::to_string(p_player1.get_max_bom());
 		num_bom1.SetText(str_num_bom1);
 		num_bom1.LoadFromRenderText(font_time, g_screen);
-		num_bom1.RenderText(g_screen, 135, 60);
+		num_bom1.RenderText(g_screen, 57, 170);
 
 
 		// xử lý va chạm giữa nhân vật 2 và nổ bom & mìn
@@ -880,19 +888,19 @@ int Playgame()
 			p_player2.set_bat_tu(false);
 		}
 
-		// xử lý chỉ số kill cho nhân vật 2
+		// xử lý chỉ số kill cho nhân vật 1
 		std::string str_kill_1 = std::to_string(p_player1.get_num_kill());
 		str_kill_1 += "/7";
 		kill_1.SetText(str_kill_1);
 		kill_1.LoadFromRenderText(font_time, g_screen);
-		kill_1.RenderText(g_screen, 58, 122);
+		kill_1.RenderText(g_screen, 40, 208);
 
 
 		//xử lý text so bom cho nhân vật 2
-		std::string str_num_bom2 = std::to_string(p_player2.get_max_bom());
+		std::string str_num_bom2 = ":" + std::to_string(p_player2.get_max_bom());
 		num_bom2.SetText(str_num_bom2);
 		num_bom2.LoadFromRenderText(font_time, g_screen);
-		num_bom2.RenderText(g_screen, 135, 187);
+		num_bom2.RenderText(g_screen, 57, 445);
 
 		//Show game time (xử lý text)
 		time_game.SetColor(TextObject::WHITE_TEXT);
@@ -900,24 +908,26 @@ int Playgame()
 		Uint32 time_val = SDL_GetTicks() / 1000;
 		Uint32 val_time = 300 - time_val;
 
-
-
 		std::string str_val = std::to_string(val_time);
 		str_time += str_val;
 		time_game.SetText(str_time);
 		time_game.LoadFromRenderText(font_time, g_screen);
 		time_game.RenderText(g_screen, 35, 550);       // set vi tri hien thi text
+
+		//--------------------------------------- xử lý game over------------------------------------------------
+
 		if (p_player1.get_num_kill() >= MAX_KILL || p_player2.get_num_kill() >= MAX_KILL || val_time <= 0)
 		{
 			BaseObject p_over;
 			int Kt_Over = -1;
-			SDL_Rect Rect_1 = { 340,475,165,35 };
-			SDL_Rect Rect_2 = { 525,475,165,35 };
-			if (p_player1.get_num_kill() >= MAX_KILL || (val_time <= 0 && p_player1.get_num_kill() > p_player2.get_num_kill())) {
+			SDL_Rect Rect_1 = { 340,475,165,35 };                // là rect của nút menu ở table xuất hiện sau khi game kết thúc
+			SDL_Rect Rect_2 = { 525,475,165,35 };				// là rect của nút "game khác " (thoát) ở bảng table	
+			if (p_player1.get_num_kill() >= MAX_KILL || (val_time <= 0 && p_player1.get_num_kill() > p_player2.get_num_kill()) ) 
+			{
 				p_over.LoadImg("map1/table2.png", g_screen);
 				p_over.SetRect(227, 150);
-				do {
-
+				do 
+				{
 					p_over.Render(g_screen);
 					Kt_Over = Over(Rect_1, Rect_2);
 					SDL_RenderPresent(g_screen);
@@ -928,30 +938,30 @@ int Playgame()
 			{
 				p_over.LoadImg("map1/table1.png", g_screen);
 				p_over.SetRect(227, 150);
-				do {
-
+				do 
+				{
 					p_over.Render(g_screen);
 					Kt_Over = Over(Rect_1, Rect_2);
-
+					SDL_RenderPresent(g_screen);
 				} while (Kt_Over == -1);
 			}
 			else
 			{
 				p_over.LoadImg("map1/table3.png", g_screen);
 				p_over.SetRect(227, 150);
-				do {
+				do 
+				{
 					p_over.Render(g_screen);
 					Kt_Over = Over(Rect_1, Rect_2);
-
 				} while (Kt_Over == -1);
 			}
-			if (Kt_Over == 2)
+			if (Kt_Over == 2 || Kt_Over == 0)    // = 0 là đã ấn vào QUIT
 			{
-				return -1;
+				return -1;         // thoát chương trình
 			}
 			else
 			{
-				return 0;
+				return 0;      // tức là Kt_Over = 1 (ấn trở lại menu)
 			}
 		}
 		time_game.Free();  // giải phóng cho đỡ tốn bộ nhớ
@@ -977,17 +987,18 @@ int Playgame()
 	std::this_thread::sleep_for
 	(std::chrono::milliseconds(500));
 }
-int main(int argv, char* arg[]) {
+int main(int argv, char* arg[]){
 	Init();
 	int Kt = -1;
 	do
 	{
 		Kt = Menu();
-		if (Kt == 0) {
-			Kt =Playgame(); 
+		
+		if (Kt == 0) 
+		{
+			Kt = Playgame(); 
 		}
 	} while (Kt == 0);
 	close();
-	
 	return 0;
 }
