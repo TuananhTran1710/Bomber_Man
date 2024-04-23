@@ -7,7 +7,10 @@
 Uint32 val;
 BaseObject g_background;
 TTF_Font *font_time = NULL;
+
+int B;           
 bool Init() {
+	B = SDL_GetTicks();             // là thời gian khi bắt đầu vào menu
 	bool success = 1;
 	int ret = SDL_Init(SDL_INIT_VIDEO);
 	if (ret < 0) return 0;
@@ -149,6 +152,27 @@ int Over(SDL_Rect rect1, SDL_Rect rect2)
 	return -1;             
 }
 
+int dx1[4] = { -1,0,0,1 };
+int dy1[4] = { 0,1,-1,0 };
+char a[100][100];
+bool visited[100][100];
+
+void dfs(int i, int j)
+{
+	visited[i][j] = true;
+	for (int k = 0; k < 4; k++)
+	{
+		int i1 = i + dx1[k];
+		int j1 = j + dy1[k];
+		if (i1 >= 1 && i1 <= 13 && j1 >= 0 && j1 <= 14 && a[i1][j1] == 'x' && visited[i1][j1] == false)
+		{
+			dfs(i1, j1);
+		}
+	}
+}
+
+
+
 int Playgame()
 {
 	ImpTimer fps_timer;
@@ -219,9 +243,41 @@ int Playgame()
 	srand((int)time(0));
 
 	Map map_data = map.getMap();
-	p_player1.Rand2(0, 7, map_data);
 
-	//map.SetMap(map_data); 
+	int cnt = 0;      // đếm số thành phần liên thông của đồ thị
+	while (cnt != 1)
+	{
+		p_player1.Rand2 (0, 7, map_data);
+		memset(visited, false, sizeof(visited));
+		cnt = 0;
+
+		for (int i = 1; i <= 13; i++)
+		{
+			for (int j = 0; j <= 14; j++)
+			{
+				if (map_data.tile[i][j] != 3 && map_data.tile[i][j] != 7)
+				{
+					a[i][j] = 'x';
+				}
+				else a[i][j] = 'o';
+			}
+		}
+		for (int i = 1; i <= 13; i++)
+		{
+			for (int j = 0; j <= 14; j++)
+			{
+				if (a[i][j] == 'x' && visited[i][j] == false)
+				{
+					dfs(i, j);
+					cnt++;
+				}
+			}
+		}
+	}
+
+	int denta_time = SDL_GetTicks() - B;            // khi bắt đầu ấn vào chơi
+
+	map.SetMap(map_data);
 
 	while (!quit)
 	{
@@ -901,13 +957,15 @@ int Playgame()
 		num_bom2.SetText(str_num_bom2);
 		num_bom2.LoadFromRenderText(font_time, g_screen);
 		num_bom2.RenderText(g_screen, 57, 445);
-
+		//---------------------------------------------------------------------
 		//Show game time (xử lý text)
 		time_game.SetColor(TextObject::WHITE_TEXT);
 		std::string str_time = "Time: ";
-		Uint32 time_val = SDL_GetTicks() / 1000;
-		Uint32 val_time = 300 - time_val;
+		Uint32 time_val = SDL_GetTicks() / 1000;               // chia 1000 để ra đơn vị ms 
+		Uint32 val_time = denta_time / 1000 + 300 - time_val;
 
+
+		//------------------------------------------------------------------------
 		std::string str_val = std::to_string(val_time);
 		str_time += str_val;
 		time_game.SetText(str_time);
@@ -953,6 +1011,7 @@ int Playgame()
 				{
 					p_over.Render(g_screen);
 					Kt_Over = Over(Rect_1, Rect_2);
+					SDL_RenderPresent(g_screen);
 				} while (Kt_Over == -1);
 			}
 			if (Kt_Over == 2 || Kt_Over == 0)    // = 0 là đã ấn vào QUIT
@@ -987,6 +1046,9 @@ int Playgame()
 	std::this_thread::sleep_for
 	(std::chrono::milliseconds(500));
 }
+
+
+
 int main(int argv, char* arg[]){
 	Init();
 	int Kt = -1;
@@ -996,6 +1058,7 @@ int main(int argv, char* arg[]){
 		
 		if (Kt == 0) 
 		{
+
 			Kt = Playgame(); 
 		}
 	} while (Kt == 0);

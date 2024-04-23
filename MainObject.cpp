@@ -1129,11 +1129,10 @@ void MainObject::Rand2(int l , int r, Map&map_data)
 	{
 		for (int j = 0; j <= 14; j++)
 		{
-			int x = 0 + rand() % 8;
-			if (x != 1 && x != 2)
-			{
-				map_data.tile[i][j] = x;
-			}
+			int x = l + rand() % (r - l + 1);
+			if (x == 2)	map_data.tile[i][j] = 4 + rand() % 3;           // để tăng xác suất của ô 4 , 5, 6
+			else if (x == 1) map_data.tile[i][j] = 0;     //  để tăng xác suất xuất hiện của ô 0 
+			else map_data.tile[i][j] = x;
 		}
 	}
 	map_data.tile[1][0] = 0;

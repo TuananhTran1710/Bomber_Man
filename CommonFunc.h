@@ -17,6 +17,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <cstdlib>
+#include <cstring>
 
 
 static SDL_Window* g_window = NULL;
