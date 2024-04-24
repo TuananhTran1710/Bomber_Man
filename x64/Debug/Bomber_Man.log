@@ -1,9 +1,65 @@
-﻿  main.cpp
+﻿  MainObject.cpp
 C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\CommonFunc.h(57,2): warning C4091: 'typedef ': ignored on left of 'Map' when no variable is declared
-  (compiling source file 'main.cpp')
+  (compiling source file 'MainObject.cpp')
   
 C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\CommonFunc.h(62,2): warning C4091: 'typedef ': ignored on left of 'Input' when no variable is declared
-  (compiling source file 'main.cpp')
+  (compiling source file 'MainObject.cpp')
   
-C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\main.cpp(1048,1): warning C4715: 'Playgame': not all control paths return a value
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(114,12): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(115,12): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(165,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(166,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(259,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(259,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(284,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(284,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(368,52): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(375,71): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(510,52): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(518,71): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(558,9): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(559,9): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(573,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(574,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(667,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(667,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(691,113): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(691,67): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(774,52): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(781,71): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(915,52): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(923,71): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(964,9): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(965,9): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(976,9): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(977,9): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1510,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1511,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1751,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1772,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1846,23): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1846,20): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1859,21): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1859,18): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1871,18): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1871,15): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1883,22): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1883,19): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1895,23): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1895,20): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1903,20): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1903,17): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1935,33): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1936,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1937,24): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1938,43): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(1970,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2000,17): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2005,25): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2006,43): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2007,32): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2008,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2037,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2070,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ADMIN\Downloads\Bomber_Man\Bomber_Man\MainObject.cpp(2082,53): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Bomber_Man.vcxproj -> C:\Users\ADMIN\Downloads\Bomber_Man\x64\Debug\Bomber_Man.exe

@@ -1141,7 +1141,14 @@ void MainObject::Rand2(int l , int r, Map&map_data)
 	map_data.tile[1][13] = 0;
 	map_data.tile[1][14] = 0;
 	map_data.tile[2][14] = 0;
-
+	
+	map_data.tile[13][0] = 0;
+	map_data.tile[13][1] = 0;
+	map_data.tile[12][0] = 0;
+	
+	map_data.tile[13][14] = 0;
+	map_data.tile[13][13] = 0;
+	map_data.tile[12][14] = 0;
 }
 
 void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des, Mix_Chunk* sound[2]) {
