@@ -2,7 +2,11 @@
 # GIỚI THIỆU GAME
 
 BomberMan là một game chiến thuật lấy ý tưởng chính từ tựa game Bom IT, với những nhân vật hoạt hình vui nhộn, bạn sẽ nhập vai vào một nhân vật và đi ăn các item bằng cách đặt bom để phá các ô chứa nó, sau đó dùng sẽ khéo léo và nhanh nhạy của mình để hạ gục đối thủ.
+# MỤC LỤC
 
+# 0. CÁCH TẢI GAME
+* Tải game được nén thành file .zip tại link sau: https://github.com/TuananhTran1710/Bomber_Man/releases
+* Giải nén game vào một thư mục và bật Bomber_Man.exe lên và chơi
 # 1. CẤU TRÚC GAME
  ![t](https://github.com/TuananhTran1710/Bomber_Man/blob/main/map1/menu.png?raw=true)
  
@@ -74,4 +78,3 @@ BomberMan là một game chiến thuật lấy ý tưởng chính từ tựa gam
 * Lấy một số hình ảnh item và map
 
 Ngoài ra còn một số hình ảnh khác được copy trên các trang web của google
-
