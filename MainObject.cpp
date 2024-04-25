@@ -1614,6 +1614,8 @@ void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des, Mix_Chunk* so
 					type_bullet = 15;
 				}
 			}
+
+			//--------------------------------------------------------------
 			else if (p_bullet->GetRect().y < 60 + 5)
 			{
 				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y - 1, map_x, sound);
