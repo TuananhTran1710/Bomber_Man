@@ -71,6 +71,7 @@ BomberMan là một game chiến thuật lấy ý tưởng chính từ tựa gam
 * MainObject.h và MainObject.cpp: xây dựng nhân vật chính của game.
 * BulletObject.h và BulletObject.cpp: quản lý các tính năng của đạn, di chuyển của đạn
 * Nobom.h và Nobom.cpp: quản lý hình ảnh vụ nổ
+* TextObject quản lý về text trong game
 # 5. NGUỒN THAM KHẢO
 [Phát Triển Phần Mềm 123A-Z](https://www.youtube.com/@PhatTrienPhanMem123AZ)
 * Toàn bộ file : ImpTimer.cpp, ImpTimer.h, BaseObject.h, BaseObject.cpp, TextObject.h, TextObject.cpp, game_map.h
