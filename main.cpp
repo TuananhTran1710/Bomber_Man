@@ -1016,10 +1016,16 @@ int Playgame()
 			}
 			if (Kt_Over == 2 || Kt_Over == 0)    // = 0 là đã ấn vào QUIT
 			{
+				p_player1.RemoveBullet_Bom(map_data, g_screen, g_sound_exp);
+				p_player2.RemoveBullet_Bom(map_data, g_screen, g_sound_exp);
+				map.SetMap(map_data);
 				return -1;         // thoát chương trình
 			}
 			else
 			{
+				p_player1.RemoveBullet_Bom(map_data, g_screen, g_sound_exp);
+				p_player2.RemoveBullet_Bom(map_data, g_screen, g_sound_exp);
+				map.SetMap(map_data);
 				return 0;      // tức là Kt_Over = 1 (ấn trở lại menu)
 			}
 		}
@@ -1052,6 +1058,8 @@ int Playgame()
 int main(int argv, char* arg[]){
 	Init();
 	int Kt = -1;
+	//int time1 = 0;
+	
 	do
 	{
 		Kt = Menu();
@@ -1060,6 +1068,7 @@ int main(int argv, char* arg[]){
 		{
 
 			Kt = Playgame(); 
+		
 		}
 	} while (Kt == 0);
 	close();

@@ -4,7 +4,7 @@
 
 #include "BaseObject.h"
 #include "CommonFunc.h"
-
+  
 class NoBom : public BaseObject
 {
 public:

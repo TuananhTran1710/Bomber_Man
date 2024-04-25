@@ -14,7 +14,7 @@ public:
 
 	MainObject();
 
-	~MainObject();
+	~MainObject(); 
 	enum WalkType
 	{
 		WALK_RIGHT,
@@ -24,14 +24,14 @@ public:
 	};
 
 	bool LoadImg(std::string path, SDL_Renderer* screen);   // load ca anh to len va lay width_frame, height_frame
+	void set_clips();
 
 	void Show1(SDL_Renderer* des);             // load 1 frame len man hinh       
-	void Show2(SDL_Renderer* des);
+	void Show2(SDL_Renderer* des);                                                                            
 	
 	void HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]); // xu ly su kien cho nhan vat 1 
 	void HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]);  // xu ly su kien cho nhan vat 2 
 
-	void set_clips();
 
 	void DoPlayer(Map& map_data, SDL_Renderer*des);
 	void CheckToMap(Map& map_data, SDL_Renderer *des);
@@ -183,7 +183,7 @@ private:
 	Input input_type;
 	int frame;   // luu chi so frame 
 	int status;  // xem la WALK_Right hay left , up , down 
-	int max_bom;
+	                                                                                                                                                             
 	int num_life;
 
 	std::vector< std :: pair <NoBom,NoBom> > nobom;
@@ -194,6 +194,7 @@ private:
 	int num_kill;
 	int have_lachan;
 
+	int max_bom;
 	int num_sung_dan;
 	int num_sung_lua;
 	int num_ten_lua;

@@ -18,7 +18,7 @@ void ImpTimer::start() {  //  lay thoi diem chuong trinh
 	start_tick = SDL_GetTicks(); // SDL_Gettick trả về thoi diem tu luc SDL dc khoi tao
 	// => start_tick lien tuc duoc cap nhap sau moi vòng while 
 
-}
+}                                                  
 
 
 void ImpTimer::stop() {     // ??

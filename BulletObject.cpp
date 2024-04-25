@@ -10,7 +10,7 @@ BulletObject::BulletObject() {
 void BulletObject::HandleMove_Dan(const int& x_border, const int& y_border)
 {
 	if (bullet_dir == DIR_RIGHT)
-	{
+	{                                    
 		rect.x += x_val;
 		if (rect.x < x_border && rect.x >= lim_dis) is_move = false;    // TH chưa vượt qua giới hạn map nhưng vượt qua tầm bắn
 		else if (rect.x >= x_border) is_move = false;

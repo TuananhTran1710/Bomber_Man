@@ -9,7 +9,7 @@
 class BulletObject : public BaseObject
 {
 public:
-	BulletObject();
+	BulletObject();                                    
 	//~BulletObject();
 
 
@@ -50,7 +50,7 @@ public:
 	};
 
 	void LoadImgBullet(SDL_Renderer* des);
-
+	                                                                                      
 
 	void set_x_val(const int& x) { x_val = x; }
 	int get_x_val() { return x_val; }

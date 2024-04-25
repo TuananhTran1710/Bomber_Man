@@ -261,7 +261,7 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 					// nhu vậy phần trên đã khởi tạo xong viên đạn 
 
 					bullet_list_bom.push_back(p_bullet);
-					p_bullet->set_bullet_time(SDL_GetTicks());
+					p_bullet->set_bullet_time(SDL_GetTicks() );
 					
 					Mix_PlayChannel(-1, bullet_sound[0], 0);
 				}
@@ -1606,6 +1606,28 @@ void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des, Mix_Chunk* so
 			else if (p_bullet->GetRect().x < 185 + 5 )
 			{
 				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y, map_x - 1,sound);
+				p_bullet->set_is_move(false);
+				num_ten_lua--;
+				if (num_ten_lua == 0)
+				{
+					max_bom = 1;
+					type_bullet = 15;
+				}
+			}
+			else if (p_bullet->GetRect().y < 60 + 5)
+			{
+				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y - 1, map_x, sound);
+				p_bullet->set_is_move(false);
+				num_ten_lua--;
+				if (num_ten_lua == 0)
+				{
+					max_bom = 1;
+					type_bullet = 15;
+				}
+			}
+			else if (p_bullet->GetRect().y > 60 + 45*13 - 20)
+			{
+				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y + 1, map_x, sound);
 				p_bullet->set_is_move(false);
 				num_ten_lua--;
 				if (num_ten_lua == 0)
