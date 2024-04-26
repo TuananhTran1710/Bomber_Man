@@ -31,7 +31,7 @@
 
 ### I. Đặc điểm của các ô trên bản đồ
 | Hình ảnh | Tính năng của ô |
-| ------------- |:-------------:|
+| ------------- |:-------------|
 | ![1](https://github.com/TuananhTran1710/Bomber_Man/blob/main/map1/3.png?raw=true)| Ô này là ô cố định, không thể phá  |
 |     ![1](https://github.com/TuananhTran1710/Bomber_Man/blob/main/map1/7.png?raw=true)  | Đây cũng là ô cố định trong map, không thế phá    |
 | ![1](https://github.com/TuananhTran1710/Bomber_Man/blob/main/map1/2.png?raw=true)     | Đây là ô để xây mép trên và mép dưới của bản đồ, luôn cố định trong map, không thể phá    |
@@ -41,7 +41,7 @@
 
 ### II. Tính năng của các item
 | Item  | Tính năng |
-| ------------- |:-------------:|
+| ------------- |:-------------|
 | ![1](https://github.com/TuananhTran1710/Bomber_Man/blob/main/map1/bom.png?raw=true)    |Sau khi được ấn để đặt, phát nổ sau khoảng 2 giây.<br> Gây hiệu ứng với 4 ô xung quanh     |
 | ![1](https://github.com/TuananhTran1710/Bomber_Man/blob/main/map1/9.png?raw=true)      | Sau khi nhân vật ăn được item này sẽ sở hữu 2 lần phun lửa gây hiệu ứng trong 1 ô    |
 | ![1](https://github.com/TuananhTran1710/Bomber_Man/blob/main/map1/12.png?raw=true)      | Sau khi nhân vật ăn được item này sẽ sở hữu 1 lần bắn tên lửa, <br> khi tên lửa va chạm sẽ phát nổ như bom gây hiệu ứng 4 ô xung quanh  |
@@ -75,7 +75,7 @@
 # 5. GHI CHÚ VỀ CÁC SỐ LIỆU TRONG MÃ NGUỒN
 * Trong code có những số liệu dùng nhiều khi tính toán. Sau đây là bảng chú thích rõ ý nghĩa của các số liệu đó:
 | Số liệu | Ý nghĩa |
-|--------------|-------|
+|--------------|:-------|
 | 185 | Vị trí rect.x của ô [1][0] trong bản đồ |
 | 185 + 14*45   | Vị trí rect.x của ô [1][14] trên bản đồ |
 | 60 | Vị trí rect.y của các ô thuộc dòng 1 trong bản đồ | 
