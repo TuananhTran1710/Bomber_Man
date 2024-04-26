@@ -72,7 +72,17 @@
 * BulletObject.h và BulletObject.cpp: quản lý các tính năng của đạn, di chuyển của đạn
 * Nobom.h và Nobom.cpp: quản lý hình ảnh vụ nổ
 * TextObject quản lý về text trong game
-# 5. NGUỒN THAM KHẢO
+# 5. GHI CHÚ VỀ CÁC SỐ LIỆU TRONG MÃ NGUỒN
+* Trong code có những số liệu dùng nhiều khi tính toán. Sau đây là bảng chú thích rõ ý nghĩa của các số liệu đó:
+| Số liệu | Ý nghĩa |
+|--------------|-------|
+| 185 | Vị trí rect.x của ô [1][0] trong bản đồ |
+| 185 + 14*45   | Vị trí rect.x của ô [1][14] trên bản đồ |
+| 60 | Vị trí rect.y của các ô thuộc dòng 1 trong bản đồ | 
+| 45 | Độ cao, rộng của 1 ô trong map |
+
+* CHÚ Ý: Bản đồ như một ma trận 15x15 gồm 15 dòng và 15 cột, mỗi một giá trị [i][j] tương ứng với một ô trên bản đồ
+# 6. NGUỒN THAM KHẢO
 [Phát Triển Phần Mềm 123A-Z](https://www.youtube.com/@PhatTrienPhanMem123AZ)
 * Toàn bộ file : ImpTimer.cpp, ImpTimer.h, BaseObject.h, BaseObject.cpp, TextObject.h, TextObject.cpp, game_map.h
 * Một số hình ảnh trong file map1 và một số đoạn code khác sẽ được nói rõ trong video trình bày game
