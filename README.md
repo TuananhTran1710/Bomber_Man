@@ -75,8 +75,8 @@
 # 5. GHI CHÚ VỀ CÁC SỐ LIỆU TRONG MÃ NGUỒN
 * Trong code có những số liệu dùng nhiều khi tính toán. Sau đây là bảng chú thích rõ ý nghĩa của các số liệu đó:
   
-| Số liệu | Ý nghĩa |
-|--------------|:-------|
+|Số liệu |Ý nghĩa |
+|:--------------|:-------|
 | 185 | Vị trí rect.x của ô [1][0] trong bản đồ |
 | 185 + 14*45   | Vị trí rect.x của ô [1][14] trên bản đồ |
 | 60 | Vị trí rect.y của các ô thuộc dòng 1 trong bản đồ | 
