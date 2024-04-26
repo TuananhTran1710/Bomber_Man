@@ -74,6 +74,7 @@
 * TextObject quản lý về text trong game
 # 5. GHI CHÚ VỀ CÁC SỐ LIỆU TRONG MÃ NGUỒN
 * Trong code có những số liệu dùng nhiều khi tính toán. Sau đây là bảng chú thích rõ ý nghĩa của các số liệu đó:
+  
 | Số liệu | Ý nghĩa |
 |--------------|:-------|
 | 185 | Vị trí rect.x của ô [1][0] trong bản đồ |
