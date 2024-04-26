@@ -1,7 +1,7 @@
 
 # GIỚI THIỆU GAME
-
-BomberMan là một game chiến thuật lấy ý tưởng chính từ tựa game Bom IT, với những nhân vật hoạt hình vui nhộn, bạn sẽ nhập vai vào một nhân vật và đi ăn các item bằng cách đặt bom để phá các ô chứa nó, sau đó dùng sẽ khéo léo và nhanh nhạy của mình để hạ gục đối thủ.
+* Video Demo game: https://s.net.vn/m6yq
+BomberMan là một game chiến thuật 2 người chơi lấy ý tưởng chính từ tựa game Bom IT, với những nhân vật hoạt hình vui nhộn, bạn sẽ nhập vai vào một nhân vật và đi ăn các item bằng cách đặt bom để phá các ô chứa nó, sau đó dùng sẽ khéo léo và nhanh nhạy của mình để hạ gục đối thủ.
 # MỤC LỤC
 * [0. CÁCH TẢI GAME](#0-cách-tải-game)
 * [1. CẤU TRÚC GAME](#1-cấu-trúc-game)
