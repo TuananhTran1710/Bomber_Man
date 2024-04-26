@@ -24,7 +24,7 @@ MainObject::MainObject() {
 	input_type.die = 0;
 	max_bom = 1;
 	bat_tu = false;
-	num_life = 2;
+	
 	num_kill = 0;
 	have_lachan = 0;
 	type_bullet = 15;
@@ -41,14 +41,12 @@ MainObject::MainObject() {
 MainObject :: ~MainObject() {
 
 }
-
+//------------------------------------------------------------------------------------
 void MainObject::set_pos2(float x, float y)
 {
 	x_pos = x;
 	y_pos = y;
 }
-				
-
 bool MainObject::LoadImg(std::string path, SDL_Renderer* screen) {
 	bool ret = BaseObject::LoadImg(path, screen);
 	if (ret == true) {
@@ -57,7 +55,6 @@ bool MainObject::LoadImg(std::string path, SDL_Renderer* screen) {
 	}
 	return ret;
 }
-
 void MainObject::set_clips() {
 	if (width_frame > 0 && height_frame > 0) {
 
@@ -170,8 +167,8 @@ void MainObject::Show2(SDL_Renderer* des) {
 	SDL_Rect renderQuad = { rect.x ,rect.y , width_frame,height_frame };
 	SDL_RenderCopy(des, p_object, current_clip, &renderQuad);
 }
-
-// xu ly dan
+//-------------------------------------------------------------------------------------------
+// xu ly sự kiện
 void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]) {
 	if (events.type == SDL_KEYDOWN) {
 		switch (events.key.keysym.sym)
@@ -261,8 +258,7 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 					// nhu vậy phần trên đã khởi tạo xong viên đạn 
 
 					bullet_list_bom.push_back(p_bullet);
-					p_bullet->set_bullet_time(SDL_GetTicks() );
-					
+					p_bullet->set_bullet_time(SDL_GetTicks() );				
 					Mix_PlayChannel(-1, bullet_sound[0], 0);
 				}
 
@@ -578,8 +574,6 @@ void MainObject::HandleInputAction1(SDL_Event events, SDL_Renderer* screen, Map&
 		}
 	}
 }
-
-
 void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map& map_data, Mix_Chunk* bullet_sound[4]) {
 	if (events.type == SDL_KEYDOWN) {
 		switch (events.key.keysym.sym)
@@ -981,7 +975,7 @@ void MainObject::HandleInputAction2(SDL_Event events, SDL_Renderer* screen, Map&
 	}
 }
 
-
+//------------------------------------------------------------------------------------------------
 // xử lý hình ảnh đạn
 void MainObject::HandleBullet_Dan(SDL_Renderer* des)
 {
@@ -1008,7 +1002,6 @@ void MainObject::HandleBullet_Dan(SDL_Renderer* des)
 		}
 	}
 }
-
 
 // xử lý hình ảnh tên lửa 
 void MainObject::HandleBullet_TenLua(SDL_Renderer* des, Map&map_data)
@@ -1116,13 +1109,13 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 
 }
 
-
+//-------------------------------------------------------------------------------------------------------
 int MainObject :: Rand(int l, int r)
 {
 	return l + rand() % (r - l + 1);
 }
 
-
+// hàm sinh map ngẫu nhiên kết hợp với thuật toán DFS ở main.cpp
 void MainObject::Rand2(int l , int r, Map&map_data)
 {
 	for (int i = 1; i <= 13; i++)
@@ -1151,6 +1144,7 @@ void MainObject::Rand2(int l , int r, Map&map_data)
 	map_data.tile[12][14] = 0;
 }
 
+//----------------------------------------------------------------------------------------------------------
 void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des, Mix_Chunk* sound[2]) {
 		for (int i = 0; i < bullet_list_bom.size(); i++) {
 			BulletObject* p_bullet = bullet_list_bom.at(i);
@@ -1241,6 +1235,7 @@ void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des, Mix_Chunk* s
 		}
 
 		// xử lý hiệu ứng nổ tên lửa
+		//// cho đoạn xử lý này của mìn vào đây để nó được gọi liên tục để trong vòng while ở main
 
 		for (int i = 0; i < no_tenlua.size(); i++)
 		{
@@ -1261,7 +1256,6 @@ void MainObject::RemoveBullet_Bom(Map& map_data, SDL_Renderer* des, Mix_Chunk* s
 		}
 		
 }
-
 
 void MainObject::RemoveBullet_Lua(Map& map_data, SDL_Renderer* des)
 {
@@ -1319,7 +1313,7 @@ void MainObject::RemoveBullet_Lua(Map& map_data, SDL_Renderer* des)
 					tile_map.y = 60 + (map_y - 1) * 45;
 					tile_map.w = 45;
 					tile_map.h = 45;
-					bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);
+					bool Col = SDLCommonFunc::CheckCollision(rect_bullet, tile_map);       
 					if (Col && (map_data.tile[map_y][map_x] == 4 || map_data.tile[map_y][map_x] == 5 || map_data.tile[map_y][map_x] == 6))
 					{
 						map_data.tile[map_y][map_x] = Rand(9, 15);
@@ -1384,7 +1378,6 @@ void MainObject::RemoveBullet_Lua(Map& map_data, SDL_Renderer* des)
 		}
 	}
 }
-
 
 void MainObject::RemoveBullet_Tenlua(Map& map_data, SDL_Renderer*des , BulletObject * p_bullet , int map_y , int map_x , Mix_Chunk* sound[4])
 {
@@ -1504,7 +1497,8 @@ void MainObject::RemoveBullet_Tenlua(Map& map_data, SDL_Renderer*des , BulletObj
 	}
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------------------
+// hàm này gọi khi có va chạm giữa nhân vật và đạn 
 void MainObject::check_around_MainObject(Map& map_data, SDL_Renderer* des, BulletObject* p_bullet, double x_pos, double y_pos)
 {
 	int map_x = (x_pos - 185) / 45;
@@ -1527,11 +1521,12 @@ void MainObject::check_around_MainObject(Map& map_data, SDL_Renderer* des, Bulle
 
 	(*no_tenlua.rbegin()).first.SetRect(185 + (map_x) * 45 + 2, 60 + (map_y - 2) * 45);
 	(*no_tenlua.rbegin()).second.SetRect(185 + (map_x - 1) * 45, 60 + (map_y - 1) * 45 + 2);
+
 	ImpTimer ret; Delay_time_tenlua.push_back(ret);
 	(*Delay_time_tenlua.rbegin()).start();
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------------
 // check va chạm giữa tên lửa vs ô chứa vật phẩm
 void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des, Mix_Chunk* sound[4])
 {
@@ -1558,7 +1553,7 @@ void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des, Mix_Chunk* so
 			}
 			if (p_bullet->get_bullet_dir() == BulletObject::DIR_UP)
 			{
-				map_y = (rect_bullet.y - 60 + 10) / 45 + 1;
+				map_y = (rect_bullet.y - 60 + 10) / 45 + 1;        // + 10 cũng vì lý do trên 
 				tile_map.y = 60 + (map_y - 1) * 45;
 			}
 
@@ -1592,7 +1587,7 @@ void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des, Mix_Chunk* so
 				
 
 			}
-			else if (p_bullet->GetRect().x > 185 + 45 * 15 - 20)
+			else if (p_bullet->GetRect().x > 185 + 45 * 15 - 20)      // là khi vượt ra khỏi map 
 			{
 				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y, map_x + 1,sound);
 				p_bullet->set_is_move(false);
@@ -1603,7 +1598,7 @@ void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des, Mix_Chunk* so
 					type_bullet = 15;
 				}
 			}
-			else if (p_bullet->GetRect().x < 185 + 5 )
+			else if (p_bullet->GetRect().x < 185 + 5 )            // là khi vượt ra khỏi map
 			{
 				RemoveBullet_Tenlua(map_data, des, p_bullet, map_y, map_x - 1,sound);
 				p_bullet->set_is_move(false);
@@ -1644,69 +1639,7 @@ void MainObject::check_col_tenlua(Map& map_data, SDL_Renderer*des, Mix_Chunk* so
 
 }
 
-// check va set tinh nang cho item la chan
-void MainObject::check_item_lachan(int val_1, int val_2)
-{
-	if ( (val_1 == 13 && val_2 == 13) || (val_1 == 13 && val_2 >= 9 && val_1 != val_2 && val_2 <=15) || (val_1 == 13 && val_2 == 0) || (val_1 == 0 && val_2 == 13) )
-	{
-		// chú ý : ở điều kiện 2, cần có val_2 <= 15 để tránh trường hợp ô val_2 là mìn
-		// vì nếu là mìn thì chỉ cần đi giữa 2 ô ( tức là chạm vào mìn ) là sẽ nổ 
-		this->set_bat_tu(true);          // mặc định game: nếu 2 ô trên và dưới cùng là item thì ta chọn item trên để set cho nhân vật
-		have_lachan = 1;
-	}
-}
-
-
-// check và set tinh nang cho item bom 
-void MainObject :: check_item_bom(int val_1, int val_2)
-{
-	if ( (val_1 == 15 && val_2 == 15 ) || (val_1 == 15 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 15 && val_2 == 0) || (val_1 == 0 && val_2 == 15))    // và phải xử lý sao cho khi ấn space nó ra bom
-	{
-		type_bullet = 15;
-		max_bom++;
-		num_sung_dan = 0;
-		num_sung_lua = 0;
-		num_ten_lua = 0;
-		num_min = 0;
-		num_sung_dien = 0;
-	}
-}
-
-// check và set tinh nang cho mìn
-void MainObject::check_item_min(int val_1, int val_2)
-{
-	if ((val_1 == 11 && val_2 == 11) || (val_1 == 11 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 11 && val_2 == 0) || (val_1 == 0 && val_2 == 11))
-	{
-		num_min = 1; 
-		type_bullet = 11;
-		max_bom = 0;
-		num_sung_dan = 0;
-		num_sung_lua = 0;
-		num_ten_lua = 0;
-		num_sung_dien = 0;
-	}
-}
-
-
-// xử lý hình ảnh súng đạn lên bảng tổng hợp
-void MainObject::check_item_sungdan(int val_1, int val_2)
-{
-	if ((val_1 == 10 && val_2 == 10) || (val_1 == 10 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 10 && val_2 == 0) || (val_1 == 0 && val_2 == 10))
-	{
-		num_sung_dan = 1;
-		type_bullet = 10;
-		max_bom = 0;
-		num_min = 0;
-		num_sung_lua = 0;
-		num_ten_lua = 0;
-		num_sung_dien = 0;
-	}
-}
-
-
-
-
-//  check va chạm giữa viên đạn và tường + ô có vật phẩm
+//  check va chạm giữa viên đạn và các ô 
 void MainObject::check_col_sungdan(Map& map_data)
 {
 	for (int i = 0; i < bullet_list.size(); i++)
@@ -1765,10 +1698,7 @@ void MainObject::check_col_sungdan(Map& map_data)
 	}
 }
 
-
-
-
-
+//------------------------------------------------------------------------------
 
 void MainObject::RemoveBullet_Col(const int& idx)
 {
@@ -1790,7 +1720,6 @@ void MainObject::RemoveBullet_Col(const int& idx)
 		}
 	}
 }
-
 void MainObject::RemoveTenLua_Col(const int& idx)
 {
 	int size = bullet_list_tenlua.size();
@@ -1813,6 +1742,56 @@ void MainObject::RemoveTenLua_Col(const int& idx)
 	}
 }
 
+//---------------------------------------------------------------------------------------
+void MainObject::check_item_lachan(int val_1, int val_2)
+{
+	if ((val_1 == 13 && val_2 == 13) || (val_1 == 13 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 13 && val_2 == 0) || (val_1 == 0 && val_2 == 13))
+	{
+		// chú ý : ở điều kiện 2, cần có val_2 <= 15 để tránh trường hợp ô val_2 là mìn
+		// vì nếu là mìn thì chỉ cần đi giữa 2 ô ( tức là chạm vào mìn ) là sẽ nổ 
+		this->set_bat_tu(true);          // mặc định game: nếu 2 ô trên và dưới cùng là item thì ta chọn item trên để set cho nhân vật
+		have_lachan = 1;
+	}
+}
+void MainObject::check_item_bom(int val_1, int val_2)
+{
+	if ((val_1 == 15 && val_2 == 15) || (val_1 == 15 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 15 && val_2 == 0) || (val_1 == 0 && val_2 == 15))    // và phải xử lý sao cho khi ấn space nó ra bom
+	{
+		type_bullet = 15;
+		max_bom++;
+		num_sung_dan = 0;
+		num_sung_lua = 0;
+		num_ten_lua = 0;
+		num_min = 0;
+		num_sung_dien = 0;
+	}
+}
+void MainObject::check_item_min(int val_1, int val_2)
+{
+	if ((val_1 == 11 && val_2 == 11) || (val_1 == 11 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 11 && val_2 == 0) || (val_1 == 0 && val_2 == 11))
+	{
+		num_min = 1;
+		type_bullet = 11;
+		max_bom = 0;
+		num_sung_dan = 0;
+		num_sung_lua = 0;
+		num_ten_lua = 0;
+		num_sung_dien = 0;
+	}
+}
+void MainObject::check_item_sungdan(int val_1, int val_2)
+{
+	if ((val_1 == 10 && val_2 == 10) || (val_1 == 10 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 10 && val_2 == 0) || (val_1 == 0 && val_2 == 10))
+	{
+		num_sung_dan = 1;
+		type_bullet = 10;
+		max_bom = 0;
+		num_min = 0;
+		num_sung_lua = 0;
+		num_ten_lua = 0;
+		num_sung_dien = 0;
+	}
+}
 void MainObject::check_item_sunglua(int val_1, int val_2)
 {
 	if ((val_1 == 9 && val_2 == 9) || (val_1 == 9 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 9 && val_2 == 0) || (val_1 == 0 && val_2 == 9))
@@ -1826,8 +1805,6 @@ void MainObject::check_item_sunglua(int val_1, int val_2)
 		num_sung_dien = 0;
 	}
 }
-
-// xử lý tên lửa
 void MainObject::check_item_tenlua(int val_1, int val_2)
 {
 	if ((val_1 == 12 && val_2 == 12) || (val_1 == 12 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 12 && val_2 == 0) || (val_1 == 0 && val_2 == 12))
@@ -1842,8 +1819,6 @@ void MainObject::check_item_tenlua(int val_1, int val_2)
 	}
 
 }
-
-
 void MainObject::check_item_sungdien(int val_1, int val_2)
 {
 	if ((val_1 == 14 && val_2 == 14) || (val_1 == 14 && val_2 >= 9 && val_1 != val_2 && val_2 <= 15) || (val_1 == 14 && val_2 == 0) || (val_1 == 0 && val_2 == 14))
@@ -1870,7 +1845,6 @@ void MainObject :: show_sunglua(SDL_Renderer* screen,double x, double y)
 {	sung_lua.SetRect(x, y);
 	sung_lua.Render(screen);
 }
-
 
 void MainObject::init_tenlua(SDL_Renderer* screen)
 {
@@ -1920,7 +1894,6 @@ void MainObject::show_sungdien(SDL_Renderer* screen, double x, double y)
 	sung_dien.Render(screen);
 }
 
-// -------------------------------------------------------------------------------
 void MainObject::init_la_chan(SDL_Renderer* screen, double x, double y)
 {
 	lachan.LoadImg("map1/lachan.png", screen);
@@ -1928,9 +1901,10 @@ void MainObject::init_la_chan(SDL_Renderer* screen, double x, double y)
 }
 void MainObject::show_la_chan(SDL_Renderer* screen)
 {
-	
 	lachan.Render(screen);
 }
+
+
 //---------------------------------------------------------------
 // xử lý va chạm và di chuyển 
 

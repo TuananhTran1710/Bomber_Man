@@ -4,11 +4,12 @@
 #include "MainObject.h"
 #include "ImpTimer.h"
 #include "TextObject.h"
-Uint32 val;
+
 BaseObject g_background;
 TTF_Font *font_time = NULL;
 
-int B;           
+int B;   
+
 bool Init() {
 	B = SDL_GetTicks();             // là thời gian khi bắt đầu vào menu
 	bool success = 1;
@@ -152,6 +153,7 @@ int Over(SDL_Rect rect1, SDL_Rect rect2)
 	return -1;             
 }
 
+
 int dx1[4] = { -1,0,0,1 };
 int dy1[4] = { 0,1,-1,0 };
 char a[100][100];
@@ -170,7 +172,6 @@ void dfs(int i, int j)
 		}
 	}
 }
-
 
 
 int Playgame()
@@ -243,7 +244,7 @@ int Playgame()
 	srand((int)time(0));
 
 	Map map_data = map.getMap();
-
+//---------------------------------Sinh map ngẫu nhiên-----------------------------------------------------------------------
 	int cnt = 0;      // đếm số thành phần liên thông của đồ thị
 	while (cnt != 1)
 	{
@@ -274,6 +275,8 @@ int Playgame()
 			}
 		}
 	}
+
+//-------------------------------------------------------------------------------------------------------
 
 	int denta_time = SDL_GetTicks() - B;            // khi bắt đầu ấn vào chơi
 
@@ -307,21 +310,16 @@ int Playgame()
 		// set bất tử sau khi ăn lá chắn
 		if (p_player1.get_have_lachan()) p_player1.set_bat_tu(true);
 		if (p_player2.get_have_lachan()) p_player2.set_bat_tu(true);
-		//
-
 	
-		
-		//---------------------------------
+//--------------------------------------------------------------------------------
 		if (p_player1.get_have_lachan()) p_player1.show_la_chan(g_screen);
 		if (p_player2.get_have_lachan()) p_player2.show_la_chan(g_screen);
 
 		p_player1.HandleBullet_Dan(g_screen); // xu ly dan
 		p_player2.HandleBullet_Dan(g_screen);
 
-
 		p_player1.HandleBullet(g_screen);  // xử lý bom & min 
 		p_player2.HandleBullet(g_screen);  // xử lý bom & min
-
 
 		p_player1.HandleBullet_Lua(g_screen); // xử lý lửa
 		p_player2.HandleBullet_Lua(g_screen);
@@ -343,19 +341,16 @@ int Playgame()
 		//xử lý va chạm giữa ô chứa vật phẩm và tên lửa
 		p_player1.check_col_tenlua(map_data, g_screen, g_sound_bullet);
 		p_player2.check_col_tenlua(map_data, g_screen, g_sound_bullet);
-
-
+//--------------------------------------------------------------------------------------------------------------
 		map.SetMap(map_data);
-		// cap nhat game map vi ta co cau lenh khai bao Map map_data = map.getmap() o dong 71
 
 		p_player1.Show1(g_screen); // bản chất hàm này mỗi lần chỉ load 1 frame, nhưng vì chương trình chạy nhanh quá nên không thể nhìn rõ từng frame 
 		p_player2.Show2(g_screen);
 
-		// xu ly va cham giua nguoi va bom
+		//------------------------- xu ly va cham giua nguoi va bom -----------------------------------------------------
 		std::vector <std::pair<NoBom, NoBom>> nobom_list_1 = p_player1.get_no_bom_list();
 		std::vector <std::pair<NoBom, NoBom>> nobom_list_2 = p_player2.get_no_bom_list();
 		std::vector <std::pair<NoBom, NoBom>> nobom_list1, nobom_list2;
-
 
 		for (int i = 0; i < nobom_list_1.size(); i++)
 		{
@@ -367,9 +362,6 @@ int Playgame()
 			nobom_list1.push_back(nobom_list_2[i]);
 			nobom_list2.push_back(nobom_list_2[i]);
 		}
-
-
-
 
 		// xu ly va cham giữa người - mìn
 		std::vector <std::pair<NoBom, NoBom>> nomin_list_1 = p_player1.get_no_min_list();
@@ -394,7 +386,6 @@ int Playgame()
 			if (i < nobom_list1.size()) no1.push_back(nobom_list1[i]);
 			else no1.push_back(nomin_list1[i - nobom_list1.size()]);
 		}
-
 		for (int i = 0; i < nomin_list2.size() + nobom_list2.size(); i++)
 		{
 			if (i < nobom_list2.size()) no2.push_back(nobom_list2[i]);
@@ -402,7 +393,10 @@ int Playgame()
 		}
 
 
-		// xử lý va chạm giữa nhân vật 1 và nổ bom && nổ mìn 
+//------------------------------------------------------ NHÂN VẬT 1---------------------------------------------------
+
+
+		//-------------------------------------- xử lý va chạm giữa nhân vật 1 và nổ bom && nổ mìn ----------------------------------
 
 		for (int r = 0; r < no1.size(); r++) {
 
@@ -417,8 +411,6 @@ int Playgame()
 			tRect.y = p_player1.GetRect().y;
 			tRect.w = p_player1.get_width_frame();
 			tRect.h = p_player1.get_height_frame();
-
-
 
 			SDL_Rect bRect_doc = doc.GetRect();
 			SDL_Rect bRect_ngang = ngang.GetRect();
@@ -435,10 +427,7 @@ int Playgame()
 					{
 						p_player2.Increase_num_kill();
 					}
-
-
 					p_player1.Decrease_num_life();
-
 					time_bat_tu1.start();   //
 
 					p_player1.set_bat_tu(true);
@@ -456,8 +445,8 @@ int Playgame()
 
 		}
 
-
-		// xử lý va chạm giữa đạn của 2 với nhân vật 1 
+//-------------------------------------------- xử lý va chạm giữa đạn của 2 với nhân vật 1 ------------------------------------------------------------------------------------
+		
 		std::vector<BulletObject*> list_dan2 = p_player2.get_bullet_list();
 
 		for (int i = 0; i < list_dan2.size(); i++)
@@ -473,21 +462,13 @@ int Playgame()
 				tRect.h = p_player1.get_height_frame();
 
 				bool Col = SDLCommonFunc::CheckCollision(p_bullet->GetRect(), tRect);
-
-
-
 				if (p_player1.get_bat_tu() == false)
 				{
 					if (Col)
 					{
 						p_player2.RemoveBullet_Col(i);
 						p_player2.Increase_num_kill();
-
-
 						p_player1.Decrease_num_life();
-
-
-
 						time_bat_tu1.start();   //
 
 						p_player1.set_bat_tu(true);
@@ -503,8 +484,8 @@ int Playgame()
 				}
 			}
 		}
-
-		// xử lý va chạm giữa lửa của 2 với nhân vật 1 
+//--------------------------------------xử lý va chạm giữa lửa của 2 với nhân vật 1 -----------------------------------------------------------------------------------
+		
 		std::vector <BulletObject*> list_lua2 = p_player2.get_bullet_list_lua();
 		for (int i = 0; i < list_lua2.size(); i++)
 		{
@@ -520,8 +501,6 @@ int Playgame()
 
 				bool Col = SDLCommonFunc::CheckCollision(p_bullet->GetRect(), tRect);
 
-
-
 				if (p_player1.get_bat_tu() == false)
 				{
 					if (Col)
@@ -529,12 +508,7 @@ int Playgame()
 						p_player2.RemoveBullet_Col(i);
 
 						p_player2.Increase_num_kill();
-
-
 						p_player1.Decrease_num_life();
-
-
-
 						time_bat_tu1.start();
 
 						p_player1.set_bat_tu(true);
@@ -550,26 +524,10 @@ int Playgame()
 				}
 			}
 		}
-
-		// xử lý va chạm TÊN LỬA - nhân vật 1;
-		std::vector <std::pair<NoBom, NoBom>> no_tenlua_list_1 = p_player1.get_no_tenlua_list();
-		std::vector <std::pair<NoBom, NoBom>> no_tenlua_list_2 = p_player2.get_no_tenlua_list();
-		std::vector < std::pair<NoBom, NoBom>> no_tenlua1, no_tenlua2;
-
-		for (int i = 0; i < no_tenlua_list_1.size(); i++)
-		{
-			no_tenlua1.push_back(no_tenlua_list_1[i]);
-			no_tenlua2.push_back(no_tenlua_list_1[i]);
-		}
-		for (int i = 0; i < no_tenlua_list_2.size(); i++)
-		{
-			no_tenlua1.push_back(no_tenlua_list_2[i]);
-			no_tenlua2.push_back(no_tenlua_list_2[i]);
-		}
-
-
+//----------------------------------------xử lý va chạm TÊN LỬA - nhân vật 1-----------------------------------------------------------------------------
+		
 		std::vector<BulletObject*> list_tenlua2 = p_player2.get_bullet_list_tenlua();
-		// đây là khi đạn tên lửa trúng nhân vật
+		// --------------------------------------------đây là khi đạn tên lửa trúng nhân vật---------------------------
 		for (int i = 0; i < list_tenlua2.size(); i++)
 		{
 			BulletObject* p_bullet = list_tenlua2.at(i);
@@ -590,16 +548,14 @@ int Playgame()
 						Mix_FreeChunk(g_sound_bullet[1]);
 						g_sound_bullet[1] = Mix_LoadWAV("Explosion+5.wav");
 						Mix_PlayChannel(-1, g_sound_bullet[1], 0);
+
 						p_player1.check_around_MainObject(map_data, g_screen, p_bullet, tRect.x, tRect.y);
+
 						map.SetMap(map_data);
 						p_player2.RemoveTenLua_Col(i);
 
 						p_player2.Increase_num_kill();
-
-
 						p_player1.Decrease_num_life();
-
-
 
 						time_bat_tu1.start();   //
 
@@ -619,7 +575,23 @@ int Playgame()
 				}
 			}
 		}
-		// đây là khi đạn tên lửa không trúng nhân vật nhưng hiệu ứng nổ lại trúng
+		// -----------------------------------đây là khi đạn tên lửa không trúng nhân vật nhưng hiệu ứng nổ lại trúng--------------------------
+
+		std::vector <std::pair<NoBom, NoBom>> no_tenlua_list_1 = p_player1.get_no_tenlua_list();
+		std::vector <std::pair<NoBom, NoBom>> no_tenlua_list_2 = p_player2.get_no_tenlua_list();
+		std::vector < std::pair<NoBom, NoBom>> no_tenlua1, no_tenlua2;
+
+		for (int i = 0; i < no_tenlua_list_1.size(); i++)
+		{
+			no_tenlua1.push_back(no_tenlua_list_1[i]);
+			no_tenlua2.push_back(no_tenlua_list_1[i]);
+		}
+		for (int i = 0; i < no_tenlua_list_2.size(); i++)
+		{
+			no_tenlua1.push_back(no_tenlua_list_2[i]);
+			no_tenlua2.push_back(no_tenlua_list_2[i]);
+		}
+
 		for (int r = 0; r < no_tenlua1.size(); r++) {
 
 			std::pair<NoBom, NoBom> no_bom = no_tenlua1.at(r);
@@ -652,13 +624,9 @@ int Playgame()
 
 					}
 					p_player1.Decrease_num_life();
-
-
-
 					time_bat_tu1.start();   //
 
 					p_player1.set_bat_tu(true);
-					//continue;	
 				}
 			}
 			if ((bCol_doc || bCol_ngang) && p_player1.get_have_lachan())
@@ -688,7 +656,14 @@ int Playgame()
 		num_bom1.RenderText(g_screen, 57, 170);
 
 
-		// xử lý va chạm giữa nhân vật 2 và nổ bom & mìn
+
+//------------------------------------------------------ NHÂN VẬT 2---------------------------------------------------
+
+
+
+
+
+		//------------------------------------ xử lý va chạm giữa nhân vật 2 và nổ bom & mìn-------------------------------
 		for (int r = 0; r < no2.size(); r++)
 		{
 
@@ -721,7 +696,8 @@ int Playgame()
 						p_player1.Increase_num_kill();
 
 					}
-					p_player2.Decrease_num_life();
+				
+				 	p_player2.Decrease_num_life();
 
 
 
@@ -740,7 +716,7 @@ int Playgame()
 
 		}
 
-		// xử lý va chạm giữa đạn của 1 với nhân vật 2 
+		//---------------------------------- xử lý va chạm giữa đạn của 1 với nhân vật 2 -------------------------------------
 		std::vector<BulletObject*> list_dan1 = p_player1.get_bullet_list();
 		for (int i = 0; i < list_dan1.size(); i++)
 		{
@@ -787,7 +763,7 @@ int Playgame()
 			}
 		}
 
-		// xử lý va chạm giữa lửa của 1 với nhân vật 2 
+		//---------------------------------- xử lý va chạm giữa lửa của 1 với nhân vật 2 --------------------------------------
 		std::vector <BulletObject*> list_lua1 = p_player1.get_bullet_list_lua();
 		for (int i = 0; i < list_lua1.size(); i++)
 		{
@@ -835,7 +811,7 @@ int Playgame()
 		}
 
 
-		// xử lý va chạm tên lửa - nhân vật 2 
+		//-------------------------------- xử lý va chạm tên lửa - nhân vật 2 -----------------------------
 
 		std::vector<BulletObject*> list_tenlua1 = p_player1.get_bullet_list_tenlua();
 
@@ -944,7 +920,7 @@ int Playgame()
 			p_player2.set_bat_tu(false);
 		}
 
-		// xử lý chỉ số kill cho nhân vật 1
+		//------------------------------- xử lý chỉ số kill cho nhân vật 1------------------------------
 		std::string str_kill_1 = std::to_string(p_player1.get_num_kill());
 		str_kill_1 += "/7";
 		kill_1.SetText(str_kill_1);
@@ -952,20 +928,18 @@ int Playgame()
 		kill_1.RenderText(g_screen, 40, 208);
 
 
-		//xử lý text so bom cho nhân vật 2
+		//--------------------------------xử lý text so bom cho nhân vật 2-----------------------------
 		std::string str_num_bom2 = ":" + std::to_string(p_player2.get_max_bom());
 		num_bom2.SetText(str_num_bom2);
 		num_bom2.LoadFromRenderText(font_time, g_screen);
 		num_bom2.RenderText(g_screen, 57, 445);
-		//---------------------------------------------------------------------
-		//Show game time (xử lý text)
+		//--------------------------------Show game time (xử lý text)-------------------------------------
+		
 		time_game.SetColor(TextObject::WHITE_TEXT);
 		std::string str_time = "Time: ";
 		Uint32 time_val = SDL_GetTicks() / 1000;               // chia 1000 để ra đơn vị ms 
 		Uint32 val_time = denta_time / 1000 + 300 - time_val;
 
-
-		//------------------------------------------------------------------------
 		std::string str_val = std::to_string(val_time);
 		str_time += str_val;
 		time_game.SetText(str_time);
@@ -1029,6 +1003,8 @@ int Playgame()
 				return 0;      // tức là Kt_Over = 1 (ấn trở lại menu)
 			}
 		}
+
+
 		time_game.Free();  // giải phóng cho đỡ tốn bộ nhớ
 		num_bom1.Free();
 		num_bom2.Free();
@@ -1037,7 +1013,7 @@ int Playgame()
 		SDL_RenderPresent(g_screen);
 
 
-		// xử lý thời gian 
+		// xử lý thời gian và FPS
 		int real_imp_time = fps_timer.get_ticks();
 		int time_one_frame = 1000 / FRAME_PER_SECOND;  //ms
 		if (real_imp_time < time_one_frame)
@@ -1052,7 +1028,6 @@ int Playgame()
 	std::this_thread::sleep_for
 	(std::chrono::milliseconds(500));
 }
-
 
 
 int main(int argv, char* arg[]){
